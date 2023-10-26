@@ -56,18 +56,11 @@ function processCSV1(data) {
     });
 
     // Sort data
-   // Sort data
-expandedData.sort((a, b) => {
-    const compareString = (str1, str2) => {
-        if (str1 === str2) return 0;
-        return str1 < str2 ? -1 : 1;
-    };
-
-    return compareString(String(a['Product Name'] || ''), String(b['Product Name'] || '')) || 
-           compareString(String(a['Size'] || ''), String(b['Size'] || '')) || 
-           compareString(String(a['Player Number'] || ''), String(b['Player Number'] || ''));
-});
-
+    expandedData.sort((a, b) => {
+        return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+               String(a['Size'] || '').localeCompare(String(b['Size'] || '')) || 
+               String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+    });
 
     const csv = Papa.unparse(expandedData);
     downloadCSV(`StoreName_itemized.csv`, csv);
