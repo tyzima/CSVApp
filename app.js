@@ -53,6 +53,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    const canvas = document.createElement('canvas');
+    canvas.height = 64;
+    canvas.width = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.font = '64px serif';
+    ctx.fillText('🧼', 0, 64);
+    
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL("image/x-icon");
+    
+    document.getElementsByTagName('head')[0].appendChild(link);
 });
 
 // Function to normalize sizes
