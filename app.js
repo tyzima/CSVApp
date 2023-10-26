@@ -103,12 +103,12 @@ function processCSV1(data) {
     const filteredData = data.filter(row => row['Product Name'] && row['Style'])
                              .map(row => {
         return {
-            'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
-            'Player Last Name': row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'],
-            'Size': normalizeSize(row['Size'] || row['SIZE']),
-            'Grad Year': row['Grad Year'],
             'Product Name': row['Product Name'],
             'Style': row['Style'],
+            'Size': normalizeSize(row['Size'] || row['SIZE']),
+            'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
+            'Player Last Name': row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'],
+            'Grad Year': row['Grad Year'],
             'Quantity': row['Quantity']
         };
     });
