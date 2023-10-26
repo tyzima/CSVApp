@@ -122,28 +122,13 @@ function processCSV1(data) {
 
     function customSizeSort(a, b) {
         const sizeOrder = [
-            // Women's sizes
-            'Women\'s MD', 'Women\'s 5X', 'Women\'s 4X', 'Women\'s 3X', 'Women\'s 2X', 'Women\'s XL', 'Women\'s L', 'Women\'s M', 'Women\'s S', 'Women\'s XS',
-            
-            // Men's sizes
-            'Men\'s 3X-Large', 'Men\'s 2X-Large', 'Men\'s X-Large', 'Men\'s Large', 'Men\'s Medium', 'Men\'s Small',
-            
-            // Adult sizes
-            'Adult 3X-Large', 'Adult 2X-Large', 'Adult X-Large', 'Adult Large', 'Adult Medium', 'Adult Small',
-            
-            // Youth sizes
-            'Youth XL', 'youth extra large', 'Youth LG', 'youth large', 'Youth MD', 'youth medium', 'Youth SM', 'youth small', 'Youth'
+            'OSFA',
+            '5XL', '4XL', '3XL', '2XL', 'XL', 'L', 'M', 'S', 'XS',
+            'YXL', 'YL', 'YM', 'YS'
         ];
-    
-        const indexA = sizeOrder.indexOf(a);
-        const indexB = sizeOrder.indexOf(b);
-    
-        if (indexA === -1 && indexB === -1) return 0; // Both sizes are unknown
-        if (indexA === -1) return 1; // a is unknown, b comes first
-        if (indexB === -1) return -1; // b is unknown, a comes first
-    
-        return indexA - indexB;
+        return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
+    
 
     // Sort data
     expandedData.sort((a, b) => {
