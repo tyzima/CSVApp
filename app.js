@@ -199,16 +199,7 @@ function processCSV2(data) {
     downloadCSV(`${storeName}_Aggregated.csv`, csv);
 
     // Update the status
-    // Update the status
-document.getElementById('status').innerText = "Second CSV generated.";
-
-// Trigger confetti animation
-confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-});
-
+    document.getElementById('status').innerText = "Second CSV generated.";
 }
 
 
