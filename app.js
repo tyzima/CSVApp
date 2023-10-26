@@ -56,12 +56,13 @@ function processCSV1(data) {
         }
     });
 
-    expandedData.sort((a, b) => {
-        return (a['Product Name'] || '').localeCompare(b['Product Name'] || '') || 
-               ((a['Size'] || '')).localeCompare(b['Size'] || '') || 
-               ((a['Player Number'] || '')).localeCompare(b['Player Number'] || '');
-    });
-
+  // Sort data
+  expandedData.sort((a, b) => {
+    return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+           String(a['Size'] || '').localeCompare(String(b['Size'] || '')) || 
+           String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+  });
+  
     const csv = Papa.unparse(expandedData);
     downloadCSV(`StoreName_itemized.csv`, csv);
 
