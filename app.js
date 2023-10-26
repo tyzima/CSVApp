@@ -93,7 +93,7 @@ function normalizeSize(size) {
 // Function to process and create the first CSV
 function processCSV1(data) {
     // Update the status
-    document.getElementById('status').innerText = "Generating first CSV...";
+    document.getElementById('status').innerText = "Generating Itemized CSV...";
     
     // Store name for the filename
     let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
@@ -143,13 +143,13 @@ function processCSV1(data) {
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     // Update the status
-    document.getElementById('status').innerText = "First CSV generated.";
+    document.getElementById('status').innerText = "Itemized CSV generated.";
 }
 
 
 function processCSV2(data) {
     // Update the status
-    document.getElementById('status').innerText = "Generating second CSV...";
+    document.getElementById('status').innerText = "Generating Aggregated CSV...";
 
     // Capture the store name for the filename
     let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
@@ -199,7 +199,7 @@ function processCSV2(data) {
     downloadCSV(`${storeName}_Aggregated.csv`, csv);
 
     // Update the status
-    document.getElementById('status').innerText = "Second CSV generated.";
+    document.getElementById('status').innerText = "Aggregated CSV generated.";
 }
 
 
