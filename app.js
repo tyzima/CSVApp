@@ -30,10 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Generating first CSV...";
+    
+    // Store name for the filename
+    let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
 
     const filteredData = data.map(row => {
         return {
@@ -55,22 +57,28 @@ function processCSV1(data) {
         }
     });
 
+    // Custom sort function for Size
+    function customSizeSort(a, b) {
+        const sizeOrder = ['YS', 'Youth Small', 'S', 'M', 'L', 'XL', '2XL', '2 X Large', '3XL', '3 X Large', '4XL', '4 X Large', '5XL', '5 X Large'];
+        return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
+    }
+
     // Sort data
     expandedData.sort((a, b) => {
         return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
-               String(a['Size'] || '').localeCompare(String(b['Size'] || '')) || 
+               customSizeSort(a['Size'] || '', b['Size'] || '') || 
                String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
     });
 
-
     const csv = Papa.unparse(expandedData);
-    
-    console.log("Triggering CSV 1 download"); // Debugging line
-    downloadCSV(`StoreName_itemized.csv`, csv);
+
+    // Download
+    downloadCSV(`${storeName}_itemized.csv`, csv);
 
     // Update the status
     document.getElementById('status').innerText = "First CSV generated.";
 }
+
 
 
 function processCSV2(data) {
@@ -97,6 +105,7 @@ function processCSV2(data) {
     // Update the status
     document.getElementById('status').innerText = "Second CSV generated.";
 }
+
 
 function downloadCSV(filename, csvData) {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
