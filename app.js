@@ -1,23 +1,39 @@
-const Papa = require('papaparse');
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('csv-form');
+    const statusDiv = document.createElement('div');
+    statusDiv.id = "status";
+    document.body.appendChild(statusDiv);
+    
     form.addEventListener('submit', (event) => {
         event.preventDefault();
+
+        // Update the status
+        document.getElementById('status').innerText = "Loading...";
+
         const fileInput = document.getElementById('csv-file');
         const file = fileInput.files[0];
+
+        // Update the status
+        document.getElementById('status').innerText = "Processing CSV...";
+
         Papa.parse(file, {
             header: true,
             dynamicTyping: true,
             complete: function(results) {
                 processCSV1(results.data);
                 processCSV2(results.data);
+                
+                // Update the status
+                document.getElementById('status').innerText = "Processing complete. Check your downloads.";
             }
         });
     });
 });
 
 function processCSV1(data) {
+    // Update the status
+    document.getElementById('status').innerText = "Generating first CSV...";
+
     const filteredData = data.map(row => {
         return {
             'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
@@ -46,9 +62,15 @@ function processCSV1(data) {
 
     const csv = Papa.unparse(expandedData);
     downloadCSV(`StoreName_itemized.csv`, csv);
+
+    // Update the status
+    document.getElementById('status').innerText = "First CSV generated.";
 }
 
 function processCSV2(data) {
+    // Update the status
+    document.getElementById('status').innerText = "Generating second CSV...";
+
     const aggregatedData = {};
     data.forEach(row => {
         const key = `${row['Style']}-${row['Size'] || row['SIZE']}`;
@@ -65,6 +87,9 @@ function processCSV2(data) {
 
     const csv = Papa.unparse(Object.values(aggregatedData));
     downloadCSV(`AggregatedData.csv`, csv);
+
+    // Update the status
+    document.getElementById('status').innerText = "Second CSV generated.";
 }
 
 function downloadCSV(filename, csvData) {
