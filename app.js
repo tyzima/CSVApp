@@ -55,13 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Function to normalize sizes
 function normalizeSize(size) {
     const sizeMap = {
         'OSFA': 'OSFA',
+        'One Size Fits Most': 'OSFA',
         'Youth Small': 'YS', 'youth small': 'YS',
-        'Youth Medium': 'YM', 'youth medium': 'YM',
-        'Youth Large': 'YL', 'youth large': 'YL',
+        'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM',
+        'Youth Large': 'YL', 'Youth LG': 'YL', 'youth large': 'YL',
         'Youth XL': 'YXL', 'youth extra large': 'YXL',
+        'Youth SM': 'YS',
         'Adult Small': 'S', 'adult small': 'S',
         'Adult Medium': 'M', 'adult medium': 'M',
         'Adult Large': 'L', 'adult large': 'L',
@@ -70,21 +73,21 @@ function normalizeSize(size) {
         'Adult 3X-Large': '3XL', 'adult 3x-large': '3XL',
         'Adult 4X-Large': '4XL', 'adult 4x-large': '4XL',
         'Adult 5X-Large': '5XL', 'adult 5x-large': '5XL',
-        'Men\'s Small': 'S',
-        'Men\'s Medium': 'M',
-        'Men\'s Large': 'L',
-        'Men\'s X-Large': 'XL',
-        'Men\'s 2X-Large': '2XL',
-        'Men\'s 3X-Large': '3XL',
+        'Men\'s Small': 'S', 'Mens Small': 'S',
+        'Men\'s Medium': 'M', 'Mens Medium': 'M',
+        'Men\'s Large': 'L', 'Mens Large': 'L',
+        'Men\'s X-Large': 'XL', 'Mens X-Large': 'XL',
         'Women\'s Small': 'S',
-        'Women\'s Medium': 'M',
-        'Women\'s Large': 'L',
-        'Women\'s X-Large': 'XL',
-        'Women\'s 2X-Large': '2XL',
-        'Women\'s 3X-Large': '3XL'
+        'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M',
+        'Women\'s Large': 'L', 'Women\'s LG': 'L',
+        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL',
+        'Women\'s 2X-Large': '2XL', 'Women\'s XXL': '2XL',
+        'Unisex Large': 'L',
+        'Unisex X-Large': 'XL'
     };
     return sizeMap[size] || size;
 }
+
 
 // Function to process and create the first CSV
 function processCSV1(data) {
@@ -208,7 +211,7 @@ function processCSV2(data) {
     
         return indexA - indexB;
     }
-    
+
     // Convert the aggregated data to an array
     const aggregatedArray = Object.values(aggregatedData);
 
