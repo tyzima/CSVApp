@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Generating first CSV...";
@@ -50,19 +49,19 @@ function processCSV1(data) {
 
     const expandedData = [];
     filteredData.forEach(row => {
-        const quantity = row.Quantity || 1;
+        const quantity = parseInt(row.Quantity, 10) || 1;  // Ensure it's treated as a number
         for (let i = 0; i < quantity; i++) {
             expandedData.push({...row, 'Quantity': 1});
         }
     });
 
-  // Sort data
-  expandedData.sort((a, b) => {
-    return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
-           String(a['Size'] || '').localeCompare(String(b['Size'] || '')) || 
-           String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
-  });
-  
+    // Sort data
+    expandedData.sort((a, b) => {
+        return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+               String(a['Size'] || '').localeCompare(String(b['Size'] || '')) || 
+               String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+    });
+
     const csv = Papa.unparse(expandedData);
     downloadCSV(`StoreName_itemized.csv`, csv);
 
