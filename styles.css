@@ -42,18 +42,25 @@
 
   /* Order summary */
 #order-summary{
-    transform:translatex(-508px) translatey(47px);
-    width:19%;
-    float:right;
     font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-weight:500;
     font-size:21px;
     text-align:center;
     text-decoration:none;
     text-transform:none;
+    position: fixed;
     box-shadow:0px 0px 10px 0px #adadad;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color:#27ae60 !important;
-   }
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    z-index: 9999; /* Make sure it appears above all other elements */
+}
+
    
    /* Body */
    body{
