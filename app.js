@@ -37,7 +37,9 @@ function processCSV1(data) {
     // Store name for the filename
     let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
 
-    const filteredData = data.map(row => {
+    // Filter and map the data
+    const filteredData = data.filter(row => row['Product Name'] && row['Style'])
+                             .map(row => {
         return {
             'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
             'Player Last Name': row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'],
@@ -86,7 +88,9 @@ function processCSV2(data) {
     document.getElementById('status').innerText = "Generating second CSV...";
 
     const aggregatedData = {};
-    data.forEach(row => {
+    
+    // Filter rows and then aggregate
+    data.filter(row => row['Product Name'] && row['Style']).forEach(row => {
         const key = `${row['Style']}-${row['Size'] || row['SIZE']}`;
         if (!aggregatedData[key]) {
             aggregatedData[key] = {
