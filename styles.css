@@ -1,0 +1,42 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .file-drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .file-drop-area:hover,
+  .file-drop-area.dragover {
+    background-color: #f1f1f1;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  button {
+    background-color: #6200ea;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #3700b3;
+  }
+  

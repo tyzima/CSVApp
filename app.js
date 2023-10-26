@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
 function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Generating first CSV...";
@@ -55,9 +57,9 @@ function processCSV1(data) {
     });
 
     expandedData.sort((a, b) => {
-        return a['Product Name'].localeCompare(b['Product Name']) || 
-               (a['Size'] || '').localeCompare(b['Size'] || '') || 
-               (a['Player Number'] || '').localeCompare(b['Player Number'] || '');
+        return (a['Product Name'] || '').localeCompare(b['Product Name'] || '') || 
+               ((a['Size'] || '')).localeCompare(b['Size'] || '') || 
+               ((a['Player Number'] || '')).localeCompare(b['Player Number'] || '');
     });
 
     const csv = Papa.unparse(expandedData);
@@ -66,6 +68,7 @@ function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "First CSV generated.";
 }
+
 
 function processCSV2(data) {
     // Update the status
@@ -103,3 +106,47 @@ function downloadCSV(filename, csvData) {
     link.click();
     document.body.removeChild(link);
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileDropArea = document.querySelector('.file-drop-area');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, preventDefaults, false);
+    });
+  
+    ['dragenter', 'dragover'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, highlight, false);
+    });
+  
+    ['dragleave', 'drop'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, unhighlight, false);
+    });
+  
+    fileDropArea.addEventListener('drop', handleDrop, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  function highlight(e) {
+    const fileDropArea = document.querySelector('.file-drop-area');
+    fileDropArea.classList.add('dragover');
+  }
+  
+  function unhighlight(e) {
+    const fileDropArea = document.querySelector('.file-drop-area');
+    fileDropArea.classList.remove('dragover');
+  }
+  
+  function handleDrop(e) {
+    const fileInput = document.getElementById('csv-file');
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+  
+    document.getElementById('csv-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
+  }
+  
