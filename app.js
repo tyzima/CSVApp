@@ -62,7 +62,10 @@ function processCSV1(data) {
                String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
     });
 
+
     const csv = Papa.unparse(expandedData);
+    
+    console.log("Triggering CSV 1 download"); // Debugging line
     downloadCSV(`StoreName_itemized.csv`, csv);
 
     // Update the status
