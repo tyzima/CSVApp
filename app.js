@@ -116,12 +116,14 @@ function processCSV1(data) {
     // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'] && row['Style'])
                              .map(row => {
+    let lastName = row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'];
+    lastName = lastName.replace(/’/g, "'").toUpperCase();
         return {
             'Product Name': row['Product Name'],
             'Style': row['Style'],
             'Size': normalizeSize(row['Size'] || row['SIZE']),
             'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
-            'Last Name': (row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+            'Last Name': lastName,
             'Grad Year': row['Grad Year'],
             'Quantity': row['Quantity']
         };
