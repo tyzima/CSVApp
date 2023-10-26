@@ -39,4 +39,40 @@
   button:hover {
     background-color: #3700b3;
   }
+
+  /* Order summary */
+#order-summary{
+    transform:translatex(-508px) translatey(47px);
+    width:19%;
+    float:right;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:500;
+    font-size:21px;
+    text-align:center;
+    text-decoration:none;
+    text-transform:none;
+    box-shadow:0px 0px 10px 0px #adadad;
+    background-color:#27ae60 !important;
+   }
+   
+   /* Body */
+   body{
+    padding-top:64px;
+   }
+   
+   /* Status */
+   #status{
+    text-align:center;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+   }
+   
+   #csv-form button{
+    visibility:hidden;
+   }
+   
+   /* File Unknown area */
+   #csv-form .file-drop-area{
+    padding-bottom:78px;
+    padding-top:69px;
+   }
   
