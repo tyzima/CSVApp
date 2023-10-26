@@ -78,6 +78,7 @@ function normalizeSize(size) {
         'Men\'s Large': 'L', 'Mens Large': 'L',
         'Men\'s X-Large': 'XL', 'Mens X-Large': 'XL',
         'Men\'s 2X-Large': '2XL', 'Mens 2X-Large': '2XL',
+        'Men\'s 3X-Large': '3XL', 'Mens 3X-Large': '3XL',
         'Women\'s Small': 'S', 'Women\'s SM': 'S',
         'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M',
         'Women\'s Large': 'L', 'Women\'s LG': 'L',
