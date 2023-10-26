@@ -107,7 +107,7 @@ function processCSV1(data) {
             'Style': row['Style'],
             'Size': normalizeSize(row['Size'] || row['SIZE']),
             'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
-            'Player Last Name': row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'],
+            'Last Name': (row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)']).toUpperCase(),
             'Grad Year': row['Grad Year'],
             'Quantity': row['Quantity']
         };
