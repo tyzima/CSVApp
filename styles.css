@@ -72,7 +72,12 @@
    
    /* File Unknown area */
    #csv-form .file-drop-area{
-    padding-bottom:78px;
+    padding-bottom:69px;
     padding-top:69px;
    }
   
+   #csv-form .file-drop-area span{
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:600;
+   }
+   
