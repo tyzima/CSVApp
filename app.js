@@ -212,11 +212,14 @@ function processCSV2(data) {
 
     // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
    // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
-aggregatedArray.sort((a, b) => {
+   aggregatedArray.sort((a, b) => {
+    const styleA = String(a['Style'] || '');
+    const styleB = String(b['Style'] || '');
     return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
-           a['Style'].localeCompare(b['Style']) || 
+           styleA.localeCompare(styleB) || 
            customSizeSort(a['Size'], b['Size']);
 });
+
 
 
     // Convert the sorted array back to CSV
