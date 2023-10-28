@@ -77,7 +77,7 @@ function normalizeSize(size) {
         'Youth Small': 'YS', 'youth small': 'YS',
         'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM',
         'Youth Large': 'YL', 'Youth LG': 'YL', 'youth large': 'YL',
-        'Youth XL': 'YXL', 'youth extra large': 'YXL',
+        'Youth XL': 'YXL', 'youth extra large': 'YXL', 'Youth X-Large': 'YXL',
         'Youth SM': 'YS',
         'Adult Small': 'S', 'adult small': 'S',
         'Adult Medium': 'M', 'adult medium': 'M',
