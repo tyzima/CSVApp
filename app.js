@@ -124,6 +124,8 @@ function processCSV1(data) {
             'Size': normalizeSize(row['Size'] || row['SIZE']),
             'Player Number': playerNumber,
             'Last Name': lastName,
+            'Player Last Name': row['Player Last Name'] || '',
+            'Billing Email': row['Billing Email'] || '',
             'Grad Year': row['Grad Year'],
             'Quantity': row['Quantity']
         };
