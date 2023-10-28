@@ -201,7 +201,7 @@ function processCSV2(data) {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'],
                 'Size': normalizedSize,
-                'Goalie Throat Guard': goalieThroatGuard === 'YES' ? 'YES' : '',
+                'Goalie Throat Guard': goalieThroatGuard === 'Yes' ? 'Yes' : '',
                 'Aggregated Quantity': 0
             };
         }
