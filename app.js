@@ -151,11 +151,11 @@ function processCSV1(data) {
 
     // Sort data
   // Sort data
-expandedData.sort((a, b) => {
+  expandedData.sort((a, b) => {
     return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
            String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
            customSizeSort(a['Size'] || '', b['Size'] || '') || 
-           String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+           (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
 });
 
 
