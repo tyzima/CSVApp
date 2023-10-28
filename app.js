@@ -149,12 +149,14 @@ function processCSV1(data) {
     }
 
     // Sort data
-    expandedData.sort((a, b) => {
-        return a['Goalie Throat Guard?'].localeCompare(b['Goalie Throat Guard?']) ||
-               String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
-               customSizeSort(a['Size'] || '', b['Size'] || '') || 
-               String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
-    });
+  // Sort data
+expandedData.sort((a, b) => {
+    return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
+           String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+           customSizeSort(a['Size'] || '', b['Size'] || '') || 
+           String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+});
+
 
     const csv = Papa.unparse(expandedData);
 
@@ -209,11 +211,13 @@ function processCSV2(data) {
     const aggregatedArray = Object.values(aggregatedData);
 
     // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
-    aggregatedArray.sort((a, b) => {
-        return a['Style'].localeCompare(b['Style']) || 
-               customSizeSort(a['Size'], b['Size']) || 
-               b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']);
-    });
+   // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
+aggregatedArray.sort((a, b) => {
+    return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
+           a['Style'].localeCompare(b['Style']) || 
+           customSizeSort(a['Size'], b['Size']);
+});
+
 
     // Convert the sorted array back to CSV
     const csv = Papa.unparse(aggregatedArray);
