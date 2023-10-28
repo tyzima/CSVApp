@@ -14,23 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryDiv.style.padding = '10px';
     document.body.appendChild(summaryDiv);
 
-    // Create a button for sending data to Salesforce
-    const salesforceButton = document.createElement('button');
-    salesforceButton.id = "salesforce-button";
-    salesforceButton.textContent = "Send to Salesforce";
-    salesforceButton.style.display = 'none';
-    salesforceButton.style.backgroundColor = '#00A1E0';
-    salesforceButton.style.color = 'white';
-    salesforceButton.style.border = 'none';
-    salesforceButton.style.padding = '10px 20px';
-    salesforceButton.style.borderRadius = '5px';
-    salesforceButton.style.cursor = 'pointer';
-    salesforceButton.style.position = 'absolute';
-    salesforceButton.style.left = '50%';
-    salesforceButton.style.transform = 'translateX(-50%)';
-    salesforceButton.style.bottom = '20%';
-    document.body.appendChild(salesforceButton);
-
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
@@ -51,22 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Debug: Papa.parse complete");
                 
                 // Call the first processing function and trigger its download
-                const showSalesforceButton1 = processCSV1(results.data);
+                processCSV1(results.data);
                 
                 // Add a delay of 2 seconds before calling the second processing function
                 setTimeout(() => {
-                    const showSalesforceButton2 = processCSV2(results.data);
+                    processCSV2(results.data);
 
                     // Calculate and display the order summary
                     const totalProducts = results.data
                     .filter(row => row['Quantity'] || row['Product Name'])  // Exclude empty or incomplete rows
                     .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
                     summaryDiv.style.display = 'block';  // Make the summary visible
-
-                    // Show Salesforce button if all products are in the ProductJSON file
-                    if (showSalesforceButton1 && showSalesforceButton2) {
-                        salesforceButton.style.display = 'block';
-                    }
 
                 }, 2000);
 
@@ -90,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementsByTagName('head')[0].appendChild(link);
 });
-
 
 // Function to normalize sizes
 function normalizeSize(size) {
@@ -131,14 +108,14 @@ function normalizeSize(size) {
 function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Generating Itemized CSV...";
-
+    
     // Store name for the filename
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
     // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'])
                              .map(row => {
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
         return {
             'Order ID': row['Order ID'] || '',
             'Billing Email': row['Billing Email'] || '',
@@ -172,12 +149,14 @@ function processCSV1(data) {
     }
 
     // Sort data
-    expandedData.sort((a, b) => {
-        return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
-               String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
-               customSizeSort(a['Size'] || '', b['Size'] || '') || 
-               String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
-    });
+  // Sort data
+expandedData.sort((a, b) => {
+    return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
+           String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+           customSizeSort(a['Size'] || '', b['Size'] || '') || 
+           String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
+});
+
 
     const csv = Papa.unparse(expandedData);
 
@@ -186,11 +165,9 @@ function processCSV1(data) {
 
     // Update the status
     document.getElementById('status').innerText = "Itemized CSV generated.";
-
-    // Check if any product requires a goalie throat guard
-    const showSalesforceButton = expandedData.some(row => row['Goalie Throat Guard?'] === 'Yes');
-    return showSalesforceButton;
 }
+
+
 
 function processCSV2(data) {
     // Update the status
@@ -204,7 +181,7 @@ function processCSV2(data) {
     // Filter rows and then aggregate
     data.filter(row => row['Product Name']).forEach(row => {
         const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '   ';
         const style = row['Style'] || 'UnknownStyle'; // Handle lines without a Style
         const key = `${style}-${normalizedSize}-${goalieThroatGuard}`;
 
@@ -230,15 +207,17 @@ function processCSV2(data) {
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
-    // Convert the aggregated data to an array
+    // Convert the aggregated data to an arrayy
     const aggregatedArray = Object.values(aggregatedData);
 
     // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
-    aggregatedArray.sort((a, b) => {
-        return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
-               a['Style'].localeCompare(b['Style']) || 
-               customSizeSort(a['Size'], b['Size']);
-    });
+   // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
+aggregatedArray.sort((a, b) => {
+    return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
+           a['Style'].localeCompare(b['Style']) || 
+           customSizeSort(a['Size'], b['Size']);
+});
+
 
     // Convert the sorted array back to CSV
     const csv = Papa.unparse(aggregatedArray);
@@ -249,6 +228,9 @@ function processCSV2(data) {
     // Update the status
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 }
+
+
+
 
 function downloadCSV(filename, csvData) {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
@@ -262,44 +244,46 @@ function downloadCSV(filename, csvData) {
     document.body.removeChild(link);
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const fileDropArea = document.querySelector('.file-drop-area');
-
+    
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       fileDropArea.addEventListener(eventName, preventDefaults, false);
     });
-
+  
     ['dragenter', 'dragover'].forEach(eventName => {
       fileDropArea.addEventListener(eventName, highlight, false);
     });
-
+  
     ['dragleave', 'drop'].forEach(eventName => {
       fileDropArea.addEventListener(eventName, unhighlight, false);
     });
-
+  
     fileDropArea.addEventListener('drop', handleDrop, false);
-});
-
-function preventDefaults(e) {
+  });
+  
+  function preventDefaults(e) {
     e.preventDefault();
     e.stopPropagation();
-}
-
-function highlight(e) {
+  }
+  
+  function highlight(e) {
     const fileDropArea = document.querySelector('.file-drop-area');
     fileDropArea.classList.add('dragover');
-}
-
-function unhighlight(e) {
+  }
+  
+  function unhighlight(e) {
     const fileDropArea = document.querySelector('.file-drop-area');
     fileDropArea.classList.remove('dragover');
-}
-
-function handleDrop(e) {
+  }
+  
+  function handleDrop(e) {
     const fileInput = document.getElementById('csv-file');
     const dt = e.dataTransfer;
     const files = dt.files;
     fileInput.files = files;
-
+  
     document.getElementById('csv-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
-}
+  }
+  
