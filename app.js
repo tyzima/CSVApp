@@ -495,14 +495,16 @@ aggregatedArray.sort((a, b) => {
 });
 
 
-    // Convert the sorted array back to CSV
-    const csv = Papa.unparse(aggregatedArray);
+const csv = Papa.unparse(aggregatedArray);
 
-    // Trigger download
-    downloadCSV(`${storeName}_Aggregated.csv`, csv);
+// Trigger download
+downloadCSV(`${storeName}_Aggregated.csv`, csv);
 
-    // Update the status
-    document.getElementById('status').innerText = "Aggregated CSV generated.";
+// Update the status
+document.getElementById('status').innerText = "Aggregated CSV generated.";
+
+// Return the aggregated data
+return aggregatedArray;
 }
 
 
