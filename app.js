@@ -117,6 +117,7 @@ function processCSV1(data) {
                              .map(row => {
         const lastName = (row['Player Last Name (ALL CAPS)'] || '').toUpperCase().replace(/’/g, "'");
         const playerNumber = row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '';
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS Pro') && row['Goalie Throat Guard?'] === 'YES' ? 'YES' : '';
         return {
             'Order ID': row['Order ID'] || '',
             'Product Name': row['Product Name'],
@@ -127,6 +128,7 @@ function processCSV1(data) {
             'Player Last Name': row['Player Last Name'] || '',
             'Billing Email': row['Billing Email'] || '',
             'Grad Year': row['Grad Year'],
+            'Goalie Throat Guard?': goalieThroatGuard,
             'Quantity': row['Quantity']
         };
     });
@@ -147,11 +149,11 @@ function processCSV1(data) {
         ];
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
-    
 
     // Sort data
     expandedData.sort((a, b) => {
-        return String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+        return (b['Goalie Throat Guard?'] || '').localeCompare(a['Goalie Throat Guard?'] || '') ||
+               String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
                customSizeSort(a['Size'] || '', b['Size'] || '') || 
                String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
     });
