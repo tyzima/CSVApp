@@ -287,3 +287,47 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('csv-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
   }
   
+
+  function generatePDF(data) {
+    // Create a new PDF document
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Filter data for personalizations
+    const personalizations = data.filter(row => row['Player Last Name'] || row['Player Number']);
+
+    // Group data by Product Name
+    const groupedData = personalizations.reduce((acc, row) => {
+        const productName = row['Product Name'];
+        if (!acc[productName]) {
+            acc[productName] = [];
+        }
+        acc[productName].push(row);
+        return acc;
+    }, {});
+
+    Object.keys(groupedData).forEach((productName, index) => {
+        if (index > 0) doc.addPage();
+        
+        const productData = groupedData[productName][0];
+        const assetURL = productData['Asset URL'];
+
+        // Add product image
+        // Note: You might need to convert the image to a Data URL or use a proxy to avoid CORS issues
+        doc.addImage(assetURL, 'JPEG', 10, 10, 50, 50);
+        
+        // Add product name
+        doc.setFontSize(16);
+        doc.text(productName, 150, 30, { align: 'right' });
+
+        // Add table of personalizations
+        doc.autoTable({
+            startY: 70,
+            head: [['Size', 'Player Last Name', 'Player Number']],
+            body: groupedData[productName].map(row => [row['Size'], row['Player Last Name'], row['Player Number']])
+        });
+    });
+
+    // Save the PDF
+    doc.save('Personalizations.pdf');
+}
