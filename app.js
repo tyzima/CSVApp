@@ -112,21 +112,28 @@ function processCSV1(data) {
     // Store name for the filename
     let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
 
+    let includeGoalieThroatGuard = false;
+
     // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'] && row['Style'])
                              .map(row => {
         const lastName = (row['Player Last Name (ALL CAPS)'] || '').toUpperCase().replace(/’/g, "'");
         const playerNumber = row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '';
         const goalieThroatGuard = row['Product Name'].includes('Cascade XRS Pro') && row['Goalie Throat Guard?'] === 'YES' ? 'YES' : '';
+        
+        if (goalieThroatGuard === 'YES') {
+            includeGoalieThroatGuard = true;
+        }
+
         return {
             'Order ID': row['Order ID'] || '',
+            'Billing Email': row['Billing Email'] || '',
+            'Player Last Name': row['Player Last Name'] || '',
             'Product Name': row['Product Name'],
             'Style': row['Style'],
             'Size': normalizeSize(row['Size'] || row['SIZE']),
             'Player Number': playerNumber,
             'Last Name': lastName,
-            'Player Last Name': row['Player Last Name'] || '',
-            'Billing Email': row['Billing Email'] || '',
             'Grad Year': row['Grad Year'],
             'Goalie Throat Guard?': goalieThroatGuard,
             'Quantity': row['Quantity']
@@ -158,7 +165,12 @@ function processCSV1(data) {
                String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
     });
 
-    const csv = Papa.unparse(expandedData);
+    const fields = ['Order ID', 'Billing Email', 'Player Last Name', 'Product Name', 'Style', 'Size', 'Player Number', 'Last Name', 'Grad Year', 'Quantity'];
+    if (includeGoalieThroatGuard) {
+        fields.splice(9, 0, 'Goalie Throat Guard?'); // Add 'Goalie Throat Guard?' before 'Quantity'
+    }
+
+    const csv = Papa.unparse(expandedData, { fields });
 
     // Download
     downloadCSV(`${storeName}_itemized.csv`, csv);
