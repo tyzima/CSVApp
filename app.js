@@ -118,6 +118,7 @@ function processCSV1(data) {
         const lastName = (row['Player Last Name (ALL CAPS)'] || '').toUpperCase().replace(/’/g, "'");
         const playerNumber = row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '';
         return {
+            'Order ID': row['Order ID'] || '',
             'Product Name': row['Product Name'],
             'Style': row['Style'],
             'Size': normalizeSize(row['Size'] || row['SIZE']),
