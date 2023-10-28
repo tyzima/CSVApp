@@ -580,7 +580,7 @@ async function checkAllProductsInSalesforce(aggregatedData) {
 
 async function loadProductData() {
     try {
-        const response = await fetch('/path/to/ProductJSON.json');
+        const response = await fetch('/ProductJSON.json');
         const data = await response.json();
         return data;
     } catch (error) {
