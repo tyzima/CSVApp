@@ -16,50 +16,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-    
+
         // Update the status
         document.getElementById('status').innerText = "Loading...";
-    
+
         const fileInput = document.getElementById('csv-file');
         const file = fileInput.files[0];
-    
+
         // Update the status
-        document.getElementById('status').innerText = "Validating data...";
-    
+        document.getElementById('status').innerText = "Processing CSV...";
+
         Papa.parse(file, {
             header: true,
             dynamicTyping: true,
             complete: function(results) {
-                const invalidEntries = results.data.filter(row => {
-                    const playerNumber = row['Player Number'];
-                    return playerNumber && !/^\d+$/.test(playerNumber);
-                });
-    
-                if (invalidEntries.length > 0) {
-                    const invalidOrder = invalidEntries[0];
-                    document.getElementById('status').innerText = `Error in Order ID: ${invalidOrder['Order ID']} - Player Number must be a number.`;
-                    return;
-                }
-    
-                // If validation passes, continue processing
-                document.getElementById('status').innerText = "Processing CSV...";
-    
+                // Debug: Check if Papa.parse is complete
+                console.log("Debug: Papa.parse complete");
+                
                 // Call the first processing function and trigger its download
                 processCSV1(results.data);
-    
+                
                 // Add a delay of 2 seconds before calling the second processing function
                 setTimeout(() => {
                     processCSV2(results.data);
-    
+
                     // Calculate and display the order summary
                     const totalProducts = results.data
-                    .filter(row => row['Quantity'] && row['Product Name'])  // Exclude empty or incomplete rows
-                    .reduce((acc, row) => acc + row['Quantity'], 0);
-    
-                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
+                    .filter(row => row['Quantity'] || row['Product Name'])  // Exclude empty or incomplete rows
+                    .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
                     summaryDiv.style.display = 'block';  // Make the summary visible
+
                 }, 2000);
-    
+
                 // Update the status
                 document.getElementById('status').innerText = "Processing complete. Check your downloads.";
             }
