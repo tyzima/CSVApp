@@ -110,23 +110,24 @@ function processCSV1(data) {
     document.getElementById('status').innerText = "Generating Itemized CSV...";
     
     // Store name for the filename
-    let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
+    let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
     // Filter and map the data
-    const filteredData = data.filter(row => row['Product Name']) // Adjusted filter condition
+    const filteredData = data.filter(row => row['Product Name'])
                              .map(row => {
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
         return {
             'Order ID': row['Order ID'] || '',
             'Billing Email': row['Billing Email'] || '',
             'Player Last Name': row['Player Last Name'] || '',
             'Product Name': row['Product Name'],
-            'Style': row['Style'] || '', // Default to empty string if no style
+            'Style': row['Style'] || 'UnknownStyle',
             'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-            'Player Number': row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '',
+            'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '',
             'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
             'Grad Year': row['Grad Year'] || '',
             'Quantity': row['Quantity'] || 1,
-            'Goalie Throat Guard?': row['Product Name'].toLowerCase().includes('Cascade XRS') && row['Goalie Throat Guard?'].toLowerCase() === 'Yes' ? 'Yes' : ''
+            'Goalie Throat Guard?': goalieThroatGuard
         };
     });
 
@@ -147,15 +148,9 @@ function processCSV1(data) {
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
-    function goalieThroatGuardSort(a, b) {
-        if (a === 'Yes' && b === 'No') return -1;
-        if (a === 'No' && b === 'Yes') return 1;
-        return 0;
-    }
-
     // Sort data
     expandedData.sort((a, b) => {
-        return goalieThroatGuardSort(a['Goalie Throat Guard?'], b['Goalie Throat Guard?']) ||
+        return a['Goalie Throat Guard?'].localeCompare(b['Goalie Throat Guard?']) ||
                String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
                customSizeSort(a['Size'] || '', b['Size'] || '') || 
                String(a['Player Number'] || '').localeCompare(String(b['Player Number'] || ''));
@@ -182,10 +177,10 @@ function processCSV2(data) {
     const aggregatedData = {};
 
     // Filter rows and then aggregate
-    data.filter(row => row['Product Name']).forEach(row => { // Adjusted filter condition
-        const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || ''); // Default to empty string if no size
-        const goalieThroatGuard = row['Product Name'].toLowerCase().includes('Cascade XRS') && row['Goalie Throat Guard?'].toLowerCase() === 'Yes' ? 'Yes' : 'No';
-        const style = row['Style'] || ''; // Default to empty string if no style
+    data.filter(row => row['Product Name']).forEach(row => {
+        const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
+        const style = row['Style'] || 'UnknownStyle'; // Handle lines without a Style
         const key = `${style}-${normalizedSize}-${goalieThroatGuard}`;
 
         if (!aggregatedData[key]) {
@@ -229,6 +224,7 @@ function processCSV2(data) {
     // Update the status
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 }
+
 
 
 
