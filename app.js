@@ -119,7 +119,7 @@ function processCSV1(data) {
                              .map(row => {
         const lastName = (row['Player Last Name (ALL CAPS)'] || '').toUpperCase().replace(/’/g, "'");
         const playerNumber = row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '';
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS Pro') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '';
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '';
         
         if (goalieThroatGuard === 'Yes') {
             includeGoalieThroatGuard = true;
@@ -193,7 +193,7 @@ function processCSV2(data) {
     // Filter rows and then aggregate
     data.filter(row => row['Product Name'] && row['Style']).forEach(row => {
         const normalizedSize = normalizeSize(row['Size'] || row['SIZE']);
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS Pro') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : 'No';
         const key = `${row['Style']}-${normalizedSize}-${goalieThroatGuard}`;
 
         if (!aggregatedData[key]) {
