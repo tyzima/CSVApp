@@ -142,11 +142,12 @@ function processCSV1(data) {
     function customSizeSort(a, b) {
         const sizeOrder = [
             'OSFA',
-            '5XL', '4XL', '3XL', '2XL', 'XL', 'L', 'M', 'S', 'XS',
+            '5XL', '4XL', '3XL', '2XL', 'XL', 'Extra Large (14")', 'L', 'Large (13")', 'M', 'Medium (12")', 'S', 'Small (10")', 'XS',
             'YXL', 'YL', 'YM', 'YS'
         ];
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
+    
 
     // Sort data
   // Sort data
@@ -210,7 +211,6 @@ function processCSV2(data) {
     // Convert the aggregated data to an arrayy
     const aggregatedArray = Object.values(aggregatedData);
 
-    // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
    // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
    aggregatedArray.sort((a, b) => {
     const styleA = String(a['Style'] || '');
