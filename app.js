@@ -193,17 +193,19 @@ function processCSV2(data) {
     // Filter rows and then aggregate
     data.filter(row => row['Product Name'] && row['Style']).forEach(row => {
         const normalizedSize = normalizeSize(row['Size'] || row['SIZE']);
-        const key = `${row['Style']}-${normalizedSize}`;
-        
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS Pro') && row['Goalie Throat Guard?'] === 'YES' ? 'YES' : 'NO';
+        const key = `${row['Style']}-${normalizedSize}-${goalieThroatGuard}`;
+
         if (!aggregatedData[key]) {
             aggregatedData[key] = {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'],
                 'Size': normalizedSize,
+                'Goalie Throat Guard': goalieThroatGuard === 'YES' ? 'YES' : '',
                 'Aggregated Quantity': 0
             };
         }
-        
+
         aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
     });
 
@@ -215,15 +217,15 @@ function processCSV2(data) {
         ];
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
-    
 
     // Convert the aggregated data to an array
     const aggregatedArray = Object.values(aggregatedData);
 
-    // Sort the array by 'Style' and then by 'Size'
+    // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
     aggregatedArray.sort((a, b) => {
         return a['Style'].localeCompare(b['Style']) || 
-               customSizeSort(a['Size'], b['Size']);
+               customSizeSort(a['Size'], b['Size']) || 
+               b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']);
     });
 
     // Convert the sorted array back to CSV
