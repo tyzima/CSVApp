@@ -114,22 +114,27 @@ function processCSV1(data) {
 
     // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'])
-                             .map(row => {
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
-        return {
-            'Order ID': row['Order ID'] || '',
-            'Billing Email': row['Billing Email'] || '',
-            'Player Last Name': row['Player Last Name'] || '',
-            'Product Name': row['Product Name'],
-            'Style': row['Style'] || 'UnknownStyle',
-            'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-            'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '',
-            'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
-            'Grad Year': row['Grad Year'] || '',
-            'Quantity': row['Quantity'] || 1,
-            'Goalie Throat Guard?': goalieThroatGuard
-        };
-    });
+    .map(row => {
+const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
+const playerNumber = [row['Player Number'], row['Player Number Input'], row['Player Number - Exclusive']]
+       .filter(Boolean)  // Remove any undefined or empty values
+       .join(', ');  // Join the remaining values with a comma and a space
+const invalidPlayerNumber = /[^0-9, ]/.test(playerNumber);  // Test if there are any non-digit characters (excluding commas and spaces)
+
+return {
+'Order ID': row['Order ID'] || '',
+'Billing Email': row['Billing Email'] || '',
+'Player Last Name': row['Player Last Name'] || '',
+'Product Name': row['Product Name'],
+'Style': row['Style'] || 'UnknownStyle',
+'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
+'Player Number': invalidPlayerNumber ? `Error in Order ID ${row['Order ID']}: Invalid Player Number` : playerNumber,
+'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+'Grad Year': row['Grad Year'] || '',
+'Quantity': row['Quantity'] || 1,
+'Goalie Throat Guard?': goalieThroatGuard
+};
+});
 
     const expandedData = [];
     filteredData.forEach(row => {
