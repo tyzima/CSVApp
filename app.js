@@ -207,7 +207,7 @@ function processCSV2(data) {
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
-    // Convert the aggregated data to an array
+    // Convert the aggregated data to an arrayy
     const aggregatedArray = Object.values(aggregatedData);
 
     // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
