@@ -105,7 +105,6 @@ function normalizeSize(size) {
 }
 
 
-// Function to process and create the first CSV
 function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Generating Itemized CSV...";
@@ -116,12 +115,14 @@ function processCSV1(data) {
     // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'] && row['Style'])
                              .map(row => {
+        const lastName = (row['Player Last Name (ALL CAPS)'] || '').toUpperCase().replace(/’/g, "'");
+        const playerNumber = row['Player Number (input)'] || row['Player Number Input'] || row['Player Number - Exclusive'] || '';
         return {
             'Product Name': row['Product Name'],
             'Style': row['Style'],
             'Size': normalizeSize(row['Size'] || row['SIZE']),
-            'Player Number': row['Player Number'] || row['Player Number Input'] || row['Player Number (Exclusive)'],
-            'Last Name': (row['Player Last Name'] || row['Last Name'] || row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+            'Player Number': playerNumber,
+            'Last Name': lastName,
             'Grad Year': row['Grad Year'],
             'Quantity': row['Quantity']
         };
@@ -160,6 +161,7 @@ function processCSV1(data) {
     // Update the status
     document.getElementById('status').innerText = "Itemized CSV generated.";
 }
+
 
 
 function processCSV2(data) {
