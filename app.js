@@ -312,22 +312,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const productData = groupedData[productName][0];
         const assetURL = productData['Asset URL'];
 
-        // Add product image
-        // Note: You might need to convert the image to a Data URL or use a proxy to avoid CORS issues
-        doc.addImage(assetURL, 'JPEG', 10, 10, 50, 50);
-        
-        // Add product name
-        doc.setFontSize(16);
-        doc.text(productName, 150, 30, { align: 'right' });
+        const img = new Image();
+        img.src = assetURL;
+        img.crossOrigin = "Anonymous";
+        img.onload = function () {
+            // Add product image
+            const imgWidth = 50; // width in mm
+            const imgHeight = (img.height * imgWidth) / img.width; // height in mm preserving aspect ratio
+            doc.addImage(img, 'JPEG', 10, 10, imgWidth, imgHeight);
 
-        // Add table of personalizations
-        doc.autoTable({
-            startY: 70,
-            head: [['Size', 'Player Last Name', 'Player Number']],
-            body: groupedData[productName].map(row => [row['Size'], row['Player Last Name'], row['Player Number']])
-        });
+            // Add product name
+            doc.setFontSize(16);
+            doc.text(productName, 150, 30, { align: 'right' });
+
+            // Add table of personalizations
+            doc.autoTable({
+                startY: 70,
+                head: [['Size', 'Player Last Name', 'Player Number']],
+                body: groupedData[productName].map(row => [row['Size'], row['Player Last Name'], row['Player Number']])
+            });
+
+            if (index === Object.keys(groupedData).length - 1) {
+                // Save the PDF after the last image is loaded
+                doc.save('Personalizations.pdf');
+            }
+        };
+
+        img.onerror = function () {
+            console.error('Image failed to load:', assetURL);
+        };
     });
-
-    // Save the PDF
-    doc.save('Personalizations.pdf');
 }
