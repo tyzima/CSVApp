@@ -16,21 +16,40 @@ body {
 
 .print-type-buttons {
     display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-}
-
-.print-type-button {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.print-type-button.active {
-    background-color: #007bff;
-    color: #fff;
-}
+    justify-content: space-between;
+    margin: 5px 0;
+  }
+  
+  .print-type-button {
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 12px; /* Adjust the font size as needed */
+    text-align: center;
+  }
+  
+  .asset {
+    /* ... existing styles ... */
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  
+  .asset img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .additional-options {
+    width: 100%; /* Make the dropdown take the full width of the container */
+    font-size: 12px; /* Adjust the font size as needed */
+    margin: 5px 0;
+  }
+  
+  .notes {
+    width: 100%; /* Make the input take the full width of the container */
+    font-size: 12px; /* Adjust the font size as needed */
+  }
+  
 
 h1 {
     font-size: 2em;
@@ -68,6 +87,7 @@ h1 {
     margin: 10px;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 
