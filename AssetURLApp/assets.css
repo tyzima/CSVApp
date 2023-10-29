@@ -103,6 +103,10 @@ h3 {
     box-sizing: border-box;
 }
 
+.csv-file {
+    display: hidden;
+}
+
 .quantity-indicator {
     position: absolute;
     bottom: 0;
