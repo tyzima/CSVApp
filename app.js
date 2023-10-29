@@ -353,55 +353,45 @@ async function sendToSalesforce(aggregatedData) {
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     sendToSalesforceButton.innerText = 'Sending to Salesforce...'; // Change button text to indicate progress
     sendToSalesforceButton.disabled = true; // Disable button to prevent multiple clicks
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
+
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/';
     try {
-        const productJSON = await getProductJSON(); // Fetch ProductJSON.json
-
-        // Extract 'Store Name' from the first item in aggregatedData
-        const firstItem = Object.values(aggregatedData)[0];
-        const storeName = firstItem && firstItem['Store Name'] ? firstItem['Store Name'] : 'Unknown';
-        const projectCode = 'PROJ' + storeName.substring(0, 5);
-
-        // Create an array to hold all the items
-        const items = [];
-
-        // Iterate through the aggregated data and create items
-        for (const item of Object.values(aggregatedData)) {
+        const productJSON = await getProductJSON();
+        const storeCode = aggregatedData.length > 0 ? aggregatedData[0]['Store Code'] : ''; // Assuming 'Store Code' is in the CSV
+        const records = Object.values(aggregatedData).map(item => {
             const productCode = item['Style-Size'];
             const quantityAggregated = item['Aggregated Quantity'];
             const product = productJSON.find(p => p['Product Code'] === productCode);
             const charID = product ? product['18CharID'] : '';
-
-            const payload = {
+            return {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
                 '18CharID': charID,
-                'Project Code': projectCode // Add the project code to the payload
+                'Store Code': storeCode
             };
+        });
 
-            items.push(payload);
-        }
+        const payload = {
+            records
+        };
 
-        // Send all items in a single request
         try {
             const response = await fetch(zapierWebhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ items }), // Send the items array
-                mode: 'no-cors', // Add this if you are not interested in the response
+                mode: 'no-cors', // Required for CORS issues
+                body: JSON.stringify(payload),
             });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                console.log('Success:', responseData);
-            }
+            console.log('Data sent to Zapier');
         } catch (error) {
             console.error('Error sending data to Zapier:', error);
         }
-
     } catch (error) {
         console.error('Error processing data for Zapier:', error);
     }
+    
+    // After the data has been sent to Salesforce
+    sendToSalesforceButton.innerText = 'Sent to Salesforce'; // Change button text to indicate completion
 }
