@@ -80,24 +80,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const assetDiv = document.createElement('div');
             assetDiv.className = 'asset';
             assetDiv.innerHTML = `
-            <div class="image-container">
-            <img src="${asset.assetURL}" alt="${key}" />
-            <div class="quantity-indicator ${asset.quantity < 6 ? 'low-quantity' : ''}">
-                ${asset.quantity}
-            </div>
-        </div>
-        <div class="controls">
-            <button class="print-type-button" data-value="Scrn" onclick="updatePrintType('${key}', 'Scrn')">Scrn</button>
-            <button class="print-type-button" data-value="Emb" onclick="updatePrintType('${key}', 'Emb')">Emb</button>
-            <button class="print-type-button" data-value="Heat" onclick="updatePrintType('${key}', 'Heat')">Heat</button>
-            <button class="print-type-button" data-value="X" onclick="updatePrintType('${key}', 'X')">X</button>
-        </div>
-        <select class="additional-options">
-            <option value="">Select Option</option>
-            <option value="+ Number">+ Number</option>
-            <option value="+ Name">+ Name</option>
-        </select>
-        <input type="text" class="notes" placeholder="Notes" />
+                <div class="image-container">
+                    <img src="${asset.assetURL}" alt="${key}" />
+                </div>
+                <div class="print-type-buttons">
+                    <button data-value="Scrn" class="print-type-button active">Scrn</button>
+                    <button data-value="Emb" class="print-type-button">Emb</button>
+                    <button data-value="Heat" class="print-type-button">Heat</button>
+                    <button data-value="" class="print-type-button">X</button>
+                </div>
+                <h3>+PlayeriD?</h3>
+                <select class="additional-options">
+                    <option value="" selected> </option>
+                    <option value="Add Number">+ Number</option>
+                    <option value="Add Name">+ Name</option>
+                    <option value="Add Name + Number">+ Name and Number</option>
+                </select>
+                <input type="text" class="notes" placeholder="Notes" />
             `;
             assetsContainer.appendChild(assetDiv);
         });
