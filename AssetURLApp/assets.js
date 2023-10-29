@@ -213,7 +213,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+        fileDropArea.classList.add('highlight');
+    }
+
+    function unhighlight(e) {
+        fileDropArea.classList.remove('highlight');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        fileInput.files = dt.files;
+        processFile(file);
+    }
+
+
     generateDropdowns();
+    fetchAndPopulateLogos();
 
     function generateDropdowns() {
         const logoContainer = document.getElementById('logo-dropdowns');
@@ -241,29 +265,20 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
         colorContainer.innerHTML = colorDropdowns;
     }
-    
 
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    async function fetchAndPopulateLogos() {
+        try {
+            const response = await fetch('https://www.lax.ink/Logos/logos.json');
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const logos = await response.json();
+            const logoDropdowns = document.querySelectorAll('.logo-dropdown');
+            logoDropdowns.forEach(dropdown => {
+                // Initialize your logo dropdown here
+                // Example: $(dropdown).selectize({ ... });
+            });
+        } catch (error) {
+            console.error('Error fetching logos:', error);
+        }
     }
-
-    function highlight(e) {
-        fileDropArea.classList.add('highlight');
-    }
-
-    function unhighlight(e) {
-        fileDropArea.classList.remove('highlight');
-    }
-
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const file = dt.files[0];
-        fileInput.files = dt.files;
-        processFile(file);
-    }
-
-
-
 });
