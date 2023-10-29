@@ -45,12 +45,28 @@ h1 {
 
 .asset {
     width: 15%;
-    background: #fff;
     border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 10px;
     padding: 10px;
-    margin: 10px 0;
-    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.image-container {
+    width: 100%; /* Make the image container fill the width of the asset container */
+    height: 0; /* Initial height to 0 */
+    padding-bottom: 100%; /* This creates a square aspect ratio */
+    position: relative; /* Set the position to relative for absolute positioning of the image */
+}
+
+.image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image covers the container while maintaining its aspect ratio */
 }
 
 .asset img {

@@ -74,7 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const assetDiv = document.createElement('div');
             assetDiv.className = 'asset';
             assetDiv.innerHTML = `
-                <img src="${asset.assetURL}" alt="${key}" />
+                <div class="image-container">
+                    <img src="${asset.assetURL}" alt="${key}" />
+                </div>
                 <select class="print-type">
                     <option value="Screenprint">Screenprint</option>
                     <option value="HeatSeal / DTF">HeatSeal / DTF</option>
