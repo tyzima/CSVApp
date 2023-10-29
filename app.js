@@ -112,15 +112,9 @@ function processCSV1(data) {
     // Store name for the filename
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-    // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'])
     .map(row => {
 const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
-const playerNumber = [row['Player Number'], row['Player Number Input'], row['Player Number - Exclusive']]
-       .filter(Boolean)  // Remove any undefined or empty values
-       .join(', ');  // Join the remaining values with a comma and a space
-const invalidPlayerNumber = /[^0-9, ]/.test(playerNumber);  // Test if there are any non-digit characters (excluding commas and spaces)
-
 return {
 'Order ID': row['Order ID'] || '',
 'Billing Email': row['Billing Email'] || '',
@@ -128,13 +122,14 @@ return {
 'Product Name': row['Product Name'],
 'Style': row['Style'] || 'UnknownStyle',
 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-'Player Number': invalidPlayerNumber ? `Error in Order ID ${row['Order ID']}: Invalid Player Number` : playerNumber,
+'Player Number': row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '',
 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
 'Grad Year': row['Grad Year'] || '',
 'Quantity': row['Quantity'] || 1,
 'Goalie Throat Guard?': goalieThroatGuard
 };
 });
+
 
     const expandedData = [];
     filteredData.forEach(row => {
