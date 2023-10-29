@@ -181,13 +181,15 @@ function processCSV1(data) {
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     // Update the status
-    if (playerNumberErrorFound) {
-        statusElement.innerText = "Player Number Errors found";
-        statusElement.style.color = 'red';
-    } else {
-        statusElement.innerText = "Itemized CSV generated.";
-        statusElement.style.color = 'black'; // Reset to default color if needed
-    }
+ // Update the status
+if (playerNumberErrorFound) {
+    statusElement.innerText = "Player Number Errors found";
+    statusElement.style.color = 'red';
+} else {
+    statusElement.innerText = "Itemized CSV generated.";
+    statusElement.style.color = 'black'; // Reset to default color if needed
+}
+
 }
 
 
