@@ -378,25 +378,21 @@ async function sendToSalesforce(aggregatedData) {
             };
             
             try {
-                // Send the payload to the Zapier webhook
-                const response = await fetch(zapierWebhookUrl, {
+                // Using no-cors mode to bypass CORS policy
+                await fetch(zapierWebhookUrl, {
                     method: 'POST',
+                    mode: 'no-cors', // Add this line to use no-cors mode
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload),
                 });
-                
-                // Parse the response from Zapier
-                const responseData = await response.json();
-                console.log('Success:', responseData);
+                console.log('Data sent to Zapier');
             } catch (error) {
-                // Log any errors that occurred while sending data to Zapier
                 console.error('Error sending data to Zapier:', error);
             }
         }
     } catch (error) {
-        // Log any errors that occurred while processing data for Zapier
         console.error('Error processing data for Zapier:', error);
     }
 }
