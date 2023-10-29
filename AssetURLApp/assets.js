@@ -89,8 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button data-value="Heat" class="print-type-button">Heat</button>
                     <button data-value="" class="print-type-button">X</button>
                 </div>
+                <h3>+PlayeriD?</h3>
                 <select class="additional-options">
-                    <option value="" selected>+ Player iD</option>
+                    <option value="" selected> </option>
                     <option value="+ Number">+ Number</option>
                     <option value="+ Name">+ Name</option>
                     <option value="+ Name and Number">+ Name</option>
