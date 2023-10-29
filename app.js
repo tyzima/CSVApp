@@ -44,12 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Show send to Salesforce button and attach click event
                         sendToSalesforceButton.style.display = 'block';
-                        sendToSalesforceButton.onclick = () => {
-                            sendToSalesforceButton.disabled = true; // Disable the button
-                            sendToSalesforce(aggregatedData).finally(() => {
-                                sendToSalesforceButton.disabled = false; // Re-enable the button once sendToSalesforce is done
-                            });
-                        };
+                        sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
                     }, 2000);
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
@@ -60,17 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-function debounce(func, delay) {
-    let inDebounce;
-    return function() {
-      const context = this;
-      const args = arguments;
-      clearTimeout(inDebounce);
-      inDebounce = setTimeout(() => func.apply(context, args), delay);
-    }
-  }
-  
 
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
