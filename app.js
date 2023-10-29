@@ -71,16 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
-    notificationBar.innerHTML = `🛑 ${message} 🛑`;
+    notificationBar.innerHTML = `🛑 ${message.toUpperCase()} 🛑`;  // Convert message to uppercase
     notificationBar.style.position = 'fixed';
     notificationBar.style.top = '0';
     notificationBar.style.left = '0';
     notificationBar.style.width = '100%';
     notificationBar.style.textAlign = 'center';
     notificationBar.style.padding = '10px';
-    notificationBar.style.backgroundColor = isError ? 'red' : 'green';
+    notificationBar.style.background = isError ? 'linear-gradient(to right, #ff9999, #cc0000)' : 'linear-gradient(to right, lightgreen, darkgreen)';  // Gradient background
     notificationBar.style.color = 'white';
-    notificationBar.style.fontSize = '18px';
+    notificationBar.style.fontWeight = 'bold';  // Bold font
+    notificationBar.style.fontSize = '16px';  // Adjusted font size
     notificationBar.style.zIndex = '1000';
     document.body.appendChild(notificationBar);
 }
