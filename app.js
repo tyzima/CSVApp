@@ -86,6 +86,8 @@ function showNotification(message, isError) {
     document.body.appendChild(notificationBar);
 }
 
+const errorSound = new Audio('stop.mp3');
+
 
 // Function to normalize sizes
 function normalizeSize(size) {
@@ -204,6 +206,7 @@ if (playerNumberErrorFound) {
     statusElement.innerText = "Player Number Errors found";
     statusElement.style.color = 'red';
     showNotification("Player Number Error Found", true);
+    errorSound.play();  // Play the sound
 } else {
     statusElement.innerText = "Itemized CSV generated.";
     statusElement.style.color = 'black'; // Reset to default color if needed
