@@ -1,23 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Create the audio object to play the error sound
     const errorSound = new Audio('stop.mp3');
-
     const form = document.getElementById('csv-form');
-    const statusDiv = document.createElement('div');
-    statusDiv.id = "status";
-    document.body.appendChild(statusDiv);
-
-    // Create a div for the order summary
-    const summaryDiv = document.createElement('div');
-    summaryDiv.id = "order-summary";
-    summaryDiv.style.display = 'none';
-    summaryDiv.style.backgroundColor = 'green';
-    summaryDiv.style.color = 'white';
-    summaryDiv.style.borderRadius = '12px';
-    summaryDiv.style.padding = '10px';
-    document.body.appendChild(summaryDiv);
-
+    const statusDiv = document.getElementById('status');
+    const summaryDiv = document.getElementById('order-summary');
+    const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     const fileDropArea = document.querySelector('.file-drop-area');
+
     if (fileDropArea) {
         // Unlock audio context on user interaction with the file drop area
         fileDropArea.addEventListener('dragover', () => {
@@ -32,62 +20,36 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Element with class "file-drop-area" not found');
     }
 
-
     if (form) {
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-
-            // Update the status
-            document.getElementById('status').innerText = "Loading...";
-
+            statusDiv.innerText = "Loading...";
             const fileInput = document.getElementById('csv-file');
             const file = fileInput.files[0];
-
-            // Update the status
-            document.getElementById('status').innerText = "Processing CSV...";
+            statusDiv.innerText = "Processing CSV...";
 
             Papa.parse(file, {
                 header: true,
                 dynamicTyping: true,
-                complete: function(results) {
-                    // Debug: Check if Papa.parse is complete
+                complete: function (results) {
                     console.log("Debug: Papa.parse complete");
-                    
-                    // Call the first processing function and trigger its download
                     processCSV1(results.data);
-                    
-                    // Add a delay of 2 seconds before calling the second processing function
                     setTimeout(() => {
-                        processCSV2(results.data);
-
-                        // Calculate and display the order summary
+                        const aggregatedData = processCSV2(results.data);
                         const totalProducts = results.data
-                        .filter(row => row['Quantity'] || row['Product Name'])  // Exclude empty or incomplete rows
-                        .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
+                            .filter(row => row['Quantity'] || row['Product Name'])  
+                            .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
                         summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
-                        summaryDiv.style.display = 'block';  // Make the summary visible
+                        summaryDiv.style.display = 'block';
 
+                        // Show send to Salesforce button and attach click event
+                        sendToSalesforceButton.style.display = 'block';
+                        sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
                     }, 2000);
-
-                    // Update the status
-                    document.getElementById('status').innerText = "Processing complete. Check your downloads.";
+                    statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
             });
         });
-
-        const canvas = document.createElement('canvas');
-        canvas.height = 64;
-        canvas.width = 64;
-        const ctx = canvas.getContext('2d');
-        ctx.font = '64px serif';
-        ctx.fillText('🧼', 0, 64);
-        
-        const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        link.href = canvas.toDataURL("image/x-icon");
-        
-        document.getElementsByTagName('head')[0].appendChild(link);
     } else {
         console.error('Form with ID "csv-form" not found');
     }
@@ -129,7 +91,6 @@ function showNotification(message, isError) {
 }
 
 const errorSound = new Audio('stop.mp3');
-
 
 // Function to normalize sizes
 function normalizeSize(size) {
@@ -316,9 +277,9 @@ function processCSV2(data) {
 
     // Update the status
     document.getElementById('status').innerText = "Aggregated CSV generated.";
+
+    return aggregatedData;
 }
-
-
 
 function downloadCSV(filename, csvData) {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
@@ -374,4 +335,38 @@ document.addEventListener('DOMContentLoaded', () => {
   
     document.getElementById('csv-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
   }
-  
+
+async function sendToSalesforce(aggregatedData) {
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/123456/abcdef/'; // Replace with your actual Zapier webhook URL
+    try {
+        const productJSON = await getProductJSON(); // Assume this function is defined elsewhere to fetch ProductJSON.json
+        for (const item of Object.values(aggregatedData)) {
+            const productCode = item['Style-Size'];
+            const quantityAggregated = item['Aggregated Quantity'];
+            const product = productJSON.find(p => p['Product Code'] === productCode);
+            const charID = product ? product['18CharID'] : '';
+
+            const payload = {
+                'Style-Size': productCode,
+                'Quantity Aggregated': quantityAggregated,
+                '18CharID': charID
+            };
+
+            try {
+                const response = await fetch(zapierWebhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const responseData = await response.json();
+                console.log('Success:', responseData);
+            } catch (error) {
+                console.error('Error sending data to Zapier:', error);
+            }
+        }
+    } catch (error) {
+        console.error('Error processing data for Zapier:', error);
+    }
+}
