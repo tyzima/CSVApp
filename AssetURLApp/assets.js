@@ -21,6 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sendData(data);
     });
 
+    assetsContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('print-type-button')) {
+            const buttons = event.target.parentElement.querySelectorAll('.print-type-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    });
+
     // Drag and Drop functionality
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       fileDropArea.addEventListener(eventName, preventDefaults, false);
@@ -59,9 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     assetURL: assetURL,
                     saleCode: saleCode,
                     notes: '',
-                    printType: 'Screenprint',
-                    colors: [], // Array to store colors
-                    logoNumbers: [] // Array to store logo numbers
+                    printType: 'Scrn'
                 };
             }
         });
@@ -77,11 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="image-container">
                     <img src="${asset.assetURL}" alt="${key}" />
                 </div>
-                <select class="print-type">
-                    <option value="Screenprint">Screenprint</option>
-                    <option value="HeatSeal / DTF">HeatSeal / DTF</option>
-                    <option value="Embroidery">Embroidery</option>
-                    <option value="Sublimated/NoArtNeeded">Sublimated/NoArtNeeded</option>
+                <div class="print-type-buttons">
+                    <button data-value="Scrn" class="print-type-button active">Scrn</button>
+                    <button data-value="Emb" class="print-type-button">Emb</button>
+                    <button data-value="Heat" class="print-type-button">Heat</button>
+                    <button data-value="" class="print-type-button">X</button>
+                </div>
+                <select class="additional-options">
+                    <option value="" selected>Choose an option</option>
+                    <option value="+ Number">+ Number</option>
+                    <option value="+ Name">+ Name</option>
                 </select>
                 <input type="text" class="notes" placeholder="Notes" />
             `;
@@ -93,15 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const assetDivs = document.querySelectorAll('.asset');
         const data = {
             assets: [],
-            saleCode: saleCode,
-            colors: [], // Array to store colors
-            logoNumbers: [] // Array to store logo numbers
+            saleCode: saleCode
         };
         assetDivs.forEach(div => {
             const assetURL = div.querySelector('img').src;
-            const printType = div.querySelector('.print-type').value;
+            const printTypeButton = div.querySelector('.print-type-button.active');
+            const printType = printTypeButton ? printTypeButton.dataset.value : 'Scrn'; // Default to 'Scrn' if none selected
+            const additionalOptions = div.querySelector('.additional-options').value;
             const notes = div.querySelector('.notes').value;
-            data.assets.push({ assetURL, printType, notes });
+            data.assets.push({ assetURL, printType, additionalOptions, notes });
         });
         return data;
     }
