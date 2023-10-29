@@ -8,13 +8,16 @@
     <link rel="stylesheet" href="assets.css">
 </head>
 <body>
-    <h1>Assets Manager</h1>
-    <form id="assets-form">
-        <input type="file" id="csv-file" accept=".csv" required>
-        <button type="submit">Process CSV</button>
-    </form>
-    <div id="assets-container"></div>
-    <button id="send-data" style="display:none;">Send Data</button>
+    <div class="app-container">
+        <h1>Assets Manager</h1>
+        <form id="assets-form" class="file-drop-area">
+            <input type="file" id="csv-file" accept=".csv" required>
+            <span class="drop-instruction">Drop your file here or click to upload.</span>
+            <button type="submit">Process CSV</button>
+        </form>
+        <div id="assets-container"></div>
+        <button id="send-data" style="display:none;">Send Data</button>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="assets.js"></script>

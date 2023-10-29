@@ -2,24 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('assets-form');
     const assetsContainer = document.getElementById('assets-container');
     const sendDataButton = document.getElementById('send-data');
+    const fileDropArea = document.querySelector('.file-drop-area');
+    const fileInput = document.getElementById('csv-file');
 
     let aggregatedAssets = {};
     let saleCode = '';
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const fileInput = document.getElementById('csv-file');
         const file = fileInput.files[0];
         if (file) {
-            Papa.parse(file, {
-                header: true,
-                dynamicTyping: true,
-                complete: function (results) {
-                    processCSV(results.data);
-                    generateAssetModule();
-                    sendDataButton.style.display = 'block';
-                }
-            });
+            processFile(file);
         }
     });
 
@@ -27,6 +20,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = prepareDataForSending();
         sendData(data);
     });
+
+    // Drag and Drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      fileDropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    fileDropArea.addEventListener('drop', handleDrop, false);
+
+    function processFile(file) {
+        Papa.parse(file, {
+            header: true,
+            dynamicTyping: true,
+            complete: function (results) {
+                processCSV(results.data);
+                generateAssetModule();
+                sendDataButton.style.display = 'block';
+            }
+        });
+    }
 
     function processCSV(data) {
         aggregatedAssets = {};
@@ -102,5 +122,25 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error sending data:', error);
             alert('Error sending data');
         }
+    }
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+        fileDropArea.classList.add('highlight');
+    }
+
+    function unhighlight(e) {
+        fileDropArea.classList.remove('highlight');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        fileInput.files = dt.files;
+        processFile(file);
     }
 });
