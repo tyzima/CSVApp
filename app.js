@@ -69,6 +69,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementsByTagName('head')[0].appendChild(link);
 });
 
+function showNotification(message, isError) {
+    const notificationBar = document.createElement('div');
+    notificationBar.innerHTML = `🛑 ${message} 🛑`;
+    notificationBar.style.position = 'fixed';
+    notificationBar.style.top = '0';
+    notificationBar.style.left = '0';
+    notificationBar.style.width = '100%';
+    notificationBar.style.textAlign = 'center';
+    notificationBar.style.padding = '10px';
+    notificationBar.style.backgroundColor = isError ? 'red' : 'green';
+    notificationBar.style.color = 'white';
+    notificationBar.style.fontSize = '18px';
+    notificationBar.style.zIndex = '1000';
+    document.body.appendChild(notificationBar);
+}
+
+
 // Function to normalize sizes
 function normalizeSize(size) {
     const sizeMap = {
@@ -189,6 +206,17 @@ if (playerNumberErrorFound) {
     statusElement.innerText = "Itemized CSV generated.";
     statusElement.style.color = 'black'; // Reset to default color if needed
 }
+
+// Update the status and show notification if needed
+if (playerNumberErrorFound) {
+    statusElement.innerText = "Player Number Errors found";
+    statusElement.style.color = 'red';
+    showNotification("Player Number Error Found", true);
+} else {
+    statusElement.innerText = "Itemized CSV generated.";
+    statusElement.style.color = 'black'; // Reset to default color if needed
+}
+
 
 }
 
