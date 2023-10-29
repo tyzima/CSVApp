@@ -90,9 +90,9 @@
 #send-to-salesforce {
   background-color:#ecf0f1 !important;
   color:#7f8c8d !important;
-  padding: 5px 10px;
+  padding: 5px 5px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   margin-top: 10px;
   text-align: center;
