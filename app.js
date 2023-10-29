@@ -112,24 +112,32 @@ function processCSV1(data) {
     // Store name for the filename
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-    const filteredData = data.filter(row => row['Product Name'])
-    .map(row => {
-const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
-return {
-'Order ID': row['Order ID'] || '',
-'Billing Email': row['Billing Email'] || '',
-'Player Last Name': row['Player Last Name'] || '',
-'Product Name': row['Product Name'],
-'Style': row['Style'] || 'UnknownStyle',
-'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-'Player Number': row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '',
-'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
-'Grad Year': row['Grad Year'] || '',
-'Quantity': row['Quantity'] || 1,
-'Goalie Throat Guard?': goalieThroatGuard
-};
-});
+    let playerNumberErrorFound = false;
 
+    const filteredData = data.filter(row => row['Product Name'])
+                             .map(row => {
+        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
+        const playerNumber = row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '';
+        
+        // Check if the 'Player Number' is valid
+        if (!isValidPlayerNumber(playerNumber)) {
+            playerNumberErrorFound = true;
+        }
+
+        return {
+            'Order ID': row['Order ID'] || '',
+            'Billing Email': row['Billing Email'] || '',
+            'Player Last Name': row['Player Last Name'] || '',
+            'Product Name': row['Product Name'],
+            'Style': row['Style'] || 'UnknownStyle',
+            'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
+            'Player Number': playerNumber,
+            'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+            'Grad Year': row['Grad Year'] || '',
+            'Quantity': row['Quantity'] || 1,
+            'Goalie Throat Guard?': goalieThroatGuard
+        };
+    });
 
     const expandedData = [];
     filteredData.forEach(row => {
@@ -147,17 +155,14 @@ return {
         ];
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
-    
 
     // Sort data
-  // Sort data
-  expandedData.sort((a, b) => {
-    return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
-           String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
-           customSizeSort(a['Size'] || '', b['Size'] || '') || 
-           (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
-});
-
+    expandedData.sort((a, b) => {
+        return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) || // "Yes" values will come before "No" values
+               String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) || 
+               customSizeSort(a['Size'] || '', b['Size'] || '') || 
+               (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
+    });
 
     const csv = Papa.unparse(expandedData);
 
@@ -165,7 +170,12 @@ return {
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     // Update the status
-    document.getElementById('status').innerText = "Itemized CSV generated.";
+    document.getElementById('status').innerText = playerNumberErrorFound ? "Player Number Errors found" : "Itemized CSV generated.";
+}
+
+function isValidPlayerNumber(playerNumber) {
+    if (!playerNumber) return true;  // Blank or undefined values are considered valid
+    return /^[0-9]+$/.test(playerNumber);  // Only numbers are considered valid
 }
 
 
