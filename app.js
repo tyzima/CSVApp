@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryDiv.style.padding = '10px';
     document.body.appendChild(summaryDiv);
 
-    const fileDropArea = document.getElementById('file-drop-area');
+    const fileDropArea = document.getElementById('.file-drop-area');
     if (fileDropArea) {
         // Unlock audio context on user interaction with the file drop area
         fileDropArea.addEventListener('click', () => {
