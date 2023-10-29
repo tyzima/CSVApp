@@ -107,6 +107,15 @@ h3 {
     display: hidden;
 }
 
+.qty-div {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    padding: 2px 5px;
+    background-color: transparent;
+    border-radius: 5px;
+}
+
 .quantity-indicator {
     position: absolute;
     bottom: 0;
