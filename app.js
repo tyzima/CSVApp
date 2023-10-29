@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Create the audio object to play the error sound
+    const errorSound = new Audio('stop.mp3');
+
+    // Unlock audio context on user interaction
+    document.addEventListener('click', () => {
+        errorSound.play().then(() => {
+            errorSound.pause(); // Pause immediately after play
+            errorSound.currentTime = 0; // Reset the playback position
+        }).catch(error => {
+            console.error('Error trying to unlock the audio context:', error);
+        });
+    });
+
     const form = document.getElementById('csv-form');
     const statusDiv = document.createElement('div');
     statusDiv.id = "status";
@@ -14,59 +27,64 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryDiv.style.padding = '10px';
     document.body.appendChild(summaryDiv);
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-        // Update the status
-        document.getElementById('status').innerText = "Loading...";
+            // Update the status
+            document.getElementById('status').innerText = "Loading...";
 
-        const fileInput = document.getElementById('csv-file');
-        const file = fileInput.files[0];
+            const fileInput = document.getElementById('csv-file');
+            const file = fileInput.files[0];
 
-        // Update the status
-        document.getElementById('status').innerText = "Processing CSV...";
+            // Update the status
+            document.getElementById('status').innerText = "Processing CSV...";
 
-        Papa.parse(file, {
-            header: true,
-            dynamicTyping: true,
-            complete: function(results) {
-                // Debug: Check if Papa.parse is complete
-                console.log("Debug: Papa.parse complete");
-                
-                // Call the first processing function and trigger its download
-                processCSV1(results.data);
-                
-                // Add a delay of 2 seconds before calling the second processing function
-                setTimeout(() => {
-                    processCSV2(results.data);
+            Papa.parse(file, {
+                header: true,
+                dynamicTyping: true,
+                complete: function(results) {
+                    // Debug: Check if Papa.parse is complete
+                    console.log("Debug: Papa.parse complete");
+                    
+                    // Call the first processing function and trigger its download
+                    processCSV1(results.data);
+                    
+                    // Add a delay of 2 seconds before calling the second processing function
+                    setTimeout(() => {
+                        processCSV2(results.data);
 
-                    // Calculate and display the order summary
-                    const totalProducts = results.data
-                    .filter(row => row['Quantity'] || row['Product Name'])  // Exclude empty or incomplete rows
-                    .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
-                    summaryDiv.style.display = 'block';  // Make the summary visible
+                        // Calculate and display the order summary
+                        const totalProducts = results.data
+                        .filter(row => row['Quantity'] || row['Product Name'])  // Exclude empty or incomplete rows
+                        .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
+                        summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
+                        summaryDiv.style.display = 'block';  // Make the summary visible
 
-                }, 2000);
+                    }, 2000);
 
-                // Update the status
-                document.getElementById('status').innerText = "Processing complete. Check your downloads.";
-            }
+                    // Update the status
+                    document.getElementById('status').innerText = "Processing complete. Check your downloads.";
+                }
+            });
         });
-    });
 
-    const canvas = document.createElement('canvas');
-    canvas.height = 64;
-    canvas.width = 64;
-    const ctx = canvas.getContext('2d');
-    ctx.font = '64px serif';
-    ctx.fillText('🧼', 0, 64);
-    
-    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.type = 'image/x-icon';
-    link.rel = 'shortcut icon';
-    link.href = canvas.toDataURL("image/x-icon");
-    
-    document.getElementsByTagName('head')[0].appendChild(link);
+        const canvas = document.createElement('canvas');
+        canvas.height = 64;
+        canvas.width = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.font = '64px serif';
+        ctx.fillText('🧼', 0, 64);
+        
+        const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = canvas.toDataURL("image/x-icon");
+        
+        document.getElementsByTagName('head')[0].appendChild(link);
+    } else {
+        console.error('Form with ID "csv-form" not found');
+    }
 });
 
 function showNotification(message, isError) {
@@ -206,7 +224,7 @@ if (playerNumberErrorFound) {
     statusElement.innerText = "Player Number Errors found";
     statusElement.style.color = 'red';
     showNotification("Player Number Error Found", true);
-    errorSound.play();  // Play the sound
+    errorSound.play();  // This should work after user interaction
 } else {
     statusElement.innerText = "Itemized CSV generated.";
     statusElement.style.color = 'black'; // Reset to default color if needed
