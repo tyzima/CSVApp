@@ -103,6 +103,21 @@ h3 {
     box-sizing: border-box;
 }
 
+.quantity-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #FFF;
+    border-radius: 50%;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.low-quantity {
+    background-color: #FFDDDD; /* Light red */
+}
+
 
 .image-container {
     width: 100%; /* Make the image container fill the width of the asset container */
