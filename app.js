@@ -1,3 +1,5 @@
+let aggregatedAssets = {};
+
 document.addEventListener('DOMContentLoaded', () => {
     const errorSound = new Audio('stop.mp3');
     const form = document.getElementById('csv-form');
@@ -5,8 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryDiv = document.getElementById('order-summary');
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     const fileDropArea = document.querySelector('.file-drop-area');
-
-    let aggregatedAssets = {};
 
 
     if (fileDropArea) {
