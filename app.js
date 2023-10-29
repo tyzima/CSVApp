@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileInput = document.getElementById('csv-file');
             const file = fileInput.files[0];
             statusDiv.innerText = "Processing CSV...";
-
+    
             Papa.parse(file, {
                 header: true,
                 dynamicTyping: true,
@@ -41,10 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
                         summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
                         summaryDiv.style.display = 'block';
-
+    
                         // Show send to Salesforce button and attach click event
                         sendToSalesforceButton.style.display = 'block';
-                        sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
+                        sendToSalesforceButton.onclick = debounce(() => sendToSalesforce(aggregatedData), 2000);
                     }, 2000);
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
@@ -55,6 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+function debounce(func, delay) {
+    let inDebounce;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(inDebounce);
+      inDebounce = setTimeout(() => func.apply(context, args), delay);
+    }
+  }
+  
 
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
