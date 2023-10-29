@@ -49,6 +49,11 @@ body {
     width: 100%; /* Make the input take the full width of the container */
     font-size: 12px; /* Adjust the font size as needed */
   }
+
+  .print-type-button.active {
+    background-color: #007bff;
+    color: #fff;
+}
   
 
 h1 {
