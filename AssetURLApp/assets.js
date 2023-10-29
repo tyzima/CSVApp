@@ -59,19 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function processCSV(data) {
         aggregatedAssets = {};
         saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
-
-        data.filter(row => row['Asset URL']).forEach(row => {
+    
+        data.forEach(row => {
             const assetURL = row['Asset URL'];
-            if (!aggregatedAssets[assetURL]) {
-                aggregatedAssets[assetURL] = {
-                    assetURL: assetURL,
-                    saleCode: saleCode,
-                    notes: '',
-                    printType: 'Scrn'
-                };
+            const quantity = parseInt(row['Quantity'], 10) || 0;
+    
+            if (assetURL && quantity > 0) {
+                if (!aggregatedAssets[assetURL]) {
+                    aggregatedAssets[assetURL] = {
+                        assetURL: assetURL,
+                        saleCode: saleCode,
+                        notes: '',
+                        printType: 'Scrn',
+                        additionalOptions: '',
+                        quantity: 0
+                    };
+                }
+                aggregatedAssets[assetURL].quantity += quantity;
             }
         });
     }
+    
 
     function generateAssetModule() {
         assetsContainer.innerHTML = ''; // Clear previous assets
