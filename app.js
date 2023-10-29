@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 async function sendToSalesforce(aggregatedData) {
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/123456/abcdef/'; // Replace with your actual Zapier webhook URL
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
         const productJSON = await getProductJSON(); // Assume this function is defined elsewhere to fetch ProductJSON.json
         for (const item of Object.values(aggregatedData)) {
