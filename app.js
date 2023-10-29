@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     const fileDropArea = document.querySelector('.file-drop-area');
 
+    let aggregatedAssets = {};
+
+
     if (fileDropArea) {
         // Unlock audio context on user interaction with the file drop area
         fileDropArea.addEventListener('dragover', () => {
@@ -47,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
                     }, 2000);
                     statusDiv.innerText = "Processing complete. Check your downloads.";
+                    generateAssetModule();  // Call the function to generate the asset module
+                    
                 }
             });
         });
@@ -255,7 +260,7 @@ function processCSV2(data) {
         }
 
         aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
-        aggregatedAssets[key] = row['Asset URL'];
+        aggregatedAssets[key] = row['Asset URL'] || '';
     });
 
     function customSizeSort(a, b) {
