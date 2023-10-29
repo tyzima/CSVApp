@@ -255,6 +255,7 @@ function processCSV2(data) {
         }
 
         aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
+        aggregatedAssets[key] = row['Asset URL'];
     });
 
     function customSizeSort(a, b) {
@@ -288,6 +289,26 @@ function processCSV2(data) {
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 
     return aggregatedData;
+}
+
+function generateAssetModule() {
+    const assetsContainer = document.getElementById('assets-container');
+    Object.keys(aggregatedAssets).forEach(key => {
+        const assetURL = aggregatedAssets[key];
+        const assetDiv = document.createElement('div');
+        assetDiv.className = 'asset';
+        assetDiv.innerHTML = `
+            <img src="${assetURL}" alt="${key}" />
+            <select>
+                <option value="Screenprint">Screenprint</option>
+                <option value="HeatSeal / DTF">HeatSeal / DTF</option>
+                <option value="Embroidery">Embroidery</option>
+                <option value="Sublimated/NoArtNeeded">Sublimated/NoArtNeeded</option>
+            </select>
+            <input type="text" placeholder="Notes" />
+        `;
+        assetsContainer.appendChild(assetDiv);
+    });
 }
 
 function downloadCSV(filename, csvData) {

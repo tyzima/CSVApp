@@ -229,3 +229,29 @@ center h3{
     font-weight:600;
    }
    
+
+   /* Colors container */
+#asset-module .colors-container{
+  height:77px;
+ }
+ 
+ /* Select */
+ #asset-module select{
+  grid-template-columns:auto auto auto;
+  column-gap:16px;
+  display:inline-flex;
+  flex-direction:row;
+  align-items:stretch;
+  min-width:15.2%;
+ }
+ 
+ /* Asset module */
+ #asset-module{
+  transform:translatex(0px) translatey(0px);
+ }
+ 
+ /* Logos colors container */
+ #asset-module .logos-colors-container{
+  text-align:center;
+ }
+ 
