@@ -92,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>+PlayeriD?</h3>
                 <select class="additional-options">
                     <option value="" selected> </option>
-                    <option value="+ Number">+ Number</option>
-                    <option value="+ Name">+ Name</option>
-                    <option value="+ Name and Number">+ Name</option>
+                    <option value="Add Number">+ Number</option>
+                    <option value="Add Name">+ Name</option>
+                    <option value="Add Name + Number">+ Name and Number</option>
                 </select>
                 <input type="text" class="notes" placeholder="Notes" />
             `;
