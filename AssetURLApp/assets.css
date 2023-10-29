@@ -107,6 +107,10 @@ h3 {
     display: hidden;
 }
 
+.submit {
+    display: hidden;
+}
+
 .qty-div {
     position: absolute;
     bottom: 5px;
