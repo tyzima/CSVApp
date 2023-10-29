@@ -128,11 +128,79 @@ center h3{
     z-index: 9999; /* Make sure it appears above all other elements */
 }
 
+.asset-module {
+  max-width: 800px;
+  width: 100%;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.assets-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.asset {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.asset img {
+  max-width: 150px;
+  height: auto;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.asset select,
+.asset input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.logos-colors-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.logos-container,
+.colors-container {
+  width: 100%;
+}
+
+.logos-container {
+  margin-bottom: 20px; /* Add space between Logos and Colors */
+}
+
+.asset-module button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.asset-module button:hover {
+  background-color: #45a049;
+}
+
    
    /* Body */
    body{
     padding-top:136px;
     font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
    }
    
    

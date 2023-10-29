@@ -22,12 +22,61 @@
             <!-- Summary will be inserted here -->
         </div>        
     </div>
+    
     <br>
     <br>
    <center> <h3>Exclusive for ZIMA</h3></center>
     <button id="send-to-salesforce" style="display: none; background-color: rgb(0, 115, 255); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: all 0.3s ease;">
         Send to Salesforce
     </button>
+    <div id="asset-module" class="asset-module">
+        <div id="assets-container" class="assets-container"></div>
+        <div class="logos-colors-container">
+            <div class="logos-container">
+                <h4>Logos</h4>
+                <input type="text" id="logo1" placeholder="Logo1" />
+                <input type="text" id="logo2" placeholder="Logo2" />
+                <input type="text" id="logo3" placeholder="Logo3" />
+                <input type="text" id="logo4" placeholder="Logo4" />
+                <input type="text" id="logo5" placeholder="Logo5" />
+            </div>
+            <div class="colors-container">
+                <h4>Colors</h4>
+                <select id="color1">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <select id="color2">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <select id="color3">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <select id="color4">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <select id="color5">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <select id="color6">
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                    <option value="Red">Red</option>
+                </select>
+                <!-- Add more color dropdowns similar to the above -->
+            </div>
+        </div>
+        <button onclick="submitAssetInfo()">Submit</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="app.js"></script>
