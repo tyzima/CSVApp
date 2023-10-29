@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileInput = document.getElementById('csv-file');
             const file = fileInput.files[0];
             statusDiv.innerText = "Processing CSV...";
-    
+
             Papa.parse(file, {
                 header: true,
                 dynamicTyping: true,
@@ -41,10 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
                         summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
                         summaryDiv.style.display = 'block';
-    
+
                         // Show send to Salesforce button and attach click event
                         sendToSalesforceButton.style.display = 'block';
-                        sendToSalesforceButton.onclick = debounce(() => sendToSalesforce(aggregatedData), 2000);
+                        sendToSalesforceButton.onclick = () => {
+                            sendToSalesforceButton.disabled = true; // Disable the button
+                            sendToSalesforce(aggregatedData).finally(() => {
+                                sendToSalesforceButton.disabled = false; // Re-enable the button once sendToSalesforce is done
+                            });
+                        };
                     }, 2000);
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
@@ -54,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Form with ID "csv-form" not found');
     }
 });
+
 
 function debounce(func, delay) {
     let inDebounce;
