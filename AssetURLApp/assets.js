@@ -59,7 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     assetURL: assetURL,
                     saleCode: saleCode,
                     notes: '',
-                    printType: 'Screenprint'
+                    printType: 'Screenprint',
+                    colors: [], // Array to store colors
+                    logoNumbers: [] // Array to store logo numbers
                 };
             }
         });
@@ -89,7 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const assetDivs = document.querySelectorAll('.asset');
         const data = {
             assets: [],
-            saleCode: saleCode
+            saleCode: saleCode,
+            colors: [], // Array to store colors
+            logoNumbers: [] // Array to store logo numbers
         };
         assetDivs.forEach(div => {
             const assetURL = div.querySelector('img').src;
