@@ -96,9 +96,9 @@ const errorSound = new Audio('stop.mp3');
 function normalizeSize(size) {
     const sizeMap = {
         'OSFA': 'OSFA',
-        'One Size Fits Most': 'OSFA',
+        'One Size Fits Most': 'OSFA', 'One Size Fits All': 'OSFA', 'Mens One Size Fits All': 'OSFA', 'Adjustable': 'OSFA',
         'Youth Small': 'YS', 'youth small': 'YS',
-        'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM',
+        'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM','Youth  Medium': 'YM',
         'Youth Large': 'YL', 'Youth LG': 'YL', 'youth large': 'YL',
         'Youth XL': 'YXL', 'youth extra large': 'YXL', 'Youth X-Large': 'YXL',
         'Youth SM': 'YS',
@@ -116,10 +116,10 @@ function normalizeSize(size) {
         'Men\'s X-Large': 'XL', 'Mens X-Large': 'XL',
         'Men\'s 2X-Large': '2XL', 'Mens 2X-Large': '2XL',
         'Men\'s 3X-Large': '3XL', 'Mens 3X-Large': '3XL',
-        'Women\'s Small': 'S', 'Women\'s SM': 'S',
+        'Women\'s Small': 'S', 'Women\'s SM': 'S', 'Womens Small': 'S',
         'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M',
         'Women\'s Large': 'L', 'Women\'s LG': 'L',
-        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL',
+        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL', 'Womens X-Large': 'XL',
         'Women\'s 2X-Large': '2XL', 'Women\'s XXL': '2XL',
         'Unisex Large': 'L',
         'Unisex X-Large': 'XL'
