@@ -2,16 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create the audio object to play the error sound
     const errorSound = new Audio('stop.mp3');
 
-    // Unlock audio context on user interaction
-    document.addEventListener('click', () => {
-        errorSound.play().then(() => {
-            errorSound.pause(); // Pause immediately after play
-            errorSound.currentTime = 0; // Reset the playback position
-        }).catch(error => {
-            console.error('Error trying to unlock the audio context:', error);
-        });
-    });
-
     const form = document.getElementById('csv-form');
     const statusDiv = document.createElement('div');
     statusDiv.id = "status";
@@ -26,6 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryDiv.style.borderRadius = '12px';
     summaryDiv.style.padding = '10px';
     document.body.appendChild(summaryDiv);
+
+    const fileDropArea = document.getElementById('file-drop-area');
+    if (fileDropArea) {
+        // Unlock audio context on user interaction with the file drop area
+        fileDropArea.addEventListener('click', () => {
+            errorSound.play().then(() => {
+                errorSound.pause(); // Pause immediately after play
+                errorSound.currentTime = 0; // Reset the playback position
+            }).catch(error => {
+                console.error('Error trying to unlock the audio context:', error);
+            });
+        });
+    } else {
+        console.error('Element with ID "file-drop-area" not found');
+    }
 
     if (form) {
         form.addEventListener('submit', (event) => {
@@ -86,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Form with ID "csv-form" not found');
     }
 });
+
 
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
