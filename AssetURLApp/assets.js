@@ -79,28 +79,46 @@ document.addEventListener('DOMContentLoaded', () => {
             const asset = aggregatedAssets[key];
             const assetDiv = document.createElement('div');
             assetDiv.className = 'asset';
+            assetDiv.style.position = 'relative';
+    
+            const qtyDiv = document.createElement('div');
+            qtyDiv.innerText = `Qty: ${asset.quantity}`;
+            qtyDiv.style.position = 'absolute';
+            qtyDiv.style.bottom = '5px';
+            qtyDiv.style.left = '5px';
+            qtyDiv.style.padding = '2px 5px';
+            qtyDiv.style.backgroundColor = asset.quantity < 6 ? 'rgba(255, 0, 0, 0.2)' : 'transparent';
+            qtyDiv.style.borderRadius = '5px';
+    
             assetDiv.innerHTML = `
                 <div class="image-container">
                     <img src="${asset.assetURL}" alt="${key}" />
                 </div>
-                <div class="print-type-buttons">
-                    <button data-value="Scrn" class="print-type-button active">Scrn</button>
-                    <button data-value="Emb" class="print-type-button">Emb</button>
-                    <button data-value="Heat" class="print-type-button">Heat</button>
-                    <button data-value="" class="print-type-button">X</button>
+                <div class="controls">
+                    <div class="print-type-buttons">
+                        <button class="print-type-button" data-value="Scrn">Scrn</button>
+                        <button class="print-type-button" data-value="Emb">Emb</button>
+                        <button class="print-type-button" data-value="Heat">Heat</button>
+                        <button class="print-type-button" data-value="">X</button>
+                    </div>
+                    <select class="additional-options">
+                        <option value="" selected></option>
+                        <option value="+ Number">+ Number</option>
+                        <option value="+ Name">+ Name</option>
+                    </select>
+                    <input type="text" class="notes" placeholder="Notes" />
                 </div>
-                <h3>+PlayeriD?</h3>
-                <select class="additional-options">
-                    <option value="" selected> </option>
-                    <option value="Add Number">+ Number</option>
-                    <option value="Add Name">+ Name</option>
-                    <option value="Add Name + Number">+ Name and Number</option>
-                </select>
-                <input type="text" class="notes" placeholder="Notes" />
             `;
+    
+            assetDiv.querySelector(`.print-type-button[data-value="${asset.printType}"]`).classList.add('active');
+            assetDiv.querySelector('.additional-options').value = asset.additionalOptions;
+            assetDiv.querySelector('.notes').value = asset.notes;
+    
+            assetDiv.appendChild(qtyDiv);
             assetsContainer.appendChild(assetDiv);
         });
     }
+    
 
     function prepareDataForSending() {
         const assetDivs = document.querySelectorAll('.asset');
