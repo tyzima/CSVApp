@@ -272,13 +272,13 @@ function processCSV2(data) {
         const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
         const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '   ';
         const style = row['Style'] || 'UnknownStyle'; // Handle lines without a Style
-        const key = `${style}-${normalizedSize}-${goalieThroatGuard}`;
+        const styleSize = `${style}-${normalizedSize}`; // Combine Style and Size
+        const key = `${styleSize}-${goalieThroatGuard}`;
 
         if (!aggregatedData[key]) {
             aggregatedData[key] = {
                 'Product Name': row['Product Name'],
-                'Style': style,
-                'Size': normalizedSize,
+                'Style-Size': styleSize,  // Use the combined Style-Size
                 'Goalie Throat Guard': goalieThroatGuard,
                 'Aggregated Quantity': 0
             };
@@ -296,19 +296,17 @@ function processCSV2(data) {
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
-    // Convert the aggregated data to an arrayy
+    // Convert the aggregated data to an array
     const aggregatedArray = Object.values(aggregatedData);
 
-   // Sort the array by 'Style', 'Size', and 'Goalie Throat Guard'
-   aggregatedArray.sort((a, b) => {
-    const styleA = String(a['Style'] || '');
-    const styleB = String(b['Style'] || '');
-    return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
-           styleA.localeCompare(styleB) || 
-           customSizeSort(a['Size'], b['Size']);
-});
-
-
+    // Sort the array by 'Style-Size', and 'Goalie Throat Guard'
+    aggregatedArray.sort((a, b) => {
+        const styleSizeA = String(a['Style-Size'] || '');
+        const styleSizeB = String(b['Style-Size'] || '');
+        return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
+               styleSizeA.localeCompare(styleSizeB) ||
+               customSizeSort(a['Size'], b['Size']);
+    });
 
     // Convert the sorted array back to CSV
     const csv = Papa.unparse(aggregatedArray);
@@ -319,7 +317,6 @@ function processCSV2(data) {
     // Update the status
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 }
-
 
 
 
