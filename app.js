@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
-    notificationBar.innerHTML = `🛑 ${message.toUpperCase()} 🛑`;  // Convert message to uppercase
+    notificationBar.innerHTML = `🛑     ${message.toUpperCase()}    🛑`;  // Convert message to uppercase
     notificationBar.style.position = 'fixed';
     notificationBar.style.top = '0';
     notificationBar.style.left = '0';
