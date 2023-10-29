@@ -130,8 +130,12 @@ function normalizeSize(size) {
 
 function processCSV1(data) {
     // Update the status
+    const saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
     const statusElement = document.getElementById('status');
     statusElement.innerText = "Generating Itemized CSV...";
+    
+    window.saleCode = saleCode;
+
     
     // Store name for the filename
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
@@ -225,6 +229,11 @@ function processCSV2(data) {
 
     // Capture the store name for the filename
     let storeName = data.length > 0 ? data[0]['Store Name'] : 'UnknownStore';
+    const saleCode = data.length > 0 ? data[0]['Sale Code'] : 'UnknownSaleCode';
+
+    window.saleCode = saleCode;
+
+
 
     const aggregatedData = {};
 
@@ -350,6 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 }
 async function sendToSalesforce(aggregatedData) {
+    const saleCode = window.saleCode || 'UnknownSaleCode';
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     sendToSalesforceButton.innerText = 'Sending to Salesforce...'; // Change button text to indicate progress
     sendToSalesforceButton.disabled = true; // Disable button to prevent multiple clicks
@@ -376,7 +386,7 @@ async function sendToSalesforce(aggregatedData) {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
                 '18CharID': charID,
-                'Store Code': storeCode
+                'Sale Code': saleCode
             };
 
             items.push(payload);
