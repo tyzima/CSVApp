@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         sendToSalesforceButton.style.display = 'block';
                         sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
                     }, 2000);
+                    sendToSalesforceButton.classList.add('fade-out');
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
             });

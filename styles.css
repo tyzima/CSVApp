@@ -76,6 +76,17 @@
     background-color: #3700b3;
   }
 
+  #send-to-salesforce:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#send-to-salesforce.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+
   /* Order summary */
 #order-summary{
     font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
