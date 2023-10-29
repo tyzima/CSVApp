@@ -351,46 +351,35 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 async function sendToSalesforce(aggregatedData) {
-    // Define the URL of your Zapier webhook
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/';
-    
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; 
     try {
-        // Fetch the product data
-        const productJSON = await getProductJSON();
-        
-        // Loop through each item in the aggregated data
-        for (const item of Object.values(aggregatedData)) {
-            // Extract the 'Style-Size' and 'Aggregated Quantity' values from the current item
+        const productJSON = await getProductJSON(); 
+        const payload = Object.values(aggregatedData).map(item => {
             const productCode = item['Style-Size'];
             const quantityAggregated = item['Aggregated Quantity'];
-            
-            // Find the corresponding product in the product data
             const product = productJSON.find(p => p['Product Code'] === productCode);
-            
-            // Get the '18CharID' value from the product, or set it to an empty string if the product wasn't found
             const charID = product ? product['18CharID'] : '';
-            
-            // Create the payload to send to Zapier
-            const payload = {
+
+            return {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
                 '18CharID': charID
             };
-            
-            try {
-                // Using no-cors mode to bypass CORS policy
-                await fetch(zapierWebhookUrl, {
-                    method: 'POST',
-                    mode: 'no-cors', // Add this line to use no-cors mode
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-                console.log('Data sent to Zapier');
-            } catch (error) {
-                console.error('Error sending data to Zapier:', error);
-            }
+        });
+
+        try {
+            // Sending all data as an array in one request
+            await fetch(zapierWebhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+            console.log('Data sent to Zapier');
+        } catch (error) {
+            console.error('Error sending data to Zapier:', error);
         }
     } catch (error) {
         console.error('Error processing data for Zapier:', error);
