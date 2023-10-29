@@ -21,6 +21,7 @@ body {
   }
   
   .print-type-button {
+    background: #eeeeee;
     flex-grow: 1;
     padding: 5px;
     font-size: 12px; /* Adjust the font size as needed */
