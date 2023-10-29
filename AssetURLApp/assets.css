@@ -131,6 +131,18 @@ h3 {
     font-weight: bold;
 }
 
+.asset .qty-display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 0 0 5px 0; /* Rounded bottom right corner */
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
 .low-quantity {
     background-color: #FFDDDD; /* Light red */
 }
