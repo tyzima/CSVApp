@@ -59,31 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function processCSV(data) {
         aggregatedAssets = {};
         saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
-    
-        const tempAggregatedAssets = {};
-    
+
         data.filter(row => row['Asset URL']).forEach(row => {
             const assetURL = row['Asset URL'];
-            const quantity = parseInt(row['Quantity'], 10) || 1;
-    
-            if (!tempAggregatedAssets[assetURL]) {
-                tempAggregatedAssets[assetURL] = {
+            if (!aggregatedAssets[assetURL]) {
+                aggregatedAssets[assetURL] = {
                     assetURL: assetURL,
                     saleCode: saleCode,
-                    quantity: 0,
                     notes: '',
-                    printType: 'Screenprint',
-                    additionalOptions: ''
+                    printType: 'Scrn'
                 };
-            }
-    
-            tempAggregatedAssets[assetURL].quantity += quantity;
-        });
-    
-        // Filter out assets with quantity less than or equal to 0
-        Object.keys(tempAggregatedAssets).forEach(key => {
-            if (tempAggregatedAssets[key].quantity > 0) {
-                aggregatedAssets[key] = tempAggregatedAssets[key];
             }
         });
     }
