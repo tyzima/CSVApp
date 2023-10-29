@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     const fileDropArea = document.querySelector('.file-drop-area');
 
-    
-
     if (fileDropArea) {
         // Unlock audio context on user interaction with the file drop area
         fileDropArea.addEventListener('dragover', () => {
@@ -98,9 +96,9 @@ const errorSound = new Audio('stop.mp3');
 function normalizeSize(size) {
     const sizeMap = {
         'OSFA': 'OSFA',
-        'One Size Fits Most': 'OSFA', 'One Size Fits All': 'OSFA', 'Mens One Size Fits All': 'OSFA', 'Adjustable': 'OSFA',
+        'One Size Fits Most': 'OSFA',
         'Youth Small': 'YS', 'youth small': 'YS',
-        'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM','Youth  Medium': 'YM',
+        'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM',
         'Youth Large': 'YL', 'Youth LG': 'YL', 'youth large': 'YL',
         'Youth XL': 'YXL', 'youth extra large': 'YXL', 'Youth X-Large': 'YXL',
         'Youth SM': 'YS',
@@ -118,10 +116,10 @@ function normalizeSize(size) {
         'Men\'s X-Large': 'XL', 'Mens X-Large': 'XL',
         'Men\'s 2X-Large': '2XL', 'Mens 2X-Large': '2XL',
         'Men\'s 3X-Large': '3XL', 'Mens 3X-Large': '3XL',
-        'Women\'s Small': 'S', 'Women\'s SM': 'S', 'Womens Small': 'S',
+        'Women\'s Small': 'S', 'Women\'s SM': 'S',
         'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M',
         'Women\'s Large': 'L', 'Women\'s LG': 'L',
-        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL', 'Womens X-Large': 'XL',
+        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL',
         'Women\'s 2X-Large': '2XL', 'Women\'s XXL': '2XL',
         'Unisex Large': 'L',
         'Unisex X-Large': 'XL'
@@ -257,7 +255,6 @@ function processCSV2(data) {
         }
 
         aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
-        aggregatedAssets[key] = row['Asset URL'];
     });
 
     function customSizeSort(a, b) {
@@ -291,26 +288,6 @@ function processCSV2(data) {
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 
     return aggregatedData;
-}
-
-function generateAssetModule() {
-    const assetsContainer = document.getElementById('assets-container');
-    Object.keys(aggregatedAssets).forEach(key => {
-        const assetURL = aggregatedAssets[key];
-        const assetDiv = document.createElement('div');
-        assetDiv.className = 'asset';
-        assetDiv.innerHTML = `
-            <img src="${assetURL}" alt="${key}" />
-            <select>
-                <option value="Screenprint">Screenprint</option>
-                <option value="HeatSeal / DTF">HeatSeal / DTF</option>
-                <option value="Embroidery">Embroidery</option>
-                <option value="Sublimated/NoArtNeeded">Sublimated/NoArtNeeded</option>
-            </select>
-            <input type="text" placeholder="Notes" />
-        `;
-        assetsContainer.appendChild(assetDiv);
-    });
 }
 
 function downloadCSV(filename, csvData) {
