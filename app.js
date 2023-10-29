@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         sendToSalesforceButton.style.display = 'block';
                         sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
                     }, 2000);
-                    sendToSalesforceButton.classList.add('fade-out');
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
             });
@@ -352,36 +351,48 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 async function sendToSalesforce(aggregatedData) {
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; 
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
-        const productJSON = await getProductJSON(); 
-        const payload = Object.values(aggregatedData).map(item => {
+        const productJSON = await getProductJSON(); // Fetch ProductJSON.json
+
+        // Create an array to hold all the items
+        const items = [];
+
+        // Iterate through the aggregated data and create items
+        for (const item of Object.values(aggregatedData)) {
             const productCode = item['Style-Size'];
             const quantityAggregated = item['Aggregated Quantity'];
             const product = productJSON.find(p => p['Product Code'] === productCode);
             const charID = product ? product['18CharID'] : '';
 
-            return {
+            const payload = {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
                 '18CharID': charID
             };
-        });
 
+            items.push(payload);
+        }
+
+        // Send all items in a single request
         try {
-            // Sending all data as an array in one request
-            await fetch(zapierWebhookUrl, {
+            const response = await fetch(zapierWebhookUrl, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({ items }), // Send the items array
+                mode: 'no-cors', // Add this if you are not interested in the response
             });
-            console.log('Data sent to Zapier');
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Success:', responseData);
+            }
         } catch (error) {
             console.error('Error sending data to Zapier:', error);
         }
+
     } catch (error) {
         console.error('Error processing data for Zapier:', error);
     }
