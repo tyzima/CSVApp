@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (form) {
         form.addEventListener('submit', (event) => {
-            console.log('Form submitted'); // Added for debugging
             event.preventDefault();
             statusDiv.innerText = "Loading...";
             const fileInput = document.getElementById('csv-file');
@@ -35,19 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 complete: function (results) {
                     console.log("Debug: Papa.parse complete");
                     processCSV1(results.data);
-                    const aggregatedData = processCSV2(results.data);
-                    const totalProducts = results.data
-                        .filter(row => row['Quantity'] || row['Product Name'])  
-                        .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
-                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
-                    summaryDiv.style.display = 'block';
+                    setTimeout(() => {
+                        const aggregatedData = processCSV2(results.data);
+                        const totalProducts = results.data
+                            .filter(row => row['Quantity'] || row['Product Name'])  
+                            .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
+                        summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
+                        summaryDiv.style.display = 'block';
 
-                    // Show send to Salesforce button and attach click event
-                    sendToSalesforceButton.style.display = 'block';
-                    sendToSalesforceButton.replaceWith(sendToSalesforceButton.cloneNode(true));
-                    sendToSalesforceButton = document.getElementById('send-to-salesforce');
-                    sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
-
+                        // Show send to Salesforce button and attach click event
+                        sendToSalesforceButton.style.display = 'block';
+                        sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
+                    }, 2000);
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
             });
@@ -56,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Form with ID "csv-form" not found');
     }
 });
-
 
 
 function showNotification(message, isError) {
