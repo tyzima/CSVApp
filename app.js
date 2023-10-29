@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (form) {
         form.addEventListener('submit', (event) => {
+            console.log('Form submitted'); // Added for debugging
             event.preventDefault();
             statusDiv.innerText = "Loading...";
             const fileInput = document.getElementById('csv-file');
@@ -34,18 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 complete: function (results) {
                     console.log("Debug: Papa.parse complete");
                     processCSV1(results.data);
-                    setTimeout(() => {
-                        const aggregatedData = processCSV2(results.data);
-                        const totalProducts = results.data
-                            .filter(row => row['Quantity'] || row['Product Name'])  
-                            .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
-                        summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
-                        summaryDiv.style.display = 'block';
+                    const aggregatedData = processCSV2(results.data);
+                    const totalProducts = results.data
+                        .filter(row => row['Quantity'] || row['Product Name'])  
+                        .reduce((acc, row) => acc + (row['Quantity'] || 1), 0);                    
+                    summaryDiv.innerText = `Total Products Ordered: ${totalProducts}`;
+                    summaryDiv.style.display = 'block';
 
-                        // Show send to Salesforce button and attach click event
-                        sendToSalesforceButton.style.display = 'block';
-                        sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
-                    }, 2000);
+                    // Show send to Salesforce button and attach click event
+                    sendToSalesforceButton.style.display = 'block';
+                    sendToSalesforceButton.replaceWith(sendToSalesforceButton.cloneNode(true));
+                    sendToSalesforceButton = document.getElementById('send-to-salesforce');
+                    sendToSalesforceButton.onclick = () => sendToSalesforce(aggregatedData);
+
                     statusDiv.innerText = "Processing complete. Check your downloads.";
                 }
             });
@@ -54,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Form with ID "csv-form" not found');
     }
 });
+
 
 
 function showNotification(message, isError) {
@@ -362,7 +365,8 @@ async function sendToSalesforce(aggregatedData) {
     const saleCode = window.saleCode || 'UnknownSaleCode';
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     sendToSalesforceButton.innerText = 'Sending to Salesforce...'; // Change button text to indicate progress
-    sendToSalesforceButton.disabled = true; // Disable button to prevent multiple clicks
+    sendToSalesforceButton.replaceWith(sendToSalesforceButton.cloneNode(true));
+    sendToSalesforceButton = document.getElementById('send-to-salesforce');
     const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
         const productJSON = await getProductJSON(); // Fetch ProductJSON.json
