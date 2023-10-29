@@ -336,7 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('csv-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
   }
 
-async function sendToSalesforce(aggregatedData) {
+  async function sendToSalesforce(aggregatedData) {
+    console.log("Sending to Salesforce...", aggregatedData);
     const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
         const productJSON = await getProductJSON(); // Assume this function is defined elsewhere to fetch ProductJSON.json
