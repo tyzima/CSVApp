@@ -249,9 +249,38 @@ if (playerNumberErrorFound) {
     statusElement.style.color = 'red';
     showNotification("Player Number Error Found", true);
     errorSound.play();  // This should work after user interaction
+    
+    // Show error GIF
+    const errorGifDiv = document.getElementById('error-gif-div');
+    if (!errorGifDiv) {
+        const newErrorGifDiv = document.createElement('div');
+        newErrorGifDiv.id = 'error-gif-div';
+        newErrorGifDiv.style.textAlign = 'center';
+        newErrorGifDiv.style.marginTop = '20px'; // Add some space above the div
+
+        const errorGif = document.createElement('img');
+        errorGif.src = 'giphy-25.gif';
+        errorGif.alt = 'Error Gif';
+        errorGif.style.maxWidth = '100%'; // Ensure the GIF doesn't overflow the page
+
+        newErrorGifDiv.appendChild(errorGif);
+        
+        const container = document.querySelector('.container');
+        if (container) {
+            container.parentNode.insertBefore(newErrorGifDiv, container.nextSibling); // Insert the div after the container
+        } else {
+            document.body.appendChild(newErrorGifDiv); // If the container is not found, just append to body
+        }
+    }
 } else {
     statusElement.innerText = "Itemized CSV generated.";
     statusElement.style.color = 'black'; // Reset to default color if needed
+    
+    // Remove error GIF if it exists
+    const errorGifDiv = document.getElementById('error-gif-div');
+    if (errorGifDiv) {
+        errorGifDiv.remove();
+    }
 }
 
 
