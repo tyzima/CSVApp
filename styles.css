@@ -87,6 +87,15 @@
 }
 
 
+#send-to-salesforce {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+
+}
+
   /* Order summary */
 #order-summary{
     font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
