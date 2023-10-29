@@ -365,8 +365,7 @@ async function sendToSalesforce(aggregatedData) {
     const saleCode = window.saleCode || 'UnknownSaleCode';
     const sendToSalesforceButton = document.getElementById('send-to-salesforce');
     sendToSalesforceButton.innerText = 'Sending to Salesforce...'; // Change button text to indicate progress
-    sendToSalesforceButton.replaceWith(sendToSalesforceButton.cloneNode(true));
-    sendToSalesforceButton = document.getElementById('send-to-salesforce');
+    sendToSalesforceButton.disabled = true; // Disable button to prevent multiple clicks
     const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
         const productJSON = await getProductJSON(); // Fetch ProductJSON.json
