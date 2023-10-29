@@ -4,49 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendDataButton = document.getElementById('send-data');
     const fileDropArea = document.querySelector('.file-drop-area');
     const fileInput = document.getElementById('csv-file');
-    const logosAndColorsContainer = document.getElementById('logos-and-colors');
 
     let aggregatedAssets = {};
     let saleCode = '';
-
-
-    // Function to create and append logo and color fields
-    function createLogoAndColorFields() {
-        const container = document.createElement('div');
-        container.className = 'logo-color-fields';
-        container.innerHTML = `
-            <div class="logos">
-                ${Array.from({ length: 5 }, (_, i) => `
-                    <input type="text" placeholder="Logo ${i + 1}" />
-                `).join('')}
-            </div>
-            <div class="colors">
-                ${Array.from({ length: 6 }, (_, i) => `
-                    <input type="text" placeholder="Color ${i + 1}" />
-                `).join('')}
-            </div>
-        `;
-        logosAndColorsContainer.appendChild(container);
-    }
-
-    // Create logo and color fields for each print type
-    createLogoAndColorFields();
-
-    // Function to handle print type change
-    function handlePrintTypeChange(printType) {
-        const fields = document.querySelector('.logo-color-fields');
-        fields.style.display = printType !== 'Subl' ? 'block' : 'none';
-    }
-
-    // Attach event listener to print type buttons
-    assetsContainer.addEventListener('click', (event) => {
-        if (event.target.classList.contains('print-type-button')) {
-            const buttons = event.target.parentElement.querySelectorAll('.print-type-button');
-            buttons.forEach(button => button.classList.remove('active'));
-            event.target.classList.add('active');
-            handlePrintTypeChange(event.target.dataset.value);
-        }
-    });
+    
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
