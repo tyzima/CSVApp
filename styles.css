@@ -88,11 +88,11 @@
 
 
 #send-to-salesforce {
-  background-color: rgb(38, 110, 235);
-  color: white;
+  background-color:#ecf0f1 !important;
+  color:#7f8c8d !important;
   padding: 5px 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   text-align: center;
@@ -101,6 +101,12 @@
   display: block;
   width: 300px;
 }
+
+center h3{
+  color:#95a5a6;
+  letter-spacing:-0.4px;
+ }
+ 
 
   /* Order summary */
 #order-summary{
