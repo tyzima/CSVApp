@@ -381,11 +381,14 @@ async function sendToSalesforce(aggregatedData) {
             const quantityAggregated = item['Aggregated Quantity'];
             const product = productJSON.find(p => p['Product Code'] === productCode);
             const charID = product ? product['18CharID'] : '';
+            const priceBookEntryId = product ? product['Price Book Entry ID'] : ''; // Get Price Book Entry ID from productJSON
+
 
             const payload = {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
                 '18CharID': charID,
+                'Price Book Entry ID': priceBookEntryId, // Add Price Book Entry ID to payload
                 'Sale Code': saleCode
             };
 
