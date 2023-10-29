@@ -349,11 +349,15 @@ document.addEventListener('DOMContentLoaded', () => {
         throw error; // Re-throw the error to be handled by the calling function
     }
 }
-
 async function sendToSalesforce(aggregatedData) {
     const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/53953/38lmops/'; // Replace with your actual Zapier webhook URL
     try {
         const productJSON = await getProductJSON(); // Fetch ProductJSON.json
+
+        // Extract 'Store Name' from the first item in aggregatedData
+        const firstItem = Object.values(aggregatedData)[0];
+        const storeName = firstItem && firstItem['Store Name'] ? firstItem['Store Name'] : 'Unknown';
+        const projectCode = 'PROJ' + storeName.substring(0, 5);
 
         // Create an array to hold all the items
         const items = [];
@@ -368,7 +372,8 @@ async function sendToSalesforce(aggregatedData) {
             const payload = {
                 'Style-Size': productCode,
                 'Quantity Aggregated': quantityAggregated,
-                '18CharID': charID
+                '18CharID': charID,
+                'Project Code': projectCode // Add the project code to the payload
             };
 
             items.push(payload);
