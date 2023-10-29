@@ -154,6 +154,13 @@ h3 {
     margin-right: 10px;
   }
 
+  #logosandcolors{
+    display:inline-flex;
+    position:relative;
+    width:105% !important;
+    justify-content:center;
+   }
+   
 
 
 
