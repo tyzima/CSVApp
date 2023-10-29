@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryDiv.style.padding = '10px';
     document.body.appendChild(summaryDiv);
 
-    const fileDropArea = document.getElementById('.file-drop-area');
+    const fileDropArea = document.querySelector('.file-drop-area');
     if (fileDropArea) {
         // Unlock audio context on user interaction with the file drop area
-        fileDropArea.addEventListener('click', () => {
+        fileDropArea.addEventListener('dragover', () => {
             errorSound.play().then(() => {
                 errorSound.pause(); // Pause immediately after play
                 errorSound.currentTime = 0; // Reset the playback position
@@ -29,8 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     } else {
-        console.error('Element with ID "file-drop-area" not found');
+        console.error('Element with class "file-drop-area" not found');
     }
+
 
     if (form) {
         form.addEventListener('submit', (event) => {
