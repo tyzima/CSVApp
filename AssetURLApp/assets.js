@@ -90,9 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button data-value="" class="print-type-button">X</button>
                 </div>
                 <select class="additional-options">
-                    <option value="" selected>Choose an option</option>
+                    <option value="" selected>+ Player iD</option>
                     <option value="+ Number">+ Number</option>
                     <option value="+ Name">+ Name</option>
+                    <option value="+ Name and Number">+ Name</option>
                 </select>
                 <input type="text" class="notes" placeholder="Notes" />
             `;
