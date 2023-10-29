@@ -138,6 +138,18 @@ h3 {
   .logo-color-fields {
     display: none;
   }
+
+
+  #logo-dropdowns select, #color-dropdowns select {
+    width: 100%;
+  }
+  
+  #logos-container img, #colors-container img {
+    max-width: 30px;
+    margin-right: 10px;
+  }
+
+  
   
   .logos, .colors {
     display: flex;

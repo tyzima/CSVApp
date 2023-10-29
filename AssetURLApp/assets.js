@@ -150,6 +150,45 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
+    async function fetchAndPopulateLogos() {
+        try {
+          const response = await fetch('https://www.lax.ink/Logos/logos.json');
+          if (!response.ok) throw new Error('Network response was not ok');
+          
+          const logos = await response.json();
+          const logoDropdowns = document.querySelectorAll('.logo-dropdown');
+          logoDropdowns.forEach(dropdown => {
+            const selectize = $(dropdown).selectize({
+              valueField: 'SVGLink',
+              labelField: 'Description',
+              searchField: ['Logo ID', 'Description', 'Account Name'],
+              options: logos,
+              render: {
+                option: function(item, escape) {
+                  return `<div>
+                    <img src="${escape(item.PNG)}" alt="${escape(item.Description)}" height="30" />
+                    <span>${escape(item.Description)}</span>
+                  </div>`;
+                },
+                item: function(item, escape) {
+                  return `<div>
+                    <img src="${escape(item.PNG)}" alt="${escape(item.Description)}" height="30" />
+                    <span>${escape(item.Description)}</span>
+                  </div>`;
+                }
+              }
+            });
+          });
+        } catch (error) {
+          console.error('Error fetching logos:', error);
+        }
+      }
+
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchAndPopulateLogos();
+      });
+
     async function sendData(data) {
         const endpoint = 'https://your-endpoint-url.com'; // Replace with your actual endpoint
         try {
@@ -174,6 +213,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    generateDropdowns();
+
+    function generateDropdowns() {
+        const logoContainer = document.getElementById('logo-dropdowns');
+        const colorContainer = document.getElementById('color-dropdowns');
+    
+        // Generating logo dropdowns
+        const logoDropdowns = Array.from({ length: 5 }, (_, i) => `
+            <select class="logo-dropdown" id="logo${i+1}">
+                <option value="">Select Logo</option>
+            </select>
+        `).join('');
+        logoContainer.innerHTML = logoDropdowns;
+    
+        // Generating color dropdowns
+        const colorDropdowns = Array.from({ length: 5 }, (_, i) => `
+            <select class="color-dropdown" id="color${i+1}">
+                <option value="">Select Color</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="yellow">Yellow</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+            </select>
+        `).join('');
+        colorContainer.innerHTML = colorDropdowns;
+    }
+    
+
+
     function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -193,4 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.files = dt.files;
         processFile(file);
     }
+
+
+
 });
