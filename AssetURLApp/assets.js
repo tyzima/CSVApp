@@ -97,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
             qtyDiv.style.padding = '2px 5px';
             qtyDiv.style.backgroundColor = asset.quantity < 6 ? 'rgba(255, 0, 0, 0.2)' : 'transparent';
             qtyDiv.style.borderRadius = '5px';
+            qtyDiv.style.fontSize = '9px';
+            qtyDiv.style.fontWeight = '400'; 
     
             assetDiv.innerHTML = `
                 <div class="image-container">
