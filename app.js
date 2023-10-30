@@ -103,7 +103,7 @@ function normalizeSize(size) {
         'Youth XL': 'YXL', 'youth extra large': 'YXL', 'Youth X-Large': 'YXL',
         'Youth SM': 'YS', 'Girls Small': 'YS',
         'Adult X-Small': 'XS', 'X-Small': 'XS', 'XSmall': 'XS', 'x-small': 'XS', 'Unisex X-Small': 'XS',
-        'Adult Small': 'S', 'adult small': 'S', 'Unisex Small': 'SM',
+        'Adult Small': 'S', 'adult small': 'S', 'Unisex Small': 'S',
         'Adult Medium': 'M', 'adult medium': 'M', 'unisex medium': 'M', 'Unisex Medium': 'M',
         'Adult Large': 'L', 'adult large': 'L', 'Unisex Large': 'L',
         'Adult X-Large': 'XL', 'adult x-large': 'XL', 'Unisex X-Large': 'XL',
