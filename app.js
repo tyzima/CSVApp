@@ -96,7 +96,7 @@ const errorSound = new Audio('stop.mp3');
 function normalizeSize(size) {
     const sizeMap = {
         'OSFA': 'OSFA',
-        'One Size Fits Most': 'OSFA', 'One Size Fits All': 'OSFA', 'Mens One Size Fits Most': 'OSFA', 'Adjustable': 'OSFA',
+        'One Size Fits Most': 'OSFA', 'One Size Fits All': 'OSFA', 'Mens One Size Fits All': 'OSFA', 'Adjustable': 'OSFA',
         'Youth Small': 'YS', 'youth small': 'YS',
         'Youth Medium': 'YM', 'Youth MD': 'YM', 'youth medium': 'YM', 'Youth  Medium': 'YM',
         'Youth Large': 'YL', 'Youth LG': 'YL', 'youth large': 'YL',
