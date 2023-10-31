@@ -63,7 +63,7 @@
   }
   
   button {
-    background-color: #6200ea;
+    background-color: #2ecc71ea;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -73,7 +73,7 @@
   }
   
   button:hover {
-    background-color: #3700b3;
+    background-color: #25a55a;
   }
 
   #send-to-salesforce:hover {
@@ -85,6 +85,16 @@
     transform: translateY(-20px);
     pointer-events: none;
 }
+
+
+#send-to-xlsxtool{
+  background: color #2ecc71 !important;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;
+  font-weight:600 !important;
+  padding: top 10px !important;
+  margin: top 40px !important;
+ }
+ 
 
 
 #send-to-salesforce {
