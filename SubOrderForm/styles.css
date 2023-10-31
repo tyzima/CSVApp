@@ -1,103 +1,102 @@
 .form-container {
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-container label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  .form-container input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .drop-area {
-    border: 2px dashed #ccc;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-row {
-    display: inline-block;
-    /* Add other styling as needed */
-  }
-  
+  margin-bottom: 20px;
 
-  .drop-area:hover {
-    background-color: #f0f0f0;
-  }
-  
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  body {
-    font-family: 'Helvetica', sans-serif;
-    margin: 0;
-    color: rgb(79, 79, 79);
-    padding-top: 100px;
-    width:100%;
-    justify-content:center;
-    align-items:normal;
-    display:flex;
-    flex-direction:row;
-    font-weight:600;
-    font-size:16px;
-  }
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  body{
-   
-   }
-   
-   /* Form row */
-   #form .form-container .form-row{
-    width:49% !important;
-   }
-   
-  
-  .container {
-    width: 80%;
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  input,
-  button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
-  }
-  
-  #drop-area {
-    border: 2px dashed green;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    margin: 10px 0;
-    border-radius: 5px;
-  }
-  
-  #drop-area.hover {
-    background-color: #e9ffe9;
-  }
-  
-  #fileInput {
-    display: none;
-  }
-  
+.form-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.drop-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+  display: inline-block;
+  /* Add other styling as needed */
+}
+
+
+.drop-area:hover {
+  background-color: #f0f0f0;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Helvetica', sans-serif;
+  margin: 0;
+  color: black;
+  padding-top: 100px;
+  width:100%;
+  justify-content:center;
+  align-items:normal;
+  display:flex;
+  flex-direction:row;
+  font-weight:600;
+  font-size:16px;
+}
+
+
+ 
+ /* Form row */
+ #form .form-container .form-row{
+  width:49% !important;
+ }
+ 
+
+.container {
+  width: 80%;
+  max-width: 600px;
+  margin: auto;
+}
+
+input,
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+
+
+#drop-area {
+  border: 2px dashed #2ecc71;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+#drop-area.hover {
+  background-color: #e9ffe9;
+}
+
+#fileInput {
+  display: none;
+}
