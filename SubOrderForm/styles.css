@@ -82,6 +82,12 @@ button {
   box-sizing: border-box;
 }
 
+div h2{
+  text-align:center;
+  color:#2ecc71;
+  font-size:21px;
+ }
+ 
 
 
 #drop-area {
