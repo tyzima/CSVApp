@@ -163,6 +163,7 @@ function processCSV1(data) {
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
             return {
+                'Color': row['Color'] || '',
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
                 'Player Last Name': row['Player Last Name'] || '',
@@ -240,24 +241,26 @@ function processCSV2(data) {
     const aggregatedData = {};
 
     // Filter rows and then aggregate
-    data.filter(row => row['Product Name']).forEach(row => {
-        const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
-        const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '   ';
-        const style = row['Style'] || 'UnknownStyle'; // Handle lines without a Style
-        const styleSize = `${style}-${normalizedSize}`; // Combine Style and Size
-        const key = `${styleSize}-${goalieThroatGuard}`;
+data.filter(row => row['Product Name']).forEach(row => {
+    const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
+    const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '   ';
+    const style = row['Style'] || 'UnknownStyle';
+    const color = row['Color'] || ''; // Extract the color
+    const styleSize = `${style}-${normalizedSize}`;
+    const key = `${styleSize}-${goalieThroatGuard}-${color}`; // Include color in the key
 
-        if (!aggregatedData[key]) {
-            aggregatedData[key] = {
-                'Product Name': row['Product Name'],
-                'Style-Size': styleSize,  // Use the combined Style-Size
-                'Goalie Throat Guard': goalieThroatGuard,
-                'Aggregated Quantity': 0
-            };
-        }
+    if (!aggregatedData[key]) {
+        aggregatedData[key] = {
+            'Product Name': row['Product Name'],
+            'Style-Size': styleSize,
+            'Color': color, // Add the "Color" column
+            'Goalie Throat Guard': goalieThroatGuard,
+            'Aggregated Quantity': 0
+        };
+    }
 
-        aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
-    });
+    aggregatedData[key]['Aggregated Quantity'] += row['Quantity'] || 1;
+});
 
     function customSizeSort(a, b) {
         const sizeOrder = [
@@ -271,14 +274,17 @@ function processCSV2(data) {
     // Convert the aggregated data to an array
     const aggregatedArray = Object.values(aggregatedData);
 
-    // Sort the array by 'Style-Size', and 'Goalie Throat Guard'
-    aggregatedArray.sort((a, b) => {
-        const styleSizeA = String(a['Style-Size'] || '');
-        const styleSizeB = String(b['Style-Size'] || '');
-        return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) || // This line ensures "Yes" values come first
-               styleSizeA.localeCompare(styleSizeB) ||
-               customSizeSort(a['Size'], b['Size']);
-    });
+ // Sort the array by 'Style-Size', 'Color', and 'Goalie Throat Guard'
+aggregatedArray.sort((a, b) => {
+    const styleSizeA = String(a['Style-Size'] || '');
+    const styleSizeB = String(b['Style-Size'] || '');
+    const colorA = String(a['Color'] || '');
+    const colorB = String(b['Color'] || '');
+    return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) ||
+           styleSizeA.localeCompare(styleSizeB) ||
+           customSizeSort(a['Size'], b['Size']) ||
+           colorA.localeCompare(colorB); // Sort by color
+});
 
     // Convert the sorted array back to CSV
     const csv = Papa.unparse(aggregatedArray);
