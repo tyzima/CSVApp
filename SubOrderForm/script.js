@@ -245,7 +245,7 @@ function applyAlternatingColors(excelSheet) {
 
 function validateForm() {
   if (!teamName.value.trim()) {
-    alert('Team Name and PO Number are required');
+    alert('Team Name required');
     return false;
   }
   if (!projNumber.value.trim() && !reorderProjNumber.value.trim()) {
