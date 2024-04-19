@@ -72,7 +72,7 @@
   .overlay2 {
     position: fixed;
     bottom: 0;
-    right: 100%; /* Start hidden */
+    right: 110%; /* Start hidden */
     width: 90%;
     height: 100%;
     background-color: #ffffff;
