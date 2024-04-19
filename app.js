@@ -117,12 +117,12 @@ function normalizeSize(size) {
         'Men\'s X-Large': 'XL', 'Mens X-Large': 'XL', 'Adult - Men\'s X-Large': 'XL',
         'Men\'s 2X-Large': '2XL', 'Mens 2X-Large': '2XL', 'Adult - Men\'s 2X-Large': '2XL',
         'Men\'s 3X-Large': '3XL', 'Mens 3X-Large': '3XL','Adult - Men\'s 3X-Large': '3XL',
-        'Ladies X-Small': 'XS',
-        'Women\'s Small': 'S', 'Women\'s SM': 'S', 'Womens Small': 'S', 'Ladies Small': 'S',
-        'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M', 'Ladies Medium': 'M',
-        'Women\'s Large': 'L', 'Women\'s LG': 'L', 'Ladies Large': 'L',
-        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL', 'Womens X-Large': 'XL', 'Ladies X-Large': 'XL',
-        'Women\'s 2X-Large': '2XL', 'Women\'s XXL': '2XL', 'Ladies 2X-Large': '2XL',
+        'Ladies X-Small': 'XS', 'Adult - Women\'s X-Small': 'S',
+        'Women\'s Small': 'S', 'Women\'s SM': 'S', 'Womens Small': 'S', 'Ladies Small': 'S', 'Adult - Women\'s Small': 'S',
+        'Women\'s Medium': 'M', 'Womens Medium': 'M', 'Women\'s MD': 'M', 'Ladies Medium': 'M', 'Adult - Women\'s Medium': 'M',
+        'Women\'s Large': 'L', 'Women\'s LG': 'L', 'Ladies Large': 'L', 'Adult - Women\'s Large': 'L',
+        'Women\'s X-Large': 'XL', 'Women\'s XL': 'XL', 'Womens X-Large': 'XL', 'Ladies X-Large': 'XL', 'Adult - Women\'s X-Large': 'XL',
+        'Women\'s 2X-Large': '2XL', 'Women\'s XXL': '2XL', 'Ladies 2X-Large': '2XL', 'Adult - Women\'s 2X-Large': '2XL',
         'Unisex Large': 'L',
         'Unisex X-Large': 'XL'
     };
