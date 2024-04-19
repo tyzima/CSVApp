@@ -1,6 +1,7 @@
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('fileInput');
 const teamName = document.getElementById('teamName');
+const poNumber = document.getElementById('poNumber');
 const projNumber = document.getElementById('projNumber');
 const reorderProjNumber = document.getElementById('reorderProjNumber');
 
