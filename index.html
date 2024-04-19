@@ -57,19 +57,19 @@
 
     <div class="overlay2" id="overlay2">
         <div class="content">
-            <h2>What's this thing do?</h2>
+            <h2>🧼 OMG Reporting Cleanup Tool</h2>
             <p>This is a tool that will help clean up OMG Order Reports, removing unnecessary fields and returning 2 cleaned CSVs</p>
+            <h2>Files Generated</h2>
+          <p>1 CSV with aggregated Product totals, this will be used to input into Salesforce</p>
+          <p>1 CSV with itemized Products split by Qty, Sorted by Size, Number, Last Name, this will be used for sending to the coach, and for submitting sublimation orders</p>
           <h2>Size Fields</h2>
-          <p>The size information is standardized. Any field that represents the size of an item (like clothing sizes) is edited to match a uniform format. This could include fields labeled "Size," "SIZE," or any other variant.</p>
+          <p>The size information is standardized. Any field that represents the size of an item is edited to match a uniform format. For example Mens 2XL 2XLarge and 2X-Large are converted to 2XL</p>
           <h2>Player Number Fields</h2>
-          <p>These fields are checked for errors and normalized if needed. This means the system looks for and corrects any invalid or inconsistent player numbers or names. A warning will be displayed if an error is detected.</p>
+          <p>These fields are checked for errors and normalized if needed. This means the system looks for and corrects any invalid or inconsistent player numbers (Letters in the number field) or names. A warning will be displayed if an error is detected. Please note this does not check spelling of the name.</p>
           <h2>Quantity Fields</h2>
-          <p>In the data expansion step, quantity fields are adjusted based on bulk items, <br> <b>specifically cloning products with Qty 2+ into individual line items with Qty 1 </b></p>
+          <p>In the data expansion step, quantity fields are adjusted based on quantity ordered, <br> <b>specifically cloning products with Qty 2+ into individual line items with Qty 1 for order forms</b></p>
           <h2>Player Name Fields</h2>
-          <p>Player Names included on Products are included next to Player Number</p>
-          <h2>Files Generated</h2>
-          <p>1 CSV with aggregated Product totals</p>
-          <p>1 CSV with itemized Products split by Qty, Sorted by Size, Number, Last Name</p>
+          <p>There are 2 player name fields. 1 is to identify the Player Name at checkout, 1 is to identify if the garment has names included it. The names to be included in the garment are in all caps and located in column <b>Last Name</b>.</p>
         </div>
       </div>
       
