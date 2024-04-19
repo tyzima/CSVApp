@@ -163,10 +163,10 @@ function processCSV1(data) {
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
             return {
-                'Color': row['Color'] || '',
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
                 'Player Last Name': row['Player Last Name'] || '',
+                'Color': row['Color'] || '',
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
