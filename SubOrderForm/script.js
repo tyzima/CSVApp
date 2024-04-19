@@ -1,7 +1,6 @@
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('fileInput');
 const teamName = document.getElementById('teamName');
-const poNumber = document.getElementById('poNumber');
 const projNumber = document.getElementById('projNumber');
 const reorderProjNumber = document.getElementById('reorderProjNumber');
 
@@ -9,10 +8,7 @@ teamName.addEventListener('input', () => {
   teamName.value = teamName.value.toUpperCase();
 });
 
-// Add event listener to make PO Number uppercase
-poNumber.addEventListener('input', () => {
-  poNumber.value = poNumber.value.toUpperCase();
-});
+
 
 // Add event listener to ensure PROJ Number starts with "PROJ"
 projNumber.addEventListener('input', () => {
@@ -240,6 +236,27 @@ function applyAlternatingColors(excelSheet) {
   });
 }
 
+async function insertImage(workbook) {
+  const imageUrl = 'https://assetly.ordermygear.com/images/h_276,w_276,c_limit/aae9ae5958c2e70c358a94cc9300d1aa7f46141a';
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      const base64data = reader.result.split(',')[1]; // Get the base64 part
+      const imageId = workbook.addImage({
+        base64: base64data,
+        extension: 'png',
+      });
+
+      const worksheet = workbook.getWorksheet(1);
+      worksheet.addImage(imageId, 'H1:J5');
+      resolve();
+    }
+    reader.readAsDataURL(blob);
+  });
+}
 
 
 
