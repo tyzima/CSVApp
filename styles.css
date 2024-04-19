@@ -24,6 +24,7 @@
 }
 
 .overlay2 {
+  z-index: 3;
   position: fixed; /* Fixed position */
   top: 0; /* Align top */
   right: 100%; /* Start off-screen */
@@ -44,6 +45,10 @@
 .rotate {
   transform: rotate(45deg); /* Rotates the element by 45 degrees */
   transition: transform 0.3s ease-in-out; /* Smooth transition for rotation */
+}
+
+.open-btn.rotate {
+  z-index: 10;
 }
 
 .open-btn {
@@ -259,6 +264,7 @@ center h3{
 
   /* Order summary */
 #order-summary{
+  z-index: 1;
     font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-weight:500;
     font-size:21px;
