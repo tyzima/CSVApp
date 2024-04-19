@@ -8,11 +8,12 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+
     <div class="container">
         <form id="csv-form">
             <div class="title2"> OMG Clean-Up</div>
             <div class="file-drop-area">
-                <span class="file-msg">Drag & drop Order_Report.csv</span>
+                <span class="file-msg">2. Drag & drop Order_Report.csv</span>
                 <input type="file" id="csv-file" class="file-input">
             </div>
             <button type="submit">Upload</button>
@@ -21,6 +22,23 @@
         <div id="order-summary" style="display: none; background-color: green; color: white; border-radius: 12px; padding: 10px;">
             <!-- Summary will be inserted here -->
         </div>        
+    </div>
+
+    <div class="image-container">
+            <div class="image-box">
+                <img src="https://res.cloudinary.com/laxdotcom/image/upload/v1713486665/00000ASSETS/Asset_6images_jrx9m6.jpg" alt="Descriptive Alt Text 1">
+                <div class="overlay">
+                    <div class="text">1. Download "Regular" Order Report</div>
+                </div>
+            </div>
+    
+        <div class="image-box">
+            <img src="https://res.cloudinary.com/laxdotcom/image/upload/v1713486672/00000ASSETS/Asset_4images_ah317z.jpg" alt="Descriptive Alt Text 2">
+            <div class="overlay">
+                <div class="text">3. Clean Reports will auto-download</div>
+            </div>
+        </div>
+      
     </div>
         <div class="container2">
 
@@ -35,8 +53,65 @@
         Step 2. xlsx Tool
     </button>         </div>
 
+
+
+    <div class="overlay2" id="overlay2">
+        <div class="content">
+            <h2>What's this thing do?</h2>
+            <p>This is a tool that will help clean up OMG Order Reports, removing unnecessary fields and returning 2 cleaned CSVs</p>
+          <h2>Size Fields</h2>
+          <p>The size information is standardized. Any field that represents the size of an item (like clothing sizes) is edited to match a uniform format. This could include fields labeled "Size," "SIZE," or any other variant.</p>
+          <h2>Player Number Fields</h2>
+          <p>These fields are checked for errors and normalized if needed. This means the system looks for and corrects any invalid or inconsistent player numbers or names. A warning will be displayed if an error is detected.</p>
+          <h2>Quantity Fields</h2>
+          <p>In the data expansion step, quantity fields are adjusted based on bulk items, <br> <b>specifically cloning products with Qty 2+ into individual line items with Qty 1 </b></p>
+          <h2>Player Name Fields</h2>
+          <p>Player Names included on Products are included next to Player Number</p>
+          <h2>Files Generated</h2>
+          <p>1 CSV with aggregated Product totals</p>
+          <p>1 CSV with itemized Products split by Qty, Sorted by Size, Number, Last Name</p>
+        </div>
+      </div>
+      
+      <div class="open-btn" onclick="toggleOverlay()">+</div>
+      
+
+
+<script>function toggleOverlay() {
+    const overlay = document.querySelector('.overlay2');
+    const openButton = document.querySelector('.open-btn'); // Select the open button
+    // Toggle the right style by checking if it's currently shown
+    if (overlay.style.right === '0px') {
+      overlay.style.right = '100%'; // Slide out
+      openButton.classList.remove('rotate'); // Revert the rotation on the open button
+    } else {
+      overlay.style.right = '0px'; // Slide in
+      openButton.classList.add('rotate'); // Rotate the open button
+    }
+  }
+  
+  window.onclick = function(event) {
+    const overlay = document.getElementById('overlay2');
+    if (event.target === overlay) {
+      toggleOverlay(); // Call toggleOverlay without parameters
+    }
+  }
+  
+
+</script>
+
+<style>
+    .rotate {
+    transform: rotate(45deg) !important; /* Rotates the element by 45 degrees */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for rotation */
+}
+</style>
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
+
