@@ -94,7 +94,6 @@ async function processWorkbook(workbook) {
 
   XLSX.utils.sheet_add_aoa(templateSheet, [
     [teamName.value], 
-    [poNumber.value], 
     [projNumber.value], 
     [reorderProjNumber.value]
   ], { origin: 'B1' });
