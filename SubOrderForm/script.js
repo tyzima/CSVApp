@@ -4,6 +4,10 @@ const teamName = document.getElementById('teamName');
 const projNumber = document.getElementById('projNumber');
 const reorderProjNumber = document.getElementById('reorderProjNumber');
 
+Dim proj As String
+proj = Left(uploadedFileName, 5)
+
+
 teamName.addEventListener('input', () => {
   teamName.value = teamName.value.toUpperCase();
 });
@@ -197,17 +201,17 @@ columnsToShrink.forEach(col => {
  
 
 const updatedBlob = await excelWorkbook.xlsx.writeBuffer();
-
 const downloadLink = document.createElement('a');
 const projNumberValue = projNumber.value.trim();
-const fileName = projNumberValue ? `${projNumberValue}_SubOrderForm.xlsx` : 'PROJ_SubOrderForm.xlsx';
+const proj = uploadedFileName.substring(0, 5);
+const fileName = `${proj}_SubOrderForm.xlsx`;
 downloadLink.href = URL.createObjectURL(new Blob([updatedBlob], { type: 'application/octet-stream' }));
 downloadLink.download = fileName;
 document.body.appendChild(downloadLink);
 downloadLink.click();
 document.body.removeChild(downloadLink);
-}
 
+  
 function applyAlternatingColors(excelSheet) {
   const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ'];
   const lightGrey = 'FFD3D3D3'; // Light grey color
