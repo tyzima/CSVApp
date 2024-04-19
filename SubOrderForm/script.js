@@ -104,7 +104,7 @@ async function processWorkbook(workbook) {
 
 
 
-  const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ'];
+const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ', 'BX', 'CE', 'CL', 'CS', 'CZ', 'DG', 'DN'];
   productColumns.forEach((col, index) => {
     const productName = Object.keys(groupedData)[index];
     if (productName) {
@@ -173,7 +173,7 @@ async function processWorkbook(workbook) {
   row12.commit();
 
   // Style specific columns
-const columnsToFill = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP'];
+const columnsToFill = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP', 'BW', 'CD', 'CK', 'CR', 'CY', 'DF', 'DM'];
 columnsToFill.forEach(col => {
   for (let rowNum = 1; rowNum <= excelSheet.rowCount; rowNum++) {
     const row = excelSheet.getRow(rowNum);
@@ -188,8 +188,8 @@ columnsToFill.forEach(col => {
 });
 
 // Set column width for specific columns
-const columnsToShrink = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP'];
-columnsToShrink.forEach(col => {
+const columnsToShrink = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP', 'BW', 'CD', 'CK', 'CR', 'CY', 'DF', 'DM'];
+  columnsToShrink.forEach(col => {
   excelSheet.getColumn(col).width = 2;
 });
 
