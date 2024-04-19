@@ -4,10 +4,6 @@ const teamName = document.getElementById('teamName');
 const projNumber = document.getElementById('projNumber');
 const reorderProjNumber = document.getElementById('reorderProjNumber');
 
-Dim proj As String
-proj = Left(uploadedFileName, 5)
-
-
 teamName.addEventListener('input', () => {
   teamName.value = teamName.value.toUpperCase();
 });
@@ -172,6 +168,7 @@ const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ', 
   });
   row12.commit();
 
+  
   // Style specific columns
 const columnsToFill = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP', 'BW', 'CD', 'CK', 'CR', 'CY', 'DF', 'DM'];
 columnsToFill.forEach(col => {
@@ -189,7 +186,7 @@ columnsToFill.forEach(col => {
 
 // Set column width for specific columns
 const columnsToShrink = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI', 'BP', 'BW', 'CD', 'CK', 'CR', 'CY', 'DF', 'DM'];
-  columnsToShrink.forEach(col => {
+columnsToShrink.forEach(col => {
   excelSheet.getColumn(col).width = 2;
 });
 
@@ -201,17 +198,17 @@ const columnsToShrink = ['D', 'K', 'R', 'Y', 'AF', 'AG', 'AN', 'AU', 'BB', 'BI',
  
 
 const updatedBlob = await excelWorkbook.xlsx.writeBuffer();
+
 const downloadLink = document.createElement('a');
 const projNumberValue = projNumber.value.trim();
-const proj = uploadedFileName.substring(0, 5);
-const fileName = `${proj}_SubOrderForm.xlsx`;
+const fileName = projNumberValue ? `${projNumberValue}_SubOrderForm.xlsx` : 'PROJ_SubOrderForm.xlsx';
 downloadLink.href = URL.createObjectURL(new Blob([updatedBlob], { type: 'application/octet-stream' }));
 downloadLink.download = fileName;
 document.body.appendChild(downloadLink);
 downloadLink.click();
 document.body.removeChild(downloadLink);
+}
 
-  
 function applyAlternatingColors(excelSheet) {
   const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ'];
   const lightGrey = 'FFD3D3D3'; // Light grey color
