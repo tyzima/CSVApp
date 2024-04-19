@@ -107,10 +107,9 @@
 }
 
 .image-box {
-      margin: 10px;
-
+      margin: 20px;
     position: flex;
-    max-width: 35%;
+    max-width: 30%;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 12px;
