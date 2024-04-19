@@ -107,7 +107,7 @@ const productColumns = ['E', 'L', 'S', 'Z', 'AH', 'AO', 'AV', 'BC', 'BJ', 'BQ', 
       XLSX.utils.sheet_add_aoa(templateSheet, [[productName]], { origin: `${col}4` });
       const sizeCol = col;
       const productData = groupedData[productName].map(row => [
-        row['Size'] || '', '', row['Player Number'] || '', row['Last Name'] || '', row['Grad Year'] || ''
+        row['Size'] || '', row['Color'] || '' , row['Player Number'] || '', row['Last Name'] || '', row['Grad Year'] || ''
       ]);
       XLSX.utils.sheet_add_aoa(templateSheet, productData, { origin: `${sizeCol}13` });
     }
