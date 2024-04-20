@@ -144,10 +144,12 @@ function processCSV1(data) {
 
 // Function to validate player numbers
 function isValidPlayerNumber(playerNumber) {
-    if (playerNumber === undefined || playerNumber === '') return true; // Blank or undefined values are valid
-    return /^[0-9]+$/.test(playerNumber.toString()); // Force everything to string to ensure uniformity
+    if (playerNumber === undefined || playerNumber === null || playerNumber === '') {
+        return true; // Consider blank, undefined, or null values as valid
+    }
+    return /^[0-9]+$/.test(playerNumber.toString()); // Use regex to check if the value is numeric
 }
-
+    
     // Flag to track if any invalid player numbers are found
     let playerNumberErrorFound = false;
 
