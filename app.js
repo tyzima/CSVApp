@@ -145,7 +145,7 @@ function processCSV1(data) {
     // Function to validate player numbers
     function isValidPlayerNumber(playerNumber) {
         if (!playerNumber) return true;  // Blank or undefined values are considered valid
-        return /^[0-9]+$/.test(playerNumber);  // Only numbers are considered valid
+return /^[0-9]*$/.test(playerNumber); 
     }
 
     // Flag to track if any invalid player numbers are found
