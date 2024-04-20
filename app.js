@@ -151,8 +151,7 @@ function processCSV1(data) {
     // Flag to track if any invalid player numbers are found
     let playerNumberErrorFound = false;
 
-    // Filter and map the data
-    const filteredData = data.filter(row => row['Product Name'])
+     const filteredData = data.filter(row => row['Product Name'])
         .map(row => {
             // Check if the 'Player Number' fields are valid
             if (!isValidPlayerNumber(row['Player Number Input']) ||
@@ -162,6 +161,10 @@ function processCSV1(data) {
             }
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
+            
+            // Modify this line to handle '0' as a valid player number
+            const playerNumber = row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'];
+
             return {
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
@@ -170,13 +173,14 @@ function processCSV1(data) {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '',
+                'Player Number': playerNumber !== undefined ? playerNumber : '', // Use the playerNumber variable
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
                 'Goalie Throat Guard?': goalieThroatGuard
             };
         });
+
 
     // Expand data based on quantity
     const expandedData = [];
