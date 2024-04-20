@@ -143,10 +143,12 @@ function processCSV1(data) {
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
     // Function to validate player numbers
-   function isValidPlayerNumber(playerNumber) {
-    if (!playerNumber && playerNumber !== '0') return true;  // Blank, undefined, or '0' values are considered valid
-    return /^[0-9]+$/.test(playerNumber);  // One or more numbers are considered valid
+function isValidPlayerNumber(playerNumber) {
+    if (playerNumber === 0 || playerNumber === '0') return true; // Explicitly consider '0' as valid
+    if (!playerNumber) return false; // Handle null, undefined, or empty as invalid
+    return /^[0-9]+$/.test(playerNumber); // One or more numbers are considered valid
 }
+
 
     // Flag to track if any invalid player numbers are found
     let playerNumberErrorFound = false;
