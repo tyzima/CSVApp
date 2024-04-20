@@ -138,25 +138,27 @@ function processCSV1(data) {
 
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-    function isValidPlayerNumber(playerNumber) {
-        return playerNumber !== undefined && playerNumber !== null && /^[0-9]+$/.test(playerNumber.toString());
-    }
+function isValidPlayerNumber(playerNumber) {
+    // Check if playerNumber is strictly a non-empty numeric string
+    return /^[0-9]+$/.test(playerNumber);
+}
 
     let playerNumberErrorFound = false;
 
-    const filteredData = data.filter(row => row['Product Name'])
-        .map(row => {
-            let validPlayerNumber = '';
-            const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
-            for (let num of playerNumbers) {
-                if (isValidPlayerNumber(num)) {
-                    validPlayerNumber = num;
-                    break;
-                }
+const filteredData = data.filter(row => row['Product Name'])
+    .map(row => {
+        let validPlayerNumber = '';
+        const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
+        for (let num of playerNumbers) {
+            if (isValidPlayerNumber(num)) {
+                validPlayerNumber = num;
+                break;
             }
-            if (validPlayerNumber === '') {
-                playerNumberErrorFound = true;
-            }
+        }
+        if (validPlayerNumber === '') {
+            playerNumberErrorFound = true;
+        }
+
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
             return {
