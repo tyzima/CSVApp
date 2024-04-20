@@ -55,43 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function showNotification(message, isError) {
-    const notificationBar = document.createElement('div');
-    
-    const stopSignLeft = document.createElement('span');
-    stopSignLeft.innerHTML = '🛑';
-    stopSignLeft.style.marginRight = '10px'; // Add spacing to the right
-
-    const text = document.createElement('span');
-        text.innerHTML = message.replace(/\b\w/g, function(char) {
-            return char.toUpperCase();
-        });
-    text.style.marginRight = '10px'; // Add spacing to the right
-    text.style.marginLeft = '10px'; // Add spacing to the left
-
-    const stopSignRight = document.createElement('span');
-    stopSignRight.innerHTML = '🛑';
-    stopSignRight.style.marginLeft = '10px'; // Add spacing to the left
-
-    notificationBar.appendChild(stopSignLeft);
-    notificationBar.appendChild(text);
-    notificationBar.appendChild(stopSignRight);
-
-    notificationBar.style.position = 'fixed';
-    notificationBar.style.top = '0';
-    notificationBar.style.left = '0';
-    notificationBar.style.width = '100%';
-    notificationBar.style.textAlign = 'center';
-    notificationBar.style.padding = '10px';
-    notificationBar.style.background = isError ? 'linear-gradient(to right, #ff9999, #cc0000)' : 'linear-gradient(to right, lightgreen, darkgreen)';
-    notificationBar.style.color = 'white';
-    notificationBar.style.fontWeight = 'bold';
-    notificationBar.style.fontSize = '16px';
-    notificationBar.style.zIndex = '1000';
-    document.body.appendChild(notificationBar);
-}
-
-const errorSound = new Audio('stop.mp3');
 
 // Function to normalize sizes
 function normalizeSize(size) {
