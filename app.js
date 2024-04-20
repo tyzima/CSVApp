@@ -129,19 +129,18 @@ function normalizeSize(size) {
     return sizeMap[size] || size;
 }
 
-function isValidPlayerNumber(playerNumber) {
-    // Explicitly check for playerNumber being 0 or a positive integer
-    return playerNumber !== undefined && playerNumber !== null && (/^[0-9]+$/.test(playerNumber.toString()) || playerNumber === 0);
-}
-
 function processCSV1(data) {
     const saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
     const statusElement = document.getElementById('status');
     statusElement.innerText = "Generating Itemized CSV...";
-
+    
     window.saleCode = saleCode;
 
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
+
+    function isValidPlayerNumber(playerNumber) {
+        return playerNumber !== undefined && playerNumber !== null && /^[0-9]+$/.test(playerNumber.toString());
+    }
 
     let playerNumberErrorFound = false;
 
@@ -184,6 +183,14 @@ function processCSV1(data) {
         }
     });
 
+    function customSizeSort(a, b) {
+        const sizeOrder = [
+            'OSFA', '5XL', '4XL', '3XL', '2XL', 'XL', 'Extra Large (14")', 'L', 'Large (13")',
+            'M', 'Medium (12")', 'S', 'Small (10")', 'XS', 'YXL', 'YL', 'YM', 'YS'
+        ];
+        return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
+    }
+
     expandedData.sort((a, b) => {
         return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) ||
             String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) ||
@@ -204,7 +211,6 @@ function processCSV1(data) {
         statusElement.style.color = 'black';
     }
 }
-
 
 
 function processCSV2(data) {
