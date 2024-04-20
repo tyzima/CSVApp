@@ -144,8 +144,8 @@ function processCSV1(data) {
 
     // Function to validate player numbers
     function isValidPlayerNumber(playerNumber) {
-        if (playerNumber === undefined || playerNumber === null) return true;  // Blank or undefined values are considered valid
-        return /^[0-9]+$/.test(playerNumber.toString());  // Only numbers are considered valid
+        if (!playerNumber) return true;  // Blank or undefined values are considered valid
+        return /^[0-9]+$/.test(playerNumber);  // Only numbers are considered valid
     }
 
     // Flag to track if any invalid player numbers are found
@@ -170,9 +170,7 @@ function processCSV1(data) {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': row['Player Number Input'] !== undefined ? row['Player Number Input'].toString() :
-                                 row['Player Number - Exclusive'] !== undefined ? row['Player Number - Exclusive'].toString() :
-                                 row['Player Number (input)'] !== undefined ? row['Player Number (input)'].toString() : '',
+                'Player Number': row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '',
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
