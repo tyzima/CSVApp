@@ -129,39 +129,34 @@ function normalizeSize(size) {
     return sizeMap[size] || size;
 }
 
-
 function processCSV1(data) {
-    // Update the status
     const saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
     const statusElement = document.getElementById('status');
     statusElement.innerText = "Generating Itemized CSV...";
     
     window.saleCode = saleCode;
 
-    
-    // Store name for the filename
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-// Function to validate player numbers
-function isValidPlayerNumber(playerNumber) {
-    if (playerNumber === undefined || playerNumber === null || playerNumber === '') {
-        return true; // Consider blank, undefined, or null values as valid
+    function isValidPlayerNumber(playerNumber) {
+        return playerNumber !== undefined && playerNumber !== null && /^[0-9]+$/.test(playerNumber.toString());
     }
-    return /^[0-9]+$/.test(playerNumber.toString()); // Use regex to check if the value is numeric
-}
-    
-    // Flag to track if any invalid player numbers are found
+
     let playerNumberErrorFound = false;
 
-    // Filter and map the data
     const filteredData = data.filter(row => row['Product Name'])
         .map(row => {
-            // Check if the 'Player Number' fields are valid
-           if (!isValidPlayerNumber(row['Player Number Input']) ||
-    !isValidPlayerNumber(row['Player Number - Exclusive']) ||
-    !isValidPlayerNumber(row['Player Number (input)'])) {
-    playerNumberErrorFound = true;
-}
+            let validPlayerNumber = '';
+            const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
+            for (let num of playerNumbers) {
+                if (isValidPlayerNumber(num)) {
+                    validPlayerNumber = num;
+                    break;
+                }
+            }
+            if (validPlayerNumber === '') {
+                playerNumberErrorFound = true;
+            }
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
             return {
@@ -172,7 +167,7 @@ function isValidPlayerNumber(playerNumber) {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': row['Player Number Input'] || row['Player Number - Exclusive'] || row['Player Number (input)'] || '',
+                'Player Number': validPlayerNumber,
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
@@ -180,7 +175,6 @@ function isValidPlayerNumber(playerNumber) {
             };
         });
 
-    // Expand data based on quantity
     const expandedData = [];
     filteredData.forEach(row => {
         const quantity = parseInt(row.Quantity, 10) || 1;
@@ -189,7 +183,6 @@ function isValidPlayerNumber(playerNumber) {
         }
     });
 
-    // Custom size sorting function
     function customSizeSort(a, b) {
         const sizeOrder = [
             'OSFA', '5XL', '4XL', '3XL', '2XL', 'XL', 'Extra Large (14")', 'L', 'Large (13")',
@@ -198,7 +191,6 @@ function isValidPlayerNumber(playerNumber) {
         return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
-    // Sort data
     expandedData.sort((a, b) => {
         return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) ||
             String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) ||
@@ -206,25 +198,18 @@ function isValidPlayerNumber(playerNumber) {
             (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
     });
 
-    // Convert data to CSV format
     const csv = Papa.unparse(expandedData);
-
-    // Download CSV file
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
-
-// Update the status and show notification if needed
-if (playerNumberErrorFound) {
-    statusElement.innerText = "Player Number Errors found";
-    statusElement.style.color = 'red';
-    showNotification("Player Number Error Found", true);
-    errorSound.play();  // This should work after user interaction
-} else {
-    statusElement.innerText = "Itemized CSV generated.";
-    statusElement.style.color = 'black'; // Reset to default color if needed
-}
-
-
+    if (playerNumberErrorFound) {
+        statusElement.innerText = "Player Number Errors found";
+        statusElement.style.color = 'red';
+        showNotification("Player Number Error Found", true);
+        errorSound.play();
+    } else {
+        statusElement.innerText = "Itemized CSV generated.";
+        statusElement.style.color = 'black';
+    }
 }
 
 
