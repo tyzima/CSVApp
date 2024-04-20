@@ -40,6 +40,7 @@
   right: 20px; /* Spacing from the right */
   font-size: 24px; /* Larger font size for visibility */
   cursor: pointer; /* Cursor indicates interactiveness */
+  z-index: 9999;
 }
 
 .rotate {
