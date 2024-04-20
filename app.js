@@ -206,8 +206,7 @@ const filteredData = data.filter(row => row['Product Name'])
     if (playerNumberErrorFound) {
         statusElement.innerText = "Possible Number error or Zeroes in list ";
         statusElement.style.color = 'red';
-        showNotification("Player Number Error Found", true);
-        errorSound.play();
+        showNotification("Number Error or Zeroes included", true);
     } else {
         statusElement.innerText = "Itemized CSV generated.";
         statusElement.style.color = 'black';
