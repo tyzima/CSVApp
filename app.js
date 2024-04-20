@@ -55,20 +55,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
     
     const stopSignLeft = document.createElement('span');
-    stopSignLeft.innerHTML = ' ';
+    stopSignLeft.innerHTML = '🛑';
     stopSignLeft.style.marginRight = '10px'; // Add spacing to the right
 
     const text = document.createElement('span');
+        text.innerHTML = message.replace(/\b\w/g, function(char) {
+            return char.toUpperCase();
+        });
     text.style.marginRight = '10px'; // Add spacing to the right
     text.style.marginLeft = '10px'; // Add spacing to the left
 
     const stopSignRight = document.createElement('span');
-    stopSignRight.innerHTML = ' ';
+    stopSignRight.innerHTML = '🛑';
     stopSignRight.style.marginLeft = '10px'; // Add spacing to the left
 
     notificationBar.appendChild(stopSignLeft);
