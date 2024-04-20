@@ -64,7 +64,6 @@ function showNotification(message, isError) {
     stopSignLeft.style.marginRight = '10px'; // Add spacing to the right
 
     const text = document.createElement('span');
-    text.innerHTML = message.toUpperCase(); // Convert message to uppercase
     text.style.marginRight = '10px'; // Add spacing to the right
     text.style.marginLeft = '10px'; // Add spacing to the left
 
