@@ -143,11 +143,10 @@ function processCSV1(data) {
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
 // Function to validate player numbers
-   function isValidPlayerNumber(playerNumber) {
-    if (!playerNumber && playerNumber !== '0') return true;  // Blank, undefined, or '0' values are considered valid
-    return /^[0-9]+$/.test(playerNumber);  // One or more numbers are considered valid
+function isValidPlayerNumber(playerNumber) {
+    if (playerNumber === undefined || playerNumber === '') return true; // Blank or undefined values are valid
+    return /^[0-9]+$/.test(playerNumber.toString()); // Force everything to string to ensure uniformity
 }
-
 
     // Flag to track if any invalid player numbers are found
     let playerNumberErrorFound = false;
@@ -156,11 +155,11 @@ function processCSV1(data) {
     const filteredData = data.filter(row => row['Product Name'])
         .map(row => {
             // Check if the 'Player Number' fields are valid
-            if (!isValidPlayerNumber(row['Player Number Input']) ||
-                !isValidPlayerNumber(row['Player Number - Exclusive']) ||
-                !isValidPlayerNumber(row['Player Number (input)'])) {
-                playerNumberErrorFound = true;
-            }
+           if (!isValidPlayerNumber(row['Player Number Input']) ||
+    !isValidPlayerNumber(row['Player Number - Exclusive']) ||
+    !isValidPlayerNumber(row['Player Number (input)'])) {
+    playerNumberErrorFound = true;
+}
 
             const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
             return {
