@@ -204,7 +204,7 @@ const filteredData = data.filter(row => row['Product Name'])
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     if (playerNumberErrorFound) {
-        statusElement.innerText = "Player Number Errors found";
+        statusElement.innerText = "Possible Number error or Zeroes in list ";
         statusElement.style.color = 'red';
         showNotification("Player Number Error Found", true);
         errorSound.play();
