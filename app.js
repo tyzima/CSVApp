@@ -60,7 +60,7 @@ function showNotification(message, isError) {
     const notificationBar = document.createElement('div');
     
     const stopSignLeft = document.createElement('span');
-    stopSignLeft.innerHTML = '🛑';
+    stopSignLeft.innerHTML = ' ';
     stopSignLeft.style.marginRight = '10px'; // Add spacing to the right
 
     const text = document.createElement('span');
@@ -69,7 +69,7 @@ function showNotification(message, isError) {
     text.style.marginLeft = '10px'; // Add spacing to the left
 
     const stopSignRight = document.createElement('span');
-    stopSignRight.innerHTML = '🛑';
+    stopSignRight.innerHTML = ' ';
     stopSignRight.style.marginLeft = '10px'; // Add spacing to the left
 
     notificationBar.appendChild(stopSignLeft);
