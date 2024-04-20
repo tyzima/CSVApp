@@ -24,7 +24,7 @@
 }
 
 .overlay2 {
-  z-index: 3;
+  z-index: 900;
   position: fixed; /* Fixed position */
   top: 0; /* Align top */
   right: 100%; /* Start off-screen */
