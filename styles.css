@@ -49,7 +49,7 @@
 }
 
 .open-btn.rotate {
-  z-index: 10;
+  z-index: 9999;
 }
 
 .open-btn {
@@ -68,6 +68,7 @@
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     user-select: none;
+  z-index: 9999;
   }
 
   .overlay2 {
@@ -92,6 +93,7 @@
     right: 20px;
     font-size: 24px;
     cursor: pointer;
+    z-index: 9999;
   }
 
   .content {
