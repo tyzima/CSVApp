@@ -332,6 +332,10 @@ table {
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const oppId = getURLParameter('oppId');
+    const oppIdDisplay = document.getElementById('oppIdDisplay');
+    oppIdDisplay.textContent = oppId || 'No ID provided';
+
     fetch('Products.json')
         .then(response => response.json())
         .then(data => {
@@ -339,48 +343,46 @@ document.addEventListener('DOMContentLoaded', function() {
             data.forEach(item => {
                 window.products[item['Product Code']] = item['Product Name'];
             });
-            // Attach autocomplete listeners to all initial SKU cells
             const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
             attachAutocompleteListeners(initialSkuCells);
         })
         .catch(error => console.error('Error loading product data:', error));
 
-    // Attach existing event listeners for table interactions
     const table = document.getElementById('productTable');
     table.addEventListener('input', updateProductName);
     table.addEventListener('paste', handlePaste);
     table.addEventListener('click', handleDeleteRow);
-
-    // Attach an event listener for sending data to Salesforce
     document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
 
-    // Attach an event listener to the "+Product" button to add a new row
-    document.getElementById('addProductButton').addEventListener('click', function() {
+    document.getElementById('addProductButton').addEventListener('click', addNewRow);
+});
+
+function getURLParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+function addNewRow() {
     const tbody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
     const newRow = tbody.insertRow(0);
     const cellCount = tbody.rows[tbody.rows.length - 1].cells.length;
 
-    for(let i = 0; i < cellCount; i++) {
+    for (let i = 0; i < cellCount; i++) {
         let newCell = newRow.insertCell(i);
         newCell.contentEditable = true;
-        if (i === 2) { // If the third column should not be editable
+        if (i === 2) {
             newCell.contentEditable = false;
         }
     }
-    // Attach autocomplete to the new SKU cell
     attachAutocompleteListeners([newRow.cells[0]]);
-});
-
-
-    // Other existing functions like updateProductName, handlePaste, handleDeleteRow, sendToSalesforce...
-});
+}
 
 function attachAutocompleteListeners(cells) {
     cells.forEach(cell => {
         const dropdown = createDropdown();
         cell.appendChild(dropdown);
         cell.addEventListener('input', function(event) {
-            updateDropdown(dropdown, event.target.innerText); // Use innerText instead of textContent
+            updateDropdown(dropdown, event.target.innerText);
             event.stopPropagation();
         });
         cell.addEventListener('focusin', function(event) {
@@ -391,57 +393,6 @@ function attachAutocompleteListeners(cells) {
         });
     });
 }
-
-
-function updateDropdown(dropdown, text) {
-    dropdown.innerHTML = '';
-    if (text.trim() === "") {
-        dropdown.style.display = 'none';
-        return; // Exit the function if the input is empty
-    }
-
-    const inputText = text.toUpperCase();
-    let hasItems = false;
-
-    // Create an array of products with both codes and names for easier filtering
-    const productsArray = Object.entries(window.products).map(([code, name]) => ({ code, name }));
-
-    // Filter the array based on whether the inputText is included in the code or the name
-    const matchingProducts = productsArray.filter(product =>
-        product.code.toUpperCase().includes(inputText) ||
-        product.name.toUpperCase().includes(inputText)
-    ).slice(0, 10); // Limit the results to 10 items
-
-    matchingProducts.forEach(product => {
-        let item = document.createElement('li');
-        item.classList.add('dropdown-item'); // Apply class for styling
-        
-        let codeSpan = document.createElement('span');
-        codeSpan.textContent = product.code;
-        codeSpan.classList.add('product-code'); // Apply class for styling
-
-        let nameSpan = document.createElement('span');
-        nameSpan.textContent = ` - ${product.name}`;
-        nameSpan.classList.add('product-name'); // Apply class for styling
-
-        item.appendChild(codeSpan);
-        item.appendChild(nameSpan);
-        
-        item.addEventListener('click', function() {
-            let parentCell = dropdown.closest('td');
-            parentCell.innerText = product.code; // Sets the text of the input cell to the product code
-            dropdown.style.display = 'none';
-            updateProductName({ target: parentCell }); // Update product name based on selection
-        });
-        
-        dropdown.appendChild(item);
-        hasItems = true;
-    });
-
-    dropdown.style.display = hasItems ? 'block' : 'none';
-}
-
-
 
 function createDropdown() {
     let dropdown = document.createElement('ul');
@@ -455,13 +406,52 @@ function createDropdown() {
     dropdown.style.overflowY = 'auto';
     dropdown.style.boxShadow = '0 2px 5px rgba(0,0,0,.2)';
     dropdown.style.marginTop = '8px';
-    dropdown.style.marginLeft = '-8px'; // Adjusted to prevent overlap
+    dropdown.style.marginLeft = '-8px';
     dropdown.style.padding = '0';
-    dropdown.style.display = 'none'; // Initially hidden
+    dropdown.style.display = 'none';
     return dropdown;
 }
 
+function updateDropdown(dropdown, text) {
+    dropdown.innerHTML = '';
+    if (text.trim() === "") {
+        dropdown.style.display = 'none';
+        return;
+    }
 
+    const inputText = text.toUpperCase();
+    const productsArray = Object.entries(window.products).map(([code, name]) => ({ code, name }));
+    const matchingProducts = productsArray.filter(product =>
+        product.code.toUpperCase().includes(inputText) ||
+        product.name.toUpperCase().includes(inputText)
+    ).slice(0, 10);
+
+    matchingProducts.forEach(product => {
+        let item = document.createElement('li');
+        item.classList.add('dropdown-item');
+        
+        let codeSpan = document.createElement('span');
+        codeSpan.textContent = product.code;
+        codeSpan.classList.add('product-code');
+
+        let nameSpan = document.createElement('span');
+        nameSpan.textContent = ` - ${product.name}`;
+        nameSpan.classList.add('product-name');
+
+        item.appendChild(codeSpan);
+        item.appendChild(nameSpan);
+        
+        item.addEventListener('click', function() {
+            let parentCell = dropdown.closest('td');
+            parentCell.innerText = product.code;
+            dropdown.style.display = 'none';
+            updateProductName({ target: parentCell });
+        });
+        
+        dropdown.appendChild(item);
+        dropdown.style.display = 'block';
+    });
+}
 
 function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
@@ -476,13 +466,13 @@ function updateProductName(e) {
         }
     }
 }
+
 function handlePaste(e) {
     e.preventDefault();
     const clipboardData = e.clipboardData || window.clipboardData;
     const pastedData = clipboardData.getData('Text').trim();
     const rows = pastedData.split('\n');
     const table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
-    // Clear existing content in the first row
     Array.from(table.rows[0].cells).forEach(cell => cell.textContent = '');
     rows.forEach((rowText, rowIndex) => {
         const rowArray = rowText.split('\t');
@@ -490,45 +480,36 @@ function handlePaste(e) {
         rowArray.forEach((cellData, index) => {
             const cell = (rowIndex === 0) ? row.cells[index] : row.insertCell();
             cell.textContent = cellData;
-            cell.contentEditable = index !== 2; // Product Name is not editable
+            cell.contentEditable = index !== 2;
         });
         while (row.cells.length < 4) {
             const cell = row.insertCell();
-            if (row.cells.length === 4) { // MSRP column
+            if (row.cells.length === 4) {
                 cell.textContent = '0.00';
-                cell.contentEditable = true; // Optionally make editable
+                cell.contentEditable = true;
             }
         }
-        updateProductName({target: row.cells[0]}); // Populate Product Name
+        updateProductName({target: row.cells[0]});
     });
 }
-
-// Add a function to set MSRP when a row is added dynamically other than pasting
-function setDefaultMSRP() {
-    const rows = document.querySelectorAll('#productTable tbody tr');
-    rows.forEach(row => {
-        if (row.cells.length === 4) { // Assuming MSRP is the fourth column
-            row.cells[3].textContent = '$0.00';
-        }
-    });
-}
-
 
 function sendToSalesforce() {
+    const oppId = getURLParameter('oppId');
     const rows = document.querySelectorAll('#productTable tbody tr');
     const opportunityProducts = Array.from(rows).map(row => {
         const productCode = row.cells[0].textContent.trim();
         const qty = row.cells[1].textContent;
         const productName = row.cells[2].textContent;
         return {
+            OpportunityID: oppId,
             ProductID: productCode,
             Qty: qty,
-            Price: "0.00", // Placeholder for price, update if necessary
+            Price: "0.00",
             ProductName: productName.includes('Please Manually Add') ? '' : productName
         };
-    }).filter(product => product.ProductName !== ''); // Filter out rows with manual add message
+    }).filter(product => product.ProductName !== '');
     console.log('Data to send:', opportunityProducts);
-    // Here you would send the opportunityProducts data to Salesforce
+    // Add your AJAX or fetch API call here to send data to Salesforce
 }
 
 function handleDeleteRow(e) {
@@ -537,5 +518,6 @@ function handleDeleteRow(e) {
     }
 }
 </script>
+
 </body>
 </html>
