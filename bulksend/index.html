@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Table</title>
+<style>
+    body {
+        padding-top: 20px;
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        
+    }
+
+    table {
+        width: 90%;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        overflow: visible;
+        margin: auto;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ccc;
+    }
+
+    th {
+        background-color: #f4f4f4;
+        padding: 15px; 
+        padding-left: 20px;
+        border-right: 1px solid #d2d2d2;
+    }
+
+    #productTable thead th:last-child {
+    border-right: none;
+}
+
+
+    td[contenteditable="true"]:focus {
+        outline: 2px solid #4A90E2;
+        background-color: #eef6fc;
+        outline-offset: -2px  }
+
+        #sendButton {
+    background-image: linear-gradient(to right, #0055aa, #2688ea,#0055aa); /* Adjust these colors to match your needs */
+    background-size: 200% 100%;
+    animation: gradient-shift 3s linear infinite;
+    color: white;
+    border: none;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    cursor: pointer;
+    border-radius: 40px;
+    transition: all 0.9s ease-in;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 1px, rgba(0, 0, 0, 0.04) 0px 2px 2px, rgba(0, 0, 0, 0.04) 0px 4px 4px, rgba(0, 0, 0, 0.04) 0px 8px 8px, rgba(0, 0, 0, 0.04) 0px 16px 16px;
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+
+#sendButton:hover {
+    -webkit-box-shadow: inset 1px 1px 10px #33333365;
+   -moz-box-shadow:    inset 1px 1px 10px #33333371;
+   box-shadow:         inset 1px 1px 10px #33333367;
+   transition: all 0.9s ease;
+}
+
+
+    .valid-product {
+  animation: animateBg 10s linear infinite alternate;
+  background-image: linear-gradient(45deg, #fff,#fff,#fff, #d9ffe4, #fff, #fff);
+  background-size: 100% 1100%;
+}
+
+@keyframes animateBg {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+#addbuttoncontainer {
+    display: flex;
+padding-left: 98px
+}
+
+#buttoncontainer {
+display: flex;
+  justify-content: center; /* This centers the child horizontally */
+  align-items: center; 
+}
+
+    .invalid-product {
+        animation: animateBg 10s linear infinite alternate;
+  background-image: linear-gradient(45deg, #fff,#fff,#fff, #ffd9d9, #fff, #fff);
+  background-size: 100% 1100%;
+    }
+
+
+    .delete-btn {
+    background-color: red !important;
+    color: white;
+    left: -40px !important;
+    padding: 0; /* Remove padding */
+    font-weight: bold;
+    font-size: 11px; /* Smaller font size */
+    line-height: 1; /* Line height to 1 to prevent increasing height */
+    height: 20px; /* Make button height fill the cell */
+    width: 20px; /* Set a fixed width */
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex; /* Use flex to vertically and horizontally center content */
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Center content horizontally */
+    margin: 0; /* Remove any default margins */
+    margin-right: 3px;
+    border: none;
+    animation: ease-in-out 3s;
+    vertical-align: middle; /* Keep in line with other inline or inline-block elements */
+    overflow: hidden; /* Prevent any part of the button from overflowing the cell */
+    }
+/* Optional: Hover effect for better user interaction */
+.delete-btn:hover {
+    -webkit-box-shadow: inset 1px 1px 10px #33333330;
+   -moz-box-shadow:    inset 1px 1px 10px #33333330;
+   box-shadow:         inset 1px 1px 10px #3333332e;
+   animation: ease-in-out 3s;
+}
+
+#productTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+td .delete-btn {
+    float: right; /* Align the button to the right side of the cell */
+}
+
+/* Additional adjustments to keep the button within the cell's bounds */
+td {
+    position: relative; /* Establish a positioning context for absolute positioning */
+}
+
+.delete-btn {
+    position: absolute; /* Position the button absolutely within the cell */
+    right: 0; /* Align it to the right edge of the cell */
+    top: 50%; /* Align it to the vertical center */
+    transform: translateY(-50%); /* Offset the button by half its height for perfect centering */
+    margin: 0; /* Remove any default margins to prevent extra spacing */
+    /* Other styles from before... */
+}
+
+h1 {
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    letter-spacing: -1px;
+}
+h3 {
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    letter-spacing: -.4px;
+}
+
+.animated-text {
+    background-image: linear-gradient(45deg,  #003366, #2688ea, #003366); /* Gradient from dark blue to light blue */
+    -webkit-background-clip: text;
+    color: transparent; /* Make the text color transparent to show the background */
+    background-size: 200% 100%; /* Increase the background size for a continuous effect */
+    animation: slide 3s linear infinite; /* Apply the animation */
+}
+
+@keyframes slide {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+}
+
+h4 {
+    color: #ccc;
+}
+
+#productTable td:first-child {
+    position: relative; /* Ensures the dropdown is positioned relative to the cell */
+}
+
+ul.dropdown {
+    list-style-type: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    min-width: 400px !important;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    top: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    margin-top: 1px; 
+}
+
+ul.dropdown li {
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+ul.dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+ul.dropdown li span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+ul.dropdown li span:first-child {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+ul.dropdown li span:last-child {
+    font-size: smaller;
+    color: #555;
+}
+
+.dropdown-item {
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee; /* Separates items */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack code and name vertically */
+    align-items: flex-start; /* Aligns content to the left */
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0; /* Highlight item on hover */
+}
+
+.product-code {
+    font-weight: bold;
+    margin-bottom: 2px; /* Space between code and name */
+}
+
+.product-name {
+    font-size: smaller;
+    color: #555;
+}
+
+table {
+    margin-top: 50px;
+    margin-bottom: 20px; /* Adjust based on your design */
+}
+
+#addProductButton {
+    font-weight: 900;
+    color: green;
+    background-color: white;
+    border: 0px;
+    left: 30px !important;
+    display: block;
+    width: max-content; /* Adjust based on your design */
+    padding: 5px 10px; /* Adjust based on your design */
+    cursor: pointer;
+}
+
+#addProductButton:hover {
+    color: rgb(171, 171, 171);
+    background-color: white;
+    border: 0px;
+    left: 30px !important;
+    display: block;
+    width: max-content; /* Adjust based on your design */
+    padding: 5px 10px; /* Adjust based on your design */
+    cursor: pointer;
+}
+
+#oppIdDisplayContainer {
+    display: flex;
+  justify-content: center; /* This centers the child horizontally */
+  align-items: center; 
+}
+
+
+</style>
+</head>
+<body>
+    <h1>Bulk Add <span class="animated-text">Salesforce</span> Products</h1>
+    <h3>Copy and Paste from Excel or type a SKU</h3>
+    
+<table id="productTable">
+    <thead>
+        <tr>
+            <th>SKU</th>
+            <th>Quantity</th>
+            <th>Product Name</th>
+            <th>MSRP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td></td>
+            <td contenteditable="true"></td>
+        </tr>
+    </tbody>
+</table>
+<div id="addbuttoncontainer">
+    <button id="addProductButton">+Product</button>
+</div>
+<div id="buttoncontainer">
+<button id="sendButton">Send to Salesforce</button>
+</div>
+<div id="buttoncontainer">
+<h4>Please double check the opportunity.</h4>
+</div>
+<div id="oppIdDisplayContainer">
+    <h4>Opportunity ID: <span id="oppIdDisplay"></span></h4>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('Products.json')
+        .then(response => response.json())
+        .then(data => {
+            window.products = {};
+            data.forEach(item => {
+                window.products[item['Product Code']] = item['Product Name'];
+            });
+            // Attach autocomplete listeners to all initial SKU cells
+            const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
+            attachAutocompleteListeners(initialSkuCells);
+        })
+        .catch(error => console.error('Error loading product data:', error));
+
+    // Attach existing event listeners for table interactions
+    const table = document.getElementById('productTable');
+    table.addEventListener('input', updateProductName);
+    table.addEventListener('paste', handlePaste);
+    table.addEventListener('click', handleDeleteRow);
+
+    // Attach an event listener for sending data to Salesforce
+    document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
+
+    // Attach an event listener to the "+Product" button to add a new row
+    document.getElementById('addProductButton').addEventListener('click', function() {
+    const tbody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+    const newRow = tbody.insertRow(0);
+    const cellCount = tbody.rows[tbody.rows.length - 1].cells.length;
+
+    for(let i = 0; i < cellCount; i++) {
+        let newCell = newRow.insertCell(i);
+        newCell.contentEditable = true;
+        if (i === 2) { // If the third column should not be editable
+            newCell.contentEditable = false;
+        }
+    }
+    // Attach autocomplete to the new SKU cell
+    attachAutocompleteListeners([newRow.cells[0]]);
+});
+
+
+    // Other existing functions like updateProductName, handlePaste, handleDeleteRow, sendToSalesforce...
+});
+
+function attachAutocompleteListeners(cells) {
+    cells.forEach(cell => {
+        const dropdown = createDropdown();
+        cell.appendChild(dropdown);
+        cell.addEventListener('input', function(event) {
+            updateDropdown(dropdown, event.target.innerText); // Use innerText instead of textContent
+            event.stopPropagation();
+        });
+        cell.addEventListener('focusin', function(event) {
+            updateDropdown(dropdown, event.target.innerText);
+        });
+        cell.addEventListener('focusout', function(event) {
+            setTimeout(() => dropdown.style.display = 'none', 200);
+        });
+    });
+}
+
+
+function updateDropdown(dropdown, text) {
+    dropdown.innerHTML = '';
+    if (text.trim() === "") {
+        dropdown.style.display = 'none';
+        return; // Exit the function if the input is empty
+    }
+
+    const inputText = text.toUpperCase();
+    let hasItems = false;
+
+    // Create an array of products with both codes and names for easier filtering
+    const productsArray = Object.entries(window.products).map(([code, name]) => ({ code, name }));
+
+    // Filter the array based on whether the inputText is included in the code or the name
+    const matchingProducts = productsArray.filter(product =>
+        product.code.toUpperCase().includes(inputText) ||
+        product.name.toUpperCase().includes(inputText)
+    ).slice(0, 10); // Limit the results to 10 items
+
+    matchingProducts.forEach(product => {
+        let item = document.createElement('li');
+        item.classList.add('dropdown-item'); // Apply class for styling
+        
+        let codeSpan = document.createElement('span');
+        codeSpan.textContent = product.code;
+        codeSpan.classList.add('product-code'); // Apply class for styling
+
+        let nameSpan = document.createElement('span');
+        nameSpan.textContent = ` - ${product.name}`;
+        nameSpan.classList.add('product-name'); // Apply class for styling
+
+        item.appendChild(codeSpan);
+        item.appendChild(nameSpan);
+        
+        item.addEventListener('click', function() {
+            let parentCell = dropdown.closest('td');
+            parentCell.innerText = product.code; // Sets the text of the input cell to the product code
+            dropdown.style.display = 'none';
+            updateProductName({ target: parentCell }); // Update product name based on selection
+        });
+        
+        dropdown.appendChild(item);
+        hasItems = true;
+    });
+
+    dropdown.style.display = hasItems ? 'block' : 'none';
+}
+
+
+
+function createDropdown() {
+    let dropdown = document.createElement('ul');
+    dropdown.style.listStyleType = 'none';
+    dropdown.style.position = 'absolute';
+    dropdown.style.zIndex = '1000';
+    dropdown.style.border = '1px solid #ccc';
+    dropdown.style.backgroundColor = '#fff';
+    dropdown.style.width = 'auto';
+    dropdown.style.minWidth = '400px';
+    dropdown.style.overflowY = 'auto';
+    dropdown.style.boxShadow = '0 2px 5px rgba(0,0,0,.2)';
+    dropdown.style.marginTop = '8px';
+    dropdown.style.marginLeft = '-8px'; // Adjusted to prevent overlap
+    dropdown.style.padding = '0';
+    dropdown.style.display = 'none'; // Initially hidden
+    return dropdown;
+}
+
+
+
+function updateProductName(e) {
+    if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
+        const sku = e.target.textContent.trim();
+        const productNameCell = e.target.parentElement.cells[2];
+        if (window.products[sku]) {
+            productNameCell.textContent = window.products[sku];
+            productNameCell.className = 'valid-product';
+        } else {
+            productNameCell.innerHTML = 'Please Manually Add Product in Salesforce <button class="delete-btn">&#10006;</button>';
+            productNameCell.className = 'invalid-product';
+        }
+    }
+}
+function handlePaste(e) {
+    e.preventDefault();
+    const clipboardData = e.clipboardData || window.clipboardData;
+    const pastedData = clipboardData.getData('Text').trim();
+    const rows = pastedData.split('\n');
+    const table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+    // Clear existing content in the first row
+    Array.from(table.rows[0].cells).forEach(cell => cell.textContent = '');
+    rows.forEach((rowText, rowIndex) => {
+        const rowArray = rowText.split('\t');
+        const row = (rowIndex === 0) ? table.rows[0] : table.insertRow();
+        rowArray.forEach((cellData, index) => {
+            const cell = (rowIndex === 0) ? row.cells[index] : row.insertCell();
+            cell.textContent = cellData;
+            cell.contentEditable = index !== 2; // Product Name is not editable
+        });
+        while (row.cells.length < 4) {
+            const cell = row.insertCell();
+            if (row.cells.length === 4) { // MSRP column
+                cell.textContent = '0.00';
+                cell.contentEditable = true; // Optionally make editable
+            }
+        }
+        updateProductName({target: row.cells[0]}); // Populate Product Name
+    });
+}
+
+// Add a function to set MSRP when a row is added dynamically other than pasting
+function setDefaultMSRP() {
+    const rows = document.querySelectorAll('#productTable tbody tr');
+    rows.forEach(row => {
+        if (row.cells.length === 4) { // Assuming MSRP is the fourth column
+            row.cells[3].textContent = '$0.00';
+        }
+    });
+}
+
+
+function sendToSalesforce() {
+    const rows = document.querySelectorAll('#productTable tbody tr');
+    const opportunityProducts = Array.from(rows).map(row => {
+        const productCode = row.cells[0].textContent.trim();
+        const qty = row.cells[1].textContent;
+        const productName = row.cells[2].textContent;
+        return {
+            ProductID: productCode,
+            Qty: qty,
+            Price: "0.00", // Placeholder for price, update if necessary
+            ProductName: productName.includes('Please Manually Add') ? '' : productName
+        };
+    }).filter(product => product.ProductName !== ''); // Filter out rows with manual add message
+    console.log('Data to send:', opportunityProducts);
+    // Here you would send the opportunityProducts data to Salesforce
+}
+
+function handleDeleteRow(e) {
+    if (e.target.classList.contains('delete-btn')) {
+        e.target.closest('tr').remove();
+    }
+}
+</script>
+</body>
+</html>
