@@ -494,23 +494,36 @@ function handlePaste(e) {
 }
 
 function sendToSalesforce() {
-    const oppid = getURLParameter('oppid');
+    const oppId = getURLParameter('oppId');
     const rows = document.querySelectorAll('#productTable tbody tr');
-    const opportunityProducts = Array.from(rows).map(row => {
-        const productCode = row.cells[0].textContent.trim();
-        const qty = row.cells[1].textContent;
-        const productName = row.cells[2].textContent;
+    const records = Array.from(rows).map(row => {
         return {
-            OpportunityID: oppid,
-            ProductID: productCode,
-            Qty: qty,
-            Price: "0.00",
-            ProductName: productName.includes('Please Manually Add') ? '' : productName
+            fields: {
+                OpportunityID: oppId,
+                ProductID: row.cells[0].textContent.trim(),
+                Qty: parseInt(row.cells[1].textContent, 10),
+                Price: parseFloat(row.cells[3].textContent.replace('$', '')),
+                ProductName: row.cells[2].textContent
+            }
         };
-    }).filter(product => product.ProductName !== '');
-    console.log('Data to send:', opportunityProducts);
-    // Add your AJAX or fetch API call here to send data to Salesforce
+    }).filter(record => record.fields.ProductName !== '');
+
+    fetch('/.netlify/functions/sendToAirtable', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ records })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 }
+
 
 function handleDeleteRow(e) {
     if (e.target.classList.contains('delete-btn')) {
