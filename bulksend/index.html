@@ -287,7 +287,7 @@ table {
     cursor: pointer;
 }
 
-#oppIdDisplayContainer {
+#oppidDisplayContainer {
     display: flex;
   justify-content: center; /* This centers the child horizontally */
   align-items: center; 
@@ -327,14 +327,14 @@ table {
 <div id="buttoncontainer">
 <h4>Please double check the opportunity.</h4>
 </div>
-<div id="oppIdDisplayContainer">
-    <h4>Opportunity ID: <span id="oppIdDisplay"></span></h4>
+<div id="oppidDisplayContainer">
+    <h4>Opportunity ID: <span id="oppidDisplay"></span></h4>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const oppId = getURLParameter('oppId');
-    const oppIdDisplay = document.getElementById('oppIdDisplay');
-    oppIdDisplay.textContent = oppId || 'No ID provided';
+    const oppid = getURLParameter('oppid');
+    const oppidDisplay = document.getElementById('oppidDisplay');
+    oppidDisplay.textContent = oppid || 'No ID provided';
 
     fetch('Products.json')
         .then(response => response.json())
@@ -494,14 +494,14 @@ function handlePaste(e) {
 }
 
 function sendToSalesforce() {
-    const oppId = getURLParameter('oppId');
+    const oppid = getURLParameter('oppid');
     const rows = document.querySelectorAll('#productTable tbody tr');
     const opportunityProducts = Array.from(rows).map(row => {
         const productCode = row.cells[0].textContent.trim();
         const qty = row.cells[1].textContent;
         const productName = row.cells[2].textContent;
         return {
-            OpportunityID: oppId,
+            OpportunityID: oppid,
             ProductID: productCode,
             Qty: qty,
             Price: "0.00",
