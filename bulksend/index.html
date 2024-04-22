@@ -429,7 +429,7 @@ function updateDropdown(dropdown, text) {
     }
 
     const inputText = text.toUpperCase();
-    const productsArray = Object.entries(window.products).map(([code, name]) => ({ code, name }));
+    const productsArray = Object.entries(window.products).map(([code, details]) => ({ code, name: details.name }));
     const matchingProducts = productsArray.filter(product =>
         product.code.toUpperCase().includes(inputText) ||
         product.name.toUpperCase().includes(inputText)
@@ -462,12 +462,13 @@ function updateDropdown(dropdown, text) {
     });
 }
 
+
 function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
         const sku = e.target.textContent.trim();
         const productNameCell = e.target.parentElement.cells[2];
-        if (window.products[sku]) {
-            productNameCell.textContent = window.products[sku];
+        if (window.products[sku] && window.products[sku].name) {
+            productNameCell.textContent = window.products[sku].name;
             productNameCell.className = 'valid-product';
         } else {
             productNameCell.innerHTML = 'Please Manually Add Product in Salesforce <button class="delete-btn">&#10006;</button>';
@@ -475,6 +476,7 @@ function updateProductName(e) {
         }
     }
 }
+
 
 function handlePaste(e) {
     e.preventDefault();
