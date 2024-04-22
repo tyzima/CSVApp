@@ -97,34 +97,28 @@ function processCSV1(data) {
     const saleCode = data.length > 0 && data[0]['Sale Code'] ? data[0]['Sale Code'] : 'UnknownSaleCode';
     const statusElement = document.getElementById('status');
     statusElement.innerText = "Generating Itemized CSV...";
-    
+
     window.saleCode = saleCode;
 
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
-
-function isValidPlayerNumber(playerNumber) {
-    // Check if playerNumber is strictly a non-empty numeric string
-    return /^[0-9]+$/.test(playerNumber);
-}
-
     let playerNumberErrorFound = false;
 
-const filteredData = data.filter(row => row['Product Name'])
-    .map(row => {
-        let validPlayerNumber = '';
-        const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
-        for (let num of playerNumbers) {
-            if (isValidPlayerNumber(num)) {
-                validPlayerNumber = num;
-                break;
+    const filteredData = data.filter(row => row['Product Name'])
+        .map(row => {
+            let playerNumber = '';
+            const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
+            for (let num of playerNumbers) {
+                if (num) { // Changed condition to simply check if non-empty
+                    playerNumber = num;
+                    break;
+                }
             }
-        }
-        if (validPlayerNumber === '') {
-            playerNumberErrorFound = true;
-        }
+            if (playerNumber === '') {
+                playerNumberErrorFound = true;
+            }
 
+            const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'].toLowerCase() === 'goalie')) ? 'Yes' : ' ';
 
-const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'].toLowerCase() === 'goalie')) ? 'Yes' : ' ';
             return {
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
@@ -133,7 +127,7 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Positi
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': validPlayerNumber,
+                'Player Number': playerNumber, // Use the chosen player number
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
