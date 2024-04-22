@@ -508,7 +508,7 @@ function sendToSalesforce() {
         };
     }).filter(record => record.fields.ProductName !== '');
 
-    fetch('/.netlify/functions/sendToAirtable', {
+    fetch('./.netlify/functions/sendToAirtable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
