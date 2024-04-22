@@ -103,6 +103,8 @@ function processCSV1(data) {
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
     let playerNumberErrorFound = false;
 
+    const hasPosition = data.some(row => 'Position' in row);
+
     const filteredData = data.filter(row => row['Product Name'])
         .map(row => {
             let playerNumber = '';
@@ -134,8 +136,9 @@ function processCSV1(data) {
                 'Goalie?': goalieThroatGuard
             };
 
-            if (row['Position']) {
-                rowData['Position'] = row['Position'];
+            // Add 'Position' if it exists in the data
+            if (hasPosition) {
+                rowData['Position'] = row['Position'] || '';  // Provide an empty string if the field is missing in a row
             }
 
             return rowData;
