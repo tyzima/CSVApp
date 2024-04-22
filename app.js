@@ -103,14 +103,12 @@ function processCSV1(data) {
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
     let playerNumberErrorFound = false;
 
-    const hasPosition = data.some(row => 'Position' in row);
-
     const filteredData = data.filter(row => row['Product Name'])
         .map(row => {
             let playerNumber = '';
             const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
             for (let num of playerNumbers) {
-                if (num) { // Changed condition to simply check if non-empty
+                if (num) {
                     playerNumber = num;
                     break;
                 }
@@ -129,19 +127,13 @@ function processCSV1(data) {
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': playerNumber, // Use the chosen player number
+                'Player Number': playerNumber,
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
-                'Goalie?': goalieThroatGuard
+                'Goalie?': goalieThroatGuard,
+                'Position': row['Position'] || ''  // Always include Position, default to an empty string if not present
             };
-
-            // Add 'Position' if it exists in the data
-            if (hasPosition) {
-                rowData['Position'] = row['Position'] || '';  // Provide an empty string if the field is missing in a row
-            }
-
-            return rowData;
         });
 
     const expandedData = [];
