@@ -133,6 +133,12 @@ function processCSV1(data) {
                 'Quantity': row['Quantity'] || 1,
                 'Goalie?': goalieThroatGuard
             };
+
+            if (row['Position']) {
+                rowData['Position'] = row['Position'];
+            }
+
+            return rowData;
         });
 
     const expandedData = [];
