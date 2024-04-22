@@ -124,7 +124,7 @@ const filteredData = data.filter(row => row['Product Name'])
         }
 
 
-            const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : ' ';
+const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || row['Position'] === 'Goalie') ? 'Yes' : ' ';
             return {
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
@@ -137,7 +137,7 @@ const filteredData = data.filter(row => row['Product Name'])
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
                 'Quantity': row['Quantity'] || 1,
-                'Goalie Throat Guard?': goalieThroatGuard
+                'Goalie?': goalieThroatGuard
             };
         });
 
@@ -194,7 +194,7 @@ function processCSV2(data) {
     // Filter rows and then aggregate
 data.filter(row => row['Product Name']).forEach(row => {
     const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
-    const goalieThroatGuard = row['Product Name'].includes('Cascade XRS') && row['Goalie Throat Guard?'] === 'Yes' ? 'Yes' : '   ';
+    const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || row['Position'] === 'Goalie') ? 'Yes' : ' ';
     const style = row['Style'] || 'UnknownStyle';
     const color = row['Color'] || ''; // Extract the color
     const styleSize = `${style}-${normalizedSize}`;
@@ -205,7 +205,7 @@ data.filter(row => row['Product Name']).forEach(row => {
             'Product Name': row['Product Name'],
             'Style-Size': styleSize,
             'Color': color, // Add the "Color" column
-            'Goalie Throat Guard': goalieThroatGuard,
+            'Goalie?': goalieThroatGuard,
             'Aggregated Quantity': 0
         };
     }
@@ -225,13 +225,13 @@ data.filter(row => row['Product Name']).forEach(row => {
     // Convert the aggregated data to an array
     const aggregatedArray = Object.values(aggregatedData);
 
- // Sort the array by 'Style-Size', 'Color', and 'Goalie Throat Guard'
+ // Sort the array by 'Style-Size', 'Color', and 'Goalie?'
 aggregatedArray.sort((a, b) => {
     const styleSizeA = String(a['Style-Size'] || '');
     const styleSizeB = String(b['Style-Size'] || '');
     const colorA = String(a['Color'] || '');
     const colorB = String(b['Color'] || '');
-    return b['Goalie Throat Guard'].localeCompare(a['Goalie Throat Guard']) ||
+    return b['Goalie?'].localeCompare(a['Goalie?']) ||
            styleSizeA.localeCompare(styleSizeB) ||
            customSizeSort(a['Size'], b['Size']) ||
            colorA.localeCompare(colorB); // Sort by color
