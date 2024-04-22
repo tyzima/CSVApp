@@ -341,17 +341,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const oppidDisplay = document.getElementById('oppidDisplay');
     oppidDisplay.textContent = oppid || 'No ID provided';
 
-    fetch('Products.json')
-        .then(response => response.json())
-        .then(data => {
-            window.products = {};
-            data.forEach(item => {
-                window.products[item['Product Code']] = item['Product Name'];
-            });
-            const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
-            attachAutocompleteListeners(initialSkuCells);
-        })
-        .catch(error => console.error('Error loading product data:', error));
+fetch('Products.json')
+    .then(response => response.json())
+    .then(data => {
+        window.products = {};
+        data.forEach(item => {
+            window.products[item['Product Code']] = {
+                name: item['Product Name'],
+                priceBookEntryId: item['Price Book Entry ID'] // Include this in the product info
+            };
+        });
+        const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
+        attachAutocompleteListeners(initialSkuCells);
+    })
+    .catch(error => console.error('Error loading product data:', error));
 
     const table = document.getElementById('productTable');
     table.addEventListener('input', updateProductName);
@@ -508,7 +511,8 @@ function sendToSalesforce() {
                 ProductID: row.cells[0].textContent.trim(),
                 Qty: parseInt(row.cells[1].textContent, 10),
                 Price: parseFloat(row.cells[3].textContent.replace('$', '')),
-                ProductName: row.cells[2].textContent
+                ProductName: row.cells[2].textContent,
+                PriceBookEntryID: productInfo.priceBookEntryId || ''
             }
         };
     }).filter(record => record.fields.ProductName !== '');
