@@ -102,29 +102,31 @@ function processCSV1(data) {
 
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-function isValidPlayerNumber(playerNumber) {
-    // Check if playerNumber is strictly a non-empty numeric string
-    return /^[0-9]+$/.test(playerNumber);
-}
+    function isValidPlayerNumber(playerNumber) {
+        // Check if playerNumber is strictly a non-empty numeric string
+        return /^[0-9]+$/.test(playerNumber);
+    }
 
     let playerNumberErrorFound = false;
 
-const filteredData = data.filter(row => row['Product Name'])
-    .map(row => {
-        let validPlayerNumber = '';
-        const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
-        for (let num of playerNumbers) {
-            if (isValidPlayerNumber(num)) {
-                validPlayerNumber = num;
-                break;
+    const filteredData = data.filter(row => row['Product Name'])
+        .map(row => {
+            let validPlayerNumber = '';
+            const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
+            for (let num of playerNumbers) {
+                if (isValidPlayerNumber(num)) {
+                    validPlayerNumber = num;
+                    break;
+                }
             }
-        }
-        if (validPlayerNumber === '') {
-            playerNumberErrorFound = true;
-        }
+            if (validPlayerNumber === '') {
+                playerNumberErrorFound = true;
+            }
 
+            // Check if the position is 'Goalie', case-insensitively, to determine if 'Goalie?' should be 'Yes'
+            const isGoalie = row['Position'] ? row['Position'].trim().toLowerCase() === 'goalie' : false;
+            const goalieThroatGuard = row['Goalie Throat Guard?'] === 'Yes' || isGoalie ? 'Yes' : 'No';
 
-const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'].toLowerCase() === 'goalie')) ? 'Yes' : ' ';
             return {
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
@@ -143,7 +145,7 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Positi
 
     const expandedData = [];
     filteredData.forEach(row => {
-        const quantity = parseInt(row.Quantity, 10) || 1;
+        const quantity = parseInt(row['Quantity'], 10) || 1;
         for (let i = 0; i < quantity; i++) {
             expandedData.push({ ...row, 'Quantity': 1 });
         }
@@ -154,13 +156,13 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Positi
             'OSFA', '5XL', '4XL', '3XL', '2XL', 'XL', 'Extra Large (14")', 'L', 'Large (13")',
             'M', 'Medium (12")', 'S', 'Small (10")', 'XS', 'YXL', 'YL', 'YM', 'YS'
         ];
-        return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
+        return sizeOrder.indexOf(a['Size']) - sizeOrder.indexOf(b['Size']);
     }
 
     expandedData.sort((a, b) => {
         return b['Goalie?'].localeCompare(a['Goalie?']) ||
-            String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) ||
-            customSizeSort(a['Size'] || '', b['Size'] || '') ||
+            String(a['Product Name']).localeCompare(String(b['Product Name'])) ||
+            customSizeSort(a, b) ||
             (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
     });
 
@@ -168,13 +170,14 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Positi
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     if (playerNumberErrorFound) {
-        statusElement.innerText = "Possible Number error or Zeroes in list ";
-        statusElement.style.color = 'black';
+        statusElement.innerText = "Possible Number error or Zeroes in list";
+        statusElement.style.color = 'red'; // Making the error more visible
     } else {
         statusElement.innerText = "Itemized CSV generated.";
-        statusElement.style.color = 'black';
+        statusElement.style.color = 'green'; // Indicating success visually
     }
 }
+
 
 
 function processCSV2(data) {
