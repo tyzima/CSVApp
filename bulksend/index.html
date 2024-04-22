@@ -341,20 +341,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const oppidDisplay = document.getElementById('oppidDisplay');
     oppidDisplay.textContent = oppid || 'No ID provided';
 
-fetch('Products.json')
-    .then(response => response.json())
-    .then(data => {
-        window.products = {};
-        data.forEach(item => {
-            window.products[item['Product Code']] = {
-                name: item['Product Name'],
-                priceBookEntryId: item['Price Book Entry ID'] // Include this in the product info
-            };
-        });
-        const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
-        attachAutocompleteListeners(initialSkuCells);
-    })
-    .catch(error => console.error('Error loading product data:', error));
+    fetch('Products.json')
+        .then(response => response.json())
+        .then(data => {
+            window.products = {};
+            data.forEach(item => {
+                window.products[item['Product Code']] = item['Product Name'];
+            });
+            const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
+            attachAutocompleteListeners(initialSkuCells);
+        })
+        .catch(error => console.error('Error loading product data:', error));
 
     const table = document.getElementById('productTable');
     table.addEventListener('input', updateProductName);
@@ -465,10 +462,8 @@ function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
         const sku = e.target.textContent.trim();
         const productNameCell = e.target.parentElement.cells[2];
-        const product = window.products[sku]; // Get the product object
-
-        if (product) {
-            productNameCell.textContent = product.name; // Correctly reference product name
+        if (window.products[sku]) {
+            productNameCell.textContent = window.products[sku];
             productNameCell.className = 'valid-product';
         } else {
             productNameCell.innerHTML = 'Please Manually Add Product in Salesforce <button class="delete-btn">&#10006;</button>';
@@ -476,7 +471,6 @@ function updateProductName(e) {
         }
     }
 }
-
 
 function handlePaste(e) {
     e.preventDefault();
@@ -514,8 +508,7 @@ function sendToSalesforce() {
                 ProductID: row.cells[0].textContent.trim(),
                 Qty: parseInt(row.cells[1].textContent, 10),
                 Price: parseFloat(row.cells[3].textContent.replace('$', '')),
-                ProductName: row.cells[2].textContent,
-                PriceBookEntryID: productInfo.priceBookEntryId || ''
+                ProductName: row.cells[2].textContent
             }
         };
     }).filter(record => record.fields.ProductName !== '');
