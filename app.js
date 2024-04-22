@@ -126,11 +126,11 @@ function processCSV1(data) {
                 'Color': row['Color'] || '',
                 'Product Name': row['Product Name'],
                 'Style': row['Style'] || 'UnknownStyle',
+                'Quantity': row['Quantity'] || 1,
                 'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
                 'Player Number': playerNumber,
                 'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
                 'Grad Year': row['Grad Year'] || '',
-                'Quantity': row['Quantity'] || 1,
                 'Goalie?': goalieThroatGuard,
                 'Position': row['Position'] || ''  // Always include Position, default to an empty string if not present
             };
