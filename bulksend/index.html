@@ -465,8 +465,10 @@ function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
         const sku = e.target.textContent.trim();
         const productNameCell = e.target.parentElement.cells[2];
-        if (window.products[sku]) {
-            productNameCell.textContent = window.products[sku];
+        const product = window.products[sku]; // Get the product object
+
+        if (product) {
+            productNameCell.textContent = product.name; // Correctly reference product name
             productNameCell.className = 'valid-product';
         } else {
             productNameCell.innerHTML = 'Please Manually Add Product in Salesforce <button class="delete-btn">&#10006;</button>';
@@ -474,6 +476,7 @@ function updateProductName(e) {
         }
     }
 }
+
 
 function handlePaste(e) {
     e.preventDefault();
