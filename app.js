@@ -102,10 +102,10 @@ function processCSV1(data) {
 
     let storeName = data.length > 0 && data[0]['Store Name'] ? data[0]['Store Name'] : 'UnknownStore';
 
-    function isValidPlayerNumber(playerNumber) {
-        // Check if playerNumber is strictly a non-empty numeric string
-        return /^[0-9]+$/.test(playerNumber);
-    }
+function isValidPlayerNumber(playerNumber) {
+    // Check if playerNumber is strictly a non-empty numeric string
+    return /^[0-9]+$/.test(playerNumber);
+}
 
     let playerNumberErrorFound = false;
 
@@ -123,31 +123,27 @@ const filteredData = data.filter(row => row['Product Name'])
             playerNumberErrorFound = true;
         }
 
-        // Normalize the 'Position' field and check for 'goalie'
-        const positionNormalized = row['Position'] ? row['Position'].trim().toLowerCase() : '';
-        const isGoalie = positionNormalized === 'goalie';
-        const goalieThroatGuard = row['Goalie Throat Guard?'] === 'Yes' || isGoalie ? 'Yes' : 'No';
 
-        return {
-            'Order ID': row['Order ID'] || '',
-            'Billing Email': row['Billing Email'] || '',
-            'Player Last Name': row['Player Last Name'] || '',
-            'Color': row['Color'] || '',
-            'Product Name': row['Product Name'],
-            'Style': row['Style'] || 'UnknownStyle',
-            'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-            'Player Number': validPlayerNumber,
-            'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
-            'Grad Year': row['Grad Year'] || '',
-            'Quantity': row['Quantity'] || 1,
-            'Goalie?': goalieThroatGuard
-        };
-    });
-
+const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'].toLowerCase() === 'goalie')) ? 'Yes' : ' ';
+            return {
+                'Order ID': row['Order ID'] || '',
+                'Billing Email': row['Billing Email'] || '',
+                'Player Last Name': row['Player Last Name'] || '',
+                'Color': row['Color'] || '',
+                'Product Name': row['Product Name'],
+                'Style': row['Style'] || 'UnknownStyle',
+                'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
+                'Player Number': validPlayerNumber,
+                'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+                'Grad Year': row['Grad Year'] || '',
+                'Quantity': row['Quantity'] || 1,
+                'Goalie?': goalieThroatGuard
+            };
+        });
 
     const expandedData = [];
     filteredData.forEach(row => {
-        const quantity = parseInt(row['Quantity'], 10) || 1;
+        const quantity = parseInt(row.Quantity, 10) || 1;
         for (let i = 0; i < quantity; i++) {
             expandedData.push({ ...row, 'Quantity': 1 });
         }
@@ -158,13 +154,13 @@ const filteredData = data.filter(row => row['Product Name'])
             'OSFA', '5XL', '4XL', '3XL', '2XL', 'XL', 'Extra Large (14")', 'L', 'Large (13")',
             'M', 'Medium (12")', 'S', 'Small (10")', 'XS', 'YXL', 'YL', 'YM', 'YS'
         ];
-        return sizeOrder.indexOf(a['Size']) - sizeOrder.indexOf(b['Size']);
+        return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
     }
 
     expandedData.sort((a, b) => {
         return b['Goalie?'].localeCompare(a['Goalie?']) ||
-            String(a['Product Name']).localeCompare(String(b['Product Name'])) ||
-            customSizeSort(a, b) ||
+            String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) ||
+            customSizeSort(a['Size'] || '', b['Size'] || '') ||
             (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
     });
 
@@ -172,14 +168,13 @@ const filteredData = data.filter(row => row['Product Name'])
     downloadCSV(`${storeName}_itemized.csv`, csv);
 
     if (playerNumberErrorFound) {
-        statusElement.innerText = "Possible Number error or Zeroes in list";
-        statusElement.style.color = 'red'; // Making the error more visible
+        statusElement.innerText = "Possible Number error or Zeroes in list ";
+        statusElement.style.color = 'black';
     } else {
         statusElement.innerText = "Itemized CSV generated.";
-        statusElement.style.color = 'green'; // Indicating success visually
+        statusElement.style.color = 'black';
     }
 }
-
 
 
 function processCSV2(data) {
