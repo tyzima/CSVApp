@@ -109,39 +109,41 @@ function processCSV1(data) {
 
     let playerNumberErrorFound = false;
 
-    const filteredData = data.filter(row => row['Product Name'])
-        .map(row => {
-            let validPlayerNumber = '';
-            const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
-            for (let num of playerNumbers) {
-                if (isValidPlayerNumber(num)) {
-                    validPlayerNumber = num;
-                    break;
-                }
+const filteredData = data.filter(row => row['Product Name'])
+    .map(row => {
+        let validPlayerNumber = '';
+        const playerNumbers = [row['Player Number Input'], row['Player Number - Exclusive'], row['Player Number (input)']];
+        for (let num of playerNumbers) {
+            if (isValidPlayerNumber(num)) {
+                validPlayerNumber = num;
+                break;
             }
-            if (validPlayerNumber === '') {
-                playerNumberErrorFound = true;
-            }
+        }
+        if (validPlayerNumber === '') {
+            playerNumberErrorFound = true;
+        }
 
-            // Check if the position is 'Goalie', case-insensitively, to determine if 'Goalie?' should be 'Yes'
-            const isGoalie = row['Position'] ? row['Position'].trim().toLowerCase() === 'goalie' : false;
-            const goalieThroatGuard = row['Goalie Throat Guard?'] === 'Yes' || isGoalie ? 'Yes' : 'No';
+        // Normalize the 'Position' field and check for 'goalie'
+        const positionNormalized = row['Position'] ? row['Position'].trim().toLowerCase() : '';
+        const isGoalie = positionNormalized === 'goalie';
+        const goalieThroatGuard = row['Goalie Throat Guard?'] === 'Yes' || isGoalie ? 'Yes' : 'No';
 
-            return {
-                'Order ID': row['Order ID'] || '',
-                'Billing Email': row['Billing Email'] || '',
-                'Player Last Name': row['Player Last Name'] || '',
-                'Color': row['Color'] || '',
-                'Product Name': row['Product Name'],
-                'Style': row['Style'] || 'UnknownStyle',
-                'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
-                'Player Number': validPlayerNumber,
-                'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
-                'Grad Year': row['Grad Year'] || '',
-                'Quantity': row['Quantity'] || 1,
-                'Goalie?': goalieThroatGuard
-            };
-        });
+        return {
+            'Order ID': row['Order ID'] || '',
+            'Billing Email': row['Billing Email'] || '',
+            'Player Last Name': row['Player Last Name'] || '',
+            'Color': row['Color'] || '',
+            'Product Name': row['Product Name'],
+            'Style': row['Style'] || 'UnknownStyle',
+            'Size': normalizeSize(row['Size'] || row['SIZE'] || ''),
+            'Player Number': validPlayerNumber,
+            'Last Name': (row['Player Last Name (ALL CAPS)'] || '').toUpperCase(),
+            'Grad Year': row['Grad Year'] || '',
+            'Quantity': row['Quantity'] || 1,
+            'Goalie?': goalieThroatGuard
+        };
+    });
+
 
     const expandedData = [];
     filteredData.forEach(row => {
