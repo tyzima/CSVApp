@@ -199,9 +199,9 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Positi
         aggregatedData[key] = {
             'Product Name': row['Product Name'],
             'Style-Size': styleSize,
+            'Aggregated Quantity': 0,
             'Color': color, // Add the "Color" column
-            'Goalie?': goalieThroatGuard,
-            'Aggregated Quantity': 0
+            'Goalie?': goalieThroatGuard
         };
     }
 
