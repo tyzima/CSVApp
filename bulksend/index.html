@@ -508,7 +508,7 @@ function sendToSalesforce() {
         };
     }).filter(record => record.fields.ProductName !== '');
 
-    fetch('./.netlify/functions/sendToAirtable', {
+    fetch('https://omgcleanup.netlify.app/.netlify/functions/sendToAirtable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
