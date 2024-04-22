@@ -504,38 +504,60 @@ function handlePaste(e) {
     });
 }
 
-function sendToSalesforce() {
-    const oppid = getURLParameter('oppid');
-    const rows = document.querySelectorAll('#productTable tbody tr');
-    const records = Array.from(rows).map(row => {
-        const sku = row.cells[0].textContent.trim();
-        const productDetails = window.products[sku]; // Get product details from stored data
-        return {
-            fields: {
-                OpportunityID: oppid,
-                ProductID: sku,
-                Qty: parseInt(row.cells[1].textContent, 10),
-                Price: parseFloat(row.cells[3].textContent.replace('$', '')),
-                ProductName: row.cells[2].textContent,
-                PriceBookEntryID: productDetails ? productDetails.priceBookEntryId : '' // Include Price Book Entry ID
-            }
-        };
-    }).filter(record => record.fields.ProductName !== '');
+document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
 
-    fetch('https://omgcleanup.netlify.app/.netlify/functions/sendToAirtable', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ records })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+function sendToSalesforce() {
+    const button = document.getElementById('sendButton');
+    button.disabled = true; // Disable the button to prevent multiple submissions
+    button.textContent = 'Fueling up...'; // Initial text indicating the start of the process
+
+    // Simulating the delay for each stage
+    setTimeout(() => {
+        button.textContent = 'Sending...';
+
+        const oppid = getURLParameter('oppid');
+        const rows = document.querySelectorAll('#productTable tbody tr');
+        const records = Array.from(rows).map(row => {
+            const sku = row.cells[0].textContent.trim();
+            const productDetails = window.products[sku]; // Retrieve product details from stored data
+            return {
+                fields: {
+                    OpportunityID: oppid,
+                    ProductID: sku,
+                    Qty: parseInt(row.cells[1].textContent, 10),
+                    Price: parseFloat(row.cells[3].textContent.replace('$', '')),
+                    ProductName: row.cells[2].textContent,
+                    PriceBookEntryID: productDetails ? productDetails.priceBookEntryId : '' // Include Price Book Entry ID
+                }
+            };
+        }).filter(record => record.fields.ProductName !== '');
+
+        fetch('https://omgcleanup.netlify.app/.netlify/functions/sendToAirtable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ records })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            button.textContent = 'Sent';
+            setTimeout(() => {
+                button.textContent = 'Send to Salesforce';
+                button.disabled = false; // Re-enable the button after the process is complete
+            }, 2000); // Reset button after 2 seconds
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            button.textContent = 'Error! Try Again';
+            setTimeout(() => {
+                button.textContent = 'Send to Salesforce';
+                button.disabled = false;
+            }, 2000);
+        });
+
+    }, 2000); // Start the sending process after 2 seconds
 }
 
 
