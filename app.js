@@ -158,7 +158,7 @@ const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || row['Positio
     }
 
     expandedData.sort((a, b) => {
-        return b['Goalie Throat Guard?'].localeCompare(a['Goalie Throat Guard?']) ||
+        return b['Goalie?'].localeCompare(a['Goalie?']) ||
             String(a['Product Name'] || '').localeCompare(String(b['Product Name'] || '')) ||
             customSizeSort(a['Size'] || '', b['Size'] || '') ||
             (parseInt(a['Player Number'], 10) || 0) - (parseInt(b['Player Number'], 10) || 0);
