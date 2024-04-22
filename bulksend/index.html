@@ -506,6 +506,17 @@ function handlePaste(e) {
 
 document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
 
+function setupOpportunityLink() {
+    const oppid = getURLParameter('oppid');
+    if (oppid) {
+        const salesforceUrl = `https://laxdotcom.my.salesforce.com/${oppid}`;
+        const link = document.getElementById('checkOpportunityLink');
+        link.href = salesforceUrl; // Set the href attribute of the link to the constructed URL
+    } else {
+        console.log('No oppid found in URL');
+    }
+}
+
 function sendToSalesforce() {
     const button = document.getElementById('sendButton');
     button.disabled = true; // Disable the button to prevent multiple submissions
@@ -567,6 +578,10 @@ function handleDeleteRow(e) {
         e.target.closest('tr').remove();
     }
 }
+
+setupOpportunityLink();
+
+
 </script>
 
 </body>
