@@ -124,7 +124,7 @@ const filteredData = data.filter(row => row['Product Name'])
         }
 
 
-const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || row['Position'] === 'Goalie') ? 'Yes' : ' ';
+const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'] === 'Goalie')) ? 'Yes' : ' ';
             return {
                 'Order ID': row['Order ID'] || '',
                 'Billing Email': row['Billing Email'] || '',
@@ -194,7 +194,7 @@ function processCSV2(data) {
     // Filter rows and then aggregate
 data.filter(row => row['Product Name']).forEach(row => {
     const normalizedSize = normalizeSize(row['Size'] || row['SIZE'] || '');
-    const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || row['Position'] === 'Goalie') ? 'Yes' : ' ';
+const goalieThroatGuard = (row['Goalie Throat Guard?'] === 'Yes' || (row['Position'] && row['Position'] === 'Goalie')) ? 'Yes' : ' ';
     const style = row['Style'] || 'UnknownStyle';
     const color = row['Color'] || ''; // Extract the color
     const styleSize = `${style}-${normalizedSize}`;
