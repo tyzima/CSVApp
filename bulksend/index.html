@@ -328,11 +328,12 @@ table {
     <button id="addProductButton">+Product</button>
 </div>
 <div id="buttoncontainer">
+    <h4>Please include a price in every row</h4>
+    </div>
+<div id="buttoncontainer">
 <button id="sendButton">Send to Salesforce</button>
 </div>
-<div id="buttoncontainer">
-<h4>Please double check the opportunity.</h4>
-</div>
+
 <div id="oppidDisplayContainer">
     <h4>Opportunity ID: <span id="oppidDisplay"></span></h4>
 </div>
@@ -521,11 +522,11 @@ function setupOpportunityLink() {
 function sendToSalesforce() {
     const button = document.getElementById('sendButton');
     button.disabled = true; // Disable the button to prevent multiple submissions
-    button.textContent = 'Fueling up...'; // Initial text indicating the start of the process
+    button.textContent = 'Fueling the ship up...'; // Initial text indicating the start of the process
 
     // Simulating the delay for each stage
     setTimeout(() => {
-        button.textContent = 'Sending...';
+        button.textContent = 'Sending products...';
 
         const oppid = getURLParameter('oppid');
         const rows = document.querySelectorAll('#productTable tbody tr');
@@ -559,7 +560,7 @@ function sendToSalesforce() {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            button.textContent = 'Sent';
+            button.textContent = 'Sent, please check the Opp';
             setTimeout(() => {
                 button.textContent = 'Send to Salesforce';
                 button.disabled = false; // Re-enable the button after the process is complete
