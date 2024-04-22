@@ -494,12 +494,12 @@ function handlePaste(e) {
 }
 
 function sendToSalesforce() {
-    const oppId = getURLParameter('oppId');
+    const oppid = getURLParameter('oppid');
     const rows = document.querySelectorAll('#productTable tbody tr');
     const records = Array.from(rows).map(row => {
         return {
             fields: {
-                OpportunityID: oppId,
+                OpportunityID: oppid,
                 ProductID: row.cells[0].textContent.trim(),
                 Qty: parseInt(row.cells[1].textContent, 10),
                 Price: parseFloat(row.cells[3].textContent.replace('$', '')),
