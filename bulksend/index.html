@@ -530,15 +530,20 @@ function sendToSalesforce() {
         const rows = document.querySelectorAll('#productTable tbody tr');
         const records = Array.from(rows).map(row => {
             const sku = row.cells[0].textContent.trim();
+            const qty = parseInt(row.cells[1].textContent, 10);
+            const price = parseFloat(row.cells[3].textContent.replace('$', ''));
+            const totalPrice = qty * price; // Calculate TotalPrice
             const productDetails = window.products[sku]; // Retrieve product details from stored data
+
             return {
                 fields: {
                     OpportunityID: oppid,
                     ProductID: sku,
-                    Qty: parseInt(row.cells[1].textContent, 10),
-                    Price: parseFloat(row.cells[3].textContent.replace('$', '')),
+                    Qty: qty,
+                    Price: price,
                     ProductName: row.cells[2].textContent,
-                    PriceBookEntryID: productDetails ? productDetails.priceBookEntryId : '' // Include Price Book Entry ID
+                    PriceBookEntryID: productDetails ? productDetails.priceBookEntryId : '',
+                    TotalPrice: totalPrice // Include TotalPrice in the record
                 }
             };
         }).filter(record => record.fields.ProductName !== '');
@@ -570,6 +575,7 @@ function sendToSalesforce() {
 
     }, 2000); // Start the sending process after 2 seconds
 }
+
 
 
 
