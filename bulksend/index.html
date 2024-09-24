@@ -348,17 +348,17 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('Products.json')
         .then(response => response.json())
         .then(data => {
-    window.products = {};
-    data.forEach(item => {
-        // Store product details in an object, including the Price Book Entry ID
-        window.products[item['Product Code']] = {
-            name: item['Product Name'],
-            priceBookEntryId: item['Price Book Entry ID'] // Assuming the JSON includes this field
-        };
-    });
-    const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
-    attachAutocompleteListeners(initialSkuCells);
-})
+            window.products = {};
+            data.forEach(item => {
+                // Store product details with lowercase product code
+                window.products[item['Product Code'].toLowerCase()] = {
+                    name: item['Product Name'],
+                    priceBookEntryId: item['Price Book Entry ID']
+                };
+            });
+            const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
+            attachAutocompleteListeners(initialSkuCells);
+        })
         .catch(error => console.error('Error loading product data:', error));
 
     const table = document.getElementById('productTable');
@@ -432,16 +432,11 @@ function updateDropdown(dropdown, text) {
         return;
     }
 
-    const inputText = text.toUpperCase();
-    const productsArray = Object.entries(window.products).map(([code, details]) => ({ 
-        code, 
-        name: details.name,
-        upperCode: code.toUpperCase(),
-        upperName: details.name.toUpperCase()
-    }));
+    const inputText = text.toLowerCase(); // Convert to lowercase
+    const productsArray = Object.entries(window.products).map(([code, details]) => ({ code, name: details.name }));
     const matchingProducts = productsArray.filter(product =>
-        product.upperCode.includes(inputText) ||
-        product.upperName.includes(inputText)
+        product.code.includes(inputText) ||
+        product.name.toLowerCase().includes(inputText)
     ).slice(0, 10);
 
     matchingProducts.forEach(product => {
@@ -449,11 +444,11 @@ function updateDropdown(dropdown, text) {
         item.classList.add('dropdown-item');
         
         let codeSpan = document.createElement('span');
-        codeSpan.textContent = product.code; // Use original case for display
+        codeSpan.textContent = product.code;
         codeSpan.classList.add('product-code');
 
         let nameSpan = document.createElement('span');
-        nameSpan.textContent = ` - ${product.name}`; // Use original case for display
+        nameSpan.textContent = ` - ${product.name}`;
         nameSpan.classList.add('product-name');
 
         item.appendChild(codeSpan);
@@ -461,7 +456,7 @@ function updateDropdown(dropdown, text) {
         
         item.addEventListener('click', function() {
             let parentCell = dropdown.closest('td');
-            parentCell.innerText = product.code; // Use original case when setting the value
+            parentCell.innerText = product.code;
             dropdown.style.display = 'none';
             updateProductName({ target: parentCell });
         });
@@ -474,7 +469,7 @@ function updateDropdown(dropdown, text) {
 
 function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
-        const sku = e.target.textContent.trim();
+        const sku = e.target.textContent.trim().toLowerCase(); // Convert to lowercase
         const productNameCell = e.target.parentElement.cells[2];
         if (window.products[sku] && window.products[sku].name) {
             productNameCell.textContent = window.products[sku].name;
