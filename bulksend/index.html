@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -432,10 +433,15 @@ function updateDropdown(dropdown, text) {
     }
 
     const inputText = text.toUpperCase();
-    const productsArray = Object.entries(window.products).map(([code, details]) => ({ code, name: details.name }));
+    const productsArray = Object.entries(window.products).map(([code, details]) => ({ 
+        code, 
+        name: details.name,
+        upperCode: code.toUpperCase(),
+        upperName: details.name.toUpperCase()
+    }));
     const matchingProducts = productsArray.filter(product =>
-        product.code.toUpperCase().includes(inputText) ||
-        product.name.toUpperCase().includes(inputText)
+        product.upperCode.includes(inputText) ||
+        product.upperName.includes(inputText)
     ).slice(0, 10);
 
     matchingProducts.forEach(product => {
@@ -443,11 +449,11 @@ function updateDropdown(dropdown, text) {
         item.classList.add('dropdown-item');
         
         let codeSpan = document.createElement('span');
-        codeSpan.textContent = product.code;
+        codeSpan.textContent = product.code; // Use original case for display
         codeSpan.classList.add('product-code');
 
         let nameSpan = document.createElement('span');
-        nameSpan.textContent = ` - ${product.name}`;
+        nameSpan.textContent = ` - ${product.name}`; // Use original case for display
         nameSpan.classList.add('product-name');
 
         item.appendChild(codeSpan);
@@ -455,7 +461,7 @@ function updateDropdown(dropdown, text) {
         
         item.addEventListener('click', function() {
             let parentCell = dropdown.closest('td');
-            parentCell.innerText = product.code;
+            parentCell.innerText = product.code; // Use original case when setting the value
             dropdown.style.display = 'none';
             updateProductName({ target: parentCell });
         });
