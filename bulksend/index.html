@@ -198,75 +198,6 @@ h4 {
     color: #ccc;
 }
 
-#productTable td:first-child {
-    position: relative; /* Ensures the dropdown is positioned relative to the cell */
-}
-
-ul.dropdown {
-    list-style-type: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    min-width: 400px !important;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    top: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,.2);
-    margin-top: 1px; 
-}
-
-ul.dropdown li {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-    pointer-events: none; /* Disable clicking on dropdown items */
-}
-
-ul.dropdown li:hover {
-    background-color: #f0f0f0;
-}
-
-ul.dropdown li span {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-ul.dropdown li span:first-child {
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-ul.dropdown li span:last-child {
-    font-size: smaller;
-    color: #555;
-}
-
-.dropdown-item {
-    padding: 5px;
-    border-bottom: 1px solid #eee; /* Separates items */
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack code and name vertically */
-    align-items: flex-start; /* Aligns content to the left */
-    pointer-events: none; /* Disable clicking on dropdown items */
-}
-
-.dropdown-item:hover {
-    background-color: #f0f0f0; /* Highlight item on hover */
-}
-
-.product-code {
-    font-weight: bold;
-    margin-bottom: 2px; /* Space between code and name */
-}
-
-.product-name {
-    font-size: smaller;
-    color: #555;
-}
-
 table {
     margin-top: 50px;
     margin-bottom: 20px; /* Adjust based on your design */
@@ -356,8 +287,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     priceBookEntryId: item['Price Book Entry ID']
                 };
             });
-            const initialSkuCells = document.querySelectorAll('#productTable td:first-child');
-            attachAutocompleteListeners(initialSkuCells);
         })
         .catch(error => console.error('Error loading product data:', error));
 
@@ -387,79 +316,7 @@ function addNewRow() {
             newCell.contentEditable = false;
         }
     }
-    attachAutocompleteListeners([newRow.cells[0]]);
 }
-
-function attachAutocompleteListeners(cells) {
-    cells.forEach(cell => {
-        const dropdown = createDropdown();
-        cell.appendChild(dropdown);
-        cell.addEventListener('input', function(event) {
-            updateDropdown(dropdown, event.target.innerText);
-            event.stopPropagation();
-        });
-        cell.addEventListener('focusin', function(event) {
-            updateDropdown(dropdown, event.target.innerText);
-        });
-        cell.addEventListener('focusout', function(event) {
-            setTimeout(() => dropdown.style.display = 'none', 200);
-        });
-    });
-}
-
-function createDropdown() {
-    let dropdown = document.createElement('ul');
-    dropdown.style.listStyleType = 'none';
-    dropdown.style.position = 'absolute';
-    dropdown.style.zIndex = '1000';
-    dropdown.style.border = '1px solid #ccc';
-    dropdown.style.backgroundColor = '#fff';
-    dropdown.style.width = 'auto';
-    dropdown.style.minWidth = '400px';
-    dropdown.style.overflowY = 'auto';
-    dropdown.style.boxShadow = '0 2px 5px rgba(0,0,0,.2)';
-    dropdown.style.marginTop = '8px';
-    dropdown.style.marginLeft = '-8px';
-    dropdown.style.padding = '0';
-    dropdown.style.display = 'none';
-    return dropdown;
-}
-
-function updateDropdown(dropdown, text) {
-    dropdown.innerHTML = '';
-    if (text.trim() === "") {
-        dropdown.style.display = 'none';
-        return;
-    }
-
-    const inputText = text.toLowerCase(); // Convert to lowercase
-    const productsArray = Object.entries(window.products).map(([code, details]) => ({ code, name: details.name }));
-    const matchingProducts = productsArray.filter(product =>
-        product.code.includes(inputText) ||
-        product.name.toLowerCase().includes(inputText)
-    ).slice(0, 10);
-
-    matchingProducts.forEach(product => {
-        let item = document.createElement('li');
-        item.classList.add('dropdown-item');
-        
-        let codeSpan = document.createElement('span');
-        codeSpan.textContent = product.code;
-        codeSpan.classList.add('product-code');
-
-        let nameSpan = document.createElement('span');
-        nameSpan.textContent = ` - ${product.name}`;
-        nameSpan.classList.add('product-name');
-
-        item.appendChild(codeSpan);
-        item.appendChild(nameSpan);
-        
-        dropdown.appendChild(item);
-    });
-
-    dropdown.style.display = 'block';
-}
-
 
 function updateProductName(e) {
     if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
@@ -474,7 +331,6 @@ function updateProductName(e) {
         }
     }
 }
-
 
 function handlePaste(e) {
     e.preventDefault();
@@ -511,10 +367,6 @@ function handlePaste(e) {
         }
         updateProductName({target: row.cells[0]});
     });
-
-    // Attach autocomplete listeners to new SKU cells
-    const newSkuCells = Array.from(table.rows).slice(startIndex).map(row => row.cells[0]);
-    attachAutocompleteListeners(newSkuCells);
 }
 
 document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
@@ -589,9 +441,6 @@ function sendToSalesforce() {
     }, 2000); // Start the sending process after 2 seconds
 }
 
-
-
-
 function handleDeleteRow(e) {
     if (e.target.classList.contains('delete-btn')) {
         e.target.closest('tr').remove();
@@ -599,7 +448,6 @@ function handleDeleteRow(e) {
 }
 
 setupOpportunityLink();
-
 
 </script>
 
