@@ -488,15 +488,26 @@ function handlePaste(e) {
     const pastedData = clipboardData.getData('Text').trim();
     const rows = pastedData.split('\n');
     const table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
-    Array.from(table.rows[0].cells).forEach(cell => cell.textContent = '');
+    const targetRow = e.target.closest('tr');
+    const startIndex = Array.from(table.rows).indexOf(targetRow);
+
     rows.forEach((rowText, rowIndex) => {
         const rowArray = rowText.split('\t');
-        const row = (rowIndex === 0) ? table.rows[0] : table.insertRow();
+        let row;
+        if (rowIndex === 0 && startIndex < table.rows.length) {
+            row = table.rows[startIndex];
+        } else {
+            row = table.insertRow(startIndex + rowIndex);
+        }
+
         rowArray.forEach((cellData, index) => {
-            const cell = (rowIndex === 0) ? row.cells[index] : row.insertCell();
-            cell.textContent = cellData;
-            cell.contentEditable = index !== 2;
+            if (index < 4) {
+                let cell = row.cells[index] || row.insertCell();
+                cell.textContent = cellData;
+                cell.contentEditable = index !== 2;
+            }
         });
+
         while (row.cells.length < 4) {
             const cell = row.insertCell();
             if (row.cells.length === 4) {
@@ -506,6 +517,10 @@ function handlePaste(e) {
         }
         updateProductName({target: row.cells[0]});
     });
+
+    // Attach autocomplete listeners to new SKU cells
+    const newSkuCells = Array.from(table.rows).slice(startIndex).map(row => row.cells[0]);
+    attachAutocompleteListeners(newSkuCells);
 }
 
 document.getElementById('sendButton').addEventListener('click', sendToSalesforce);
