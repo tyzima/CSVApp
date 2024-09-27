@@ -281,7 +281,6 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
         manualRowResize: true,
         filters: true,
         dropdownMenu: true,
-        stretchH: 'all', // Stretch all columns to fit the available width
         columns: [
             { data: 0, width: 200 }, // Style-Size column, set a larger width
             { data: 1, type: 'numeric', width: 150 }, // Aggregated Quantity column
@@ -307,9 +306,13 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
     // Initial update of total quantity
     updateTotalQuantity(hot);
 
-    // Add "Copy All" functionality
+    // Modified "Copy All" functionality
     document.getElementById('copy-all-btn').addEventListener('click', function() {
-        const copyData = hot.getData().map(row => row.slice(0, 3).join('\t')).join('\n');
+        const copyData = hot.getData().map(row => {
+            // Only take the first 3 columns (Style-Size, Aggregated Quantity, Price)
+            return row.slice(0, 3).map(cell => cell !== null ? cell : '').join('\t');
+        }).join('\n');
+
         navigator.clipboard.writeText(copyData).then(function() {
             alert('All data copied to clipboard!');
         }, function(err) {
