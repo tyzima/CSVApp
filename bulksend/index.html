@@ -221,8 +221,8 @@ ul.dropdown {
 
 ul.dropdown li {
     padding: 5px;
-    cursor: pointer;
     border-bottom: 1px solid #eee;
+    pointer-events: none; /* Disable clicking on dropdown items */
 }
 
 ul.dropdown li:hover {
@@ -246,11 +246,11 @@ ul.dropdown li span:last-child {
 
 .dropdown-item {
     padding: 5px;
-    cursor: pointer;
     border-bottom: 1px solid #eee; /* Separates items */
     display: flex; /* Use flexbox for layout */
     flex-direction: column; /* Stack code and name vertically */
     align-items: flex-start; /* Aligns content to the left */
+    pointer-events: none; /* Disable clicking on dropdown items */
 }
 
 .dropdown-item:hover {
@@ -454,16 +454,10 @@ function updateDropdown(dropdown, text) {
         item.appendChild(codeSpan);
         item.appendChild(nameSpan);
         
-        item.addEventListener('click', function() {
-            let parentCell = dropdown.closest('td');
-            parentCell.innerText = product.code;
-            dropdown.style.display = 'none';
-            updateProductName({ target: parentCell });
-        });
-        
         dropdown.appendChild(item);
-        dropdown.style.display = 'block';
     });
+
+    dropdown.style.display = 'block';
 }
 
 
