@@ -3,56 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Button App</title>
+    <title>Send Webhook</title>
     <style>
         body {
+            font-family: sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f4f4f4;
         }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
             border: none;
-            border-radius: 5px;
-            background-color: #038BFF;
+            border-radius: 8px;
+            background-color: #0C2344;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         button:hover {
-            background-color: #0C2344;
+            background-color: #379fff;
         }
     </style>
 </head>
 <body>
 
-    <button onclick="sendPostRequest()">Send POST Request</button>
+    <button id="sendWebhook">Send Webhook</button>
 
     <script>
-        function sendPostRequest() {
-            const url = 'https://hooks.airtable.com/workflows/v1/genericWebhook/appJaZT3HpcWc1IFL/wfl1pla3XtXpGl664/wtrjB9d6NOYW9pVqf';
-            const data = { Company: "Airtable" };
-
-            fetch(url, {
+        document.getElementById('sendWebhook').addEventListener('click', function() {
+            fetch('https://hooks.airtable.com/workflows/v1/genericWebhook/appJaZT3HpcWc1IFL/wfl1pla3XtXpGl664/wtrjB9d6NOYW9pVqf', {
                 method: 'POST',
-                mode: 'no-cors', // Setting mode to no-cors to bypass CORS policy
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    "Company": "Airtable"
+                })
             })
-            .then(() => {
-                alert('POST request sent successfully!');
+            .then(response => {
+                if (response.ok) {
+                    alert('Webhook sent successfully!');
+                } else {
+                    alert('Error sending webhook');
+                }
             })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('There was an error sending the POST request.');
+            .catch(error => {
+                alert('Error: ' + error.message);
             });
-        }
+        });
     </script>
 
 </body>
