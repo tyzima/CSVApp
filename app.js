@@ -257,38 +257,50 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
     const container = document.querySelector('.container');
     container.innerHTML = '<div id="spreadsheet-controls"><button id="copy-all-btn">Copy All</button></div><div id="spreadsheet"></div><div id="total-quantity"></div>';
 
+    // Set a fixed width for the spreadsheet container
+    const spreadsheetContainer = document.getElementById('spreadsheet');
+    spreadsheetContainer.style.width = '100%';
+    spreadsheetContainer.style.minWidth = '800px'; // Adjust this value as needed
+
     const data = aggregatedArray.map(item => [
         item['Style-Size'],
         item['Aggregated Quantity'],
-        0.0, // Initial price set to 0.0
-        item['Goalie?'] === 'Yes' ? 'GOALIE' : '' // Add a GOALIE indicator
+        0.0,
+        item['Goalie?'] === 'Yes' ? 'GOALIE' : ''
     ]);
 
-    const hot = new Handsontable(document.getElementById('spreadsheet'), {
+    const hot = new Handsontable(spreadsheetContainer, {
         data: data,
         colHeaders: ['Style-Size', 'Aggregated Quantity', 'Price', 'Goalie'],
         rowHeaders: true,
         height: 'auto',
-        licenseKey: 'non-commercial-and-evaluation', // or your commercial license key
+        width: '100%', // Set the table width to 100% of its container
+        licenseKey: 'non-commercial-and-evaluation',
         contextMenu: true,
         manualColumnResize: true,
         manualRowResize: true,
         filters: true,
         dropdownMenu: true,
+        stretchH: 'all', // Stretch all columns to fit the available width
         columns: [
-            { data: 0 }, // Style-Size column
-            { data: 1, type: 'numeric' }, // Aggregated Quantity column
-            { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' } }, // Price column
-            { data: 3, readOnly: true, renderer: goalieRenderer } // Goalie column
+            { data: 0, width: 200 }, // Style-Size column, set a larger width
+            { data: 1, type: 'numeric', width: 150 }, // Aggregated Quantity column
+            { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' }, width: 100 }, // Price column
+            { data: 3, readOnly: true, renderer: goalieRenderer, width: 100 } // Goalie column
         ],
         afterChange: function(changes) {
             if (changes) {
                 changes.forEach(([row, prop, oldValue, newValue]) => {
                     console.log(`Cell at row ${row}, column ${prop} changed from ${oldValue} to ${newValue}`);
-                    // You can add additional logic here to handle changes
                 });
                 updateTotalQuantity(hot);
             }
+        },
+        afterRender: function() {
+            this.updateSettings({
+                width: '100%',
+                height: this.getSettings().height
+            });
         }
     });
 
@@ -297,13 +309,18 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
 
     // Add "Copy All" functionality
     document.getElementById('copy-all-btn').addEventListener('click', function() {
-        const copyData = hot.getData().map(row => row.slice(0, 3).join('\t')).join('\n'); // Skip header and only copy first 3 columns
+        const copyData = hot.getData().map(row => row.slice(0, 3).join('\t')).join('\n');
         navigator.clipboard.writeText(copyData).then(function() {
             alert('All data copied to clipboard!');
         }, function(err) {
             console.error('Could not copy text: ', err);
         });
     });
+
+    // Force a resize after a short delay to ensure proper rendering
+    setTimeout(() => {
+        hot.render();
+    }, 100);
 }
 
 // Function to update total quantity
