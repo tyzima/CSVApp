@@ -39,14 +39,13 @@
 
             fetch(url, {
                 method: 'POST',
+                mode: 'no-cors', // Setting mode to no-cors to bypass CORS policy
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+            .then(() => {
                 alert('POST request sent successfully!');
             })
             .catch((error) => {
