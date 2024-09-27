@@ -186,7 +186,7 @@
 }
 
   
-  #csv-form .title2{
+  .title2{
     text-align:center;
     font-weight:700;
     line-height:56.5px;
@@ -576,7 +576,7 @@ textarea{
 }
 
 /* Title2 */
-#csv-form .title2{
+ .title2{
  font-size:2em;
  letter-spacing:-1px;
  margin-top:13px;
