@@ -555,3 +555,12 @@ h3 {
 }
 
 
+/* Text Area */
+textarea{
+ position:absolute;
+ top:251px;
+ width:354px !important;
+ right:209px;
+ bottom:-21px;
+}
+
