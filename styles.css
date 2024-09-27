@@ -575,3 +575,24 @@ textarea{
  border-bottom-right-radius:5px;
 }
 
+/* Title2 */
+#csv-form .title2{
+ font-size:2em;
+ letter-spacing:-1px;
+ margin-top:13px;
+}
+
+/* Span Tag */
+#csv-form .file-drop-area span{
+ text-transform:uppercase;
+ letter-spacing:-0.2px;
+ word-spacing:2.6px;
+ font-size:14px;
+}
+
+/* Container */
+.container{
+ transform:translatex(0px) translatey(0px);
+ padding-bottom:0px;
+ padding-top:0px;
+}
