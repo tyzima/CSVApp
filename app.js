@@ -309,15 +309,15 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
     // Modified "Copy All" functionality
     document.getElementById('copy-all-btn').addEventListener('click', function() {
         const copyData = hot.getData().map(row => {
-            // Only take the first 3 columns (Style-Size, Aggregated Quantity, Price)
             return row.slice(0, 3).map(cell => cell !== null ? cell : '').join('\t');
         }).join('\n');
 
-        navigator.clipboard.writeText(copyData).then(function() {
-            alert('All data copied to clipboard!');
-        }, function(err) {
-            console.error('Could not copy text: ', err);
-        });
+        const textArea = document.createElement('textarea');
+        textArea.value = copyData;
+        textArea.style.width = '100%';
+        textArea.style.height = '200px';
+        document.body.appendChild(textArea);
+        alert('Please manually copy the data from the text area below.');
     });
 
     // Force a resize after a short delay to ensure proper rendering
