@@ -241,7 +241,176 @@ aggregatedArray.sort((a, b) => {
     // Update the status
     document.getElementById('status').innerText = "Aggregated CSV generated.";
 
+    // Display the aggregated data as a spreadsheet
+    displayAggregatedSpreadsheet(aggregatedArray);
+
     return aggregatedData;
+}
+
+function displayAggregatedSpreadsheet(aggregatedArray) {
+    if (typeof Handsontable === 'undefined') {
+        console.error('Handsontable is not loaded. Falling back to basic table display.');
+        displayBasicTable(aggregatedArray);
+        return;
+    }
+
+    const container = document.querySelector('.container');
+    container.innerHTML = '<div id="spreadsheet-controls"><button id="copy-all-btn">Copy All</button></div><div id="spreadsheet"></div><div id="total-quantity"></div>';
+
+    const data = aggregatedArray.map(item => [
+        item['Style-Size'],
+        item['Aggregated Quantity'],
+        0.0, // Initial price set to 0.0
+        item['Goalie?'] === 'Yes' ? 'GOALIE' : '' // Add a GOALIE indicator
+    ]);
+
+    const hot = new Handsontable(document.getElementById('spreadsheet'), {
+        data: data,
+        colHeaders: ['Style-Size', 'Aggregated Quantity', 'Price', 'Goalie'],
+        rowHeaders: true,
+        height: 'auto',
+        licenseKey: 'non-commercial-and-evaluation', // or your commercial license key
+        contextMenu: true,
+        manualColumnResize: true,
+        manualRowResize: true,
+        filters: true,
+        dropdownMenu: true,
+        columns: [
+            { data: 0 }, // Style-Size column
+            { data: 1, type: 'numeric' }, // Aggregated Quantity column
+            { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' } }, // Price column
+            { data: 3, readOnly: true, renderer: goalieRenderer } // Goalie column
+        ],
+        afterChange: function(changes) {
+            if (changes) {
+                changes.forEach(([row, prop, oldValue, newValue]) => {
+                    console.log(`Cell at row ${row}, column ${prop} changed from ${oldValue} to ${newValue}`);
+                    // You can add additional logic here to handle changes
+                });
+                updateTotalQuantity(hot);
+            }
+        }
+    });
+
+    // Initial update of total quantity
+    updateTotalQuantity(hot);
+
+    // Add "Copy All" functionality
+    document.getElementById('copy-all-btn').addEventListener('click', function() {
+        const copyData = hot.getData().map(row => row.slice(0, 3).join('\t')).join('\n'); // Skip header and only copy first 3 columns
+        navigator.clipboard.writeText(copyData).then(function() {
+            alert('All data copied to clipboard!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    });
+}
+
+// Function to update total quantity
+function updateTotalQuantity(hot) {
+    const totalQuantity = hot.getData().reduce((sum, row) => sum + (parseInt(row[1]) || 0), 0);
+    document.getElementById('total-quantity').innerHTML = `<strong>Total Quantity: ${totalQuantity}</strong>`;
+}
+
+// Custom renderer for the Goalie column
+function goalieRenderer(instance, td, row, col, prop, value, cellProperties) {
+    td.innerHTML = value ? '<span class="goalie-badge">GOALIE</span>' : '';
+    return td;
+}
+
+function displayBasicTable(aggregatedArray) {
+    const container = document.querySelector('.container');
+    const controls = document.createElement('div');
+    controls.innerHTML = '<button id="copy-all-btn">Copy All</button>';
+    const table = document.createElement('table');
+    table.className = 'basic-table';
+
+    // Create table header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    ['Style-Size', 'Aggregated Quantity', 'Price', 'Goalie'].forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement('tbody');
+    aggregatedArray.forEach(item => {
+        const row = document.createElement('tr');
+        
+        const styleSizeCell = document.createElement('td');
+        const styleSizeInput = document.createElement('input');
+        styleSizeInput.type = 'text';
+        styleSizeInput.value = item['Style-Size'];
+        styleSizeCell.appendChild(styleSizeInput);
+        row.appendChild(styleSizeCell);
+
+        const quantityCell = document.createElement('td');
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.value = item['Aggregated Quantity'];
+        quantityCell.appendChild(quantityInput);
+        row.appendChild(quantityCell);
+
+        const priceCell = document.createElement('td');
+        const priceInput = document.createElement('input');
+        priceInput.type = 'number';
+        priceInput.step = '0.01';
+        priceInput.value = '0.00';
+        priceCell.appendChild(priceInput);
+        row.appendChild(priceCell);
+
+        const goalieCell = document.createElement('td');
+        if (item['Goalie?'] === 'Yes') {
+            const goalieBadge = document.createElement('span');
+            goalieBadge.className = 'goalie-badge';
+            goalieBadge.textContent = 'GOALIE';
+            goalieCell.appendChild(goalieBadge);
+        }
+        row.appendChild(goalieCell);
+
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    container.innerHTML = '';
+    container.appendChild(controls);
+    container.appendChild(table);
+
+    // Add total quantity display
+    const totalQuantityDiv = document.createElement('div');
+    totalQuantityDiv.id = 'total-quantity';
+    container.appendChild(totalQuantityDiv);
+
+    // Calculate and display total quantity
+    updateBasicTableTotalQuantity();
+
+    // Add "Copy All" functionality for basic table
+    document.getElementById('copy-all-btn').addEventListener('click', function() {
+        const rows = table.querySelectorAll('tbody tr');
+        const copyData = Array.from(rows).map(row => 
+            Array.from(row.querySelectorAll('td input')).slice(0, 3).map(input => input.value).join('\t')
+        ).join('\n');
+        navigator.clipboard.writeText(copyData).then(function() {
+            alert('All data copied to clipboard!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    });
+
+    // Add event listeners to update total quantity when inputs change
+    table.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('change', updateBasicTableTotalQuantity);
+    });
+}
+
+function updateBasicTableTotalQuantity() {
+    const quantityInputs = document.querySelectorAll('.basic-table tbody tr td:nth-child(2) input');
+    const totalQuantity = Array.from(quantityInputs).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
+    document.getElementById('total-quantity').innerHTML = `<strong>Total Quantity: ${totalQuantity}</strong>`;
 }
 
 function downloadCSV(filename, csvData) {
