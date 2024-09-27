@@ -281,8 +281,9 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
         manualRowResize: true,
         filters: true,
         dropdownMenu: true,
+        stretchH: 'all', // Stretch all columns to fit the available width
         columns: [
-            { data: 0, width: 200 }, // Style-Size column
+            { data: 0, width: 200 }, // Style-Size column, set a larger width
             { data: 1, type: 'numeric', width: 150 }, // Aggregated Quantity column
             { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' }, width: 100 }, // Price column
             { data: 3, readOnly: true, renderer: goalieRenderer, width: 100 } // Goalie column
