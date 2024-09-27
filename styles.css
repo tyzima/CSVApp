@@ -550,4 +550,15 @@ h3 {
 }
 
 
-   
+   /* Copy all */
+#copy-all-btn{
+ visibility:hidden;
+ display:none;
+}
+
+/* Image container */
+.image-container{
+ display:none;
+}
+
+
