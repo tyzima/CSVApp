@@ -541,5 +541,13 @@ h3 {
     border-bottom-left-radius:2px;
     border-bottom-right-radius:2px;
    }
-   
+
+
+/* Copy all */
+#copy-all-btn{
+ visibility:hidden;
+ display:none;
+}
+
+
    
