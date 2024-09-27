@@ -631,3 +631,19 @@ body{
  padding-top:27px;
 }
 
+/* Container */
+.container{
+ transform:translatex(0px) translatey(0px);
+}
+
+/* Copy all */
+#copy-all-btn{
+ padding-top:10px;
+ margin-top:18px;
+}
+
+/* Total quantity */
+#total-quantity{
+ margin-bottom:27px;
+}
+
