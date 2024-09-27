@@ -523,3 +523,23 @@ h3 {
    }
    
    
+
+   /* Strong Tag */
+#total-quantity strong{
+    line-height:45px;
+    text-align:center;
+   }
+   
+   /* Total quantity */
+   #total-quantity{
+    text-align:center;
+    background-color:#2ecc71;
+    color:#ffffff;
+    text-shadow:rgba(0, 0, 0, 0.3) 0px 1px 1px;
+    text-transform:capitalize;
+    font-size:19px;
+    border-bottom-left-radius:2px;
+    border-bottom-right-radius:2px;
+   }
+   
+   
