@@ -325,8 +325,18 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
             ].join('\t');
         }).join('\n');
 
-        navigator.clipboard.writeText(copyData)
-            .then(() => {
+        // Create temporary textarea element
+        const textarea = document.createElement('textarea');
+        textarea.value = copyData;
+        textarea.style.position = 'fixed';  // Ensure it's always on screen
+        textarea.style.opacity = '0';       // Make it invisible
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            // Try the old execCommand method first (better iframe support)
+            const success = document.execCommand('copy');
+            if (success) {
                 const statusEl = document.getElementById('copy-status');
                 const bottomStatusEl = document.getElementById('bottom-copy-status');
                 statusEl.textContent = 'Copied to clipboard!';
@@ -339,18 +349,24 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
                     statusEl.classList.remove('success');
                     bottomStatusEl.classList.remove('success');
                 }, 2000);
-            })
-            .catch(err => {
+            }
+        } catch (err) {
+            // If execCommand fails, try the modern clipboard API as fallback
+            navigator.clipboard.writeText(copyData).catch(err => {
+                // If both methods fail, show error and data to manually copy
                 const statusEl = document.getElementById('copy-status');
                 const bottomStatusEl = document.getElementById('bottom-copy-status');
-                const errorMsg = 'Failed to copy. Please try again.';
-                statusEl.textContent = errorMsg;
-                bottomStatusEl.textContent = errorMsg;
+                statusEl.textContent = 'Please press Ctrl+C/Cmd+C to copy';
+                bottomStatusEl.textContent = 'Please press Ctrl+C/Cmd+C to copy';
                 statusEl.classList.add('error');
                 bottomStatusEl.classList.add('error');
                 console.error('Copy failed:', err);
             });
-    };
+        } finally {
+            // Clean up the temporary textarea
+            document.body.removeChild(textarea);
+        }
+    }
 
     // Add click handlers for both buttons
     document.getElementById('copy-all-btn').addEventListener('click', handleCopy);
