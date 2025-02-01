@@ -255,12 +255,30 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
     }
 
     const container = document.querySelector('.container');
-    container.innerHTML = '<div id="spreadsheet-controls"><button id="copy-all-btn">Copy All</button></div><div id="spreadsheet"></div><div id="total-quantity"></div>';
+    container.innerHTML = `
+        <div id="spreadsheet-controls">
+            <button id="copy-all-btn" class="action-button">Copy to Clipboard</button>
+            <div id="copy-status" class="copy-status"></div>
+        </div>
+        <div id="spreadsheet" class="full-width-table"></div>
+        <div id="total-quantity"></div>
+        <div class="bottom-copy-section">
+            <button id="bottom-copy-btn" class="action-button">Copy to Clipboard</button>
+            <div id="bottom-copy-status" class="copy-status"></div>
+        </div>
+        <div id="alert-popup" class="alert-popup">
+            <div class="alert-content">
+                <div class="alert-message"></div>
+                <div class="alert-table"></div>
+                <button class="alert-copy-btn">Copy Data</button>
+                <button class="alert-close-btn">Close</button>
+            </div>
+        </div>
+    `;
 
-    // Set a fixed width for the spreadsheet container
     const spreadsheetContainer = document.getElementById('spreadsheet');
     spreadsheetContainer.style.width = '100%';
-    spreadsheetContainer.style.minWidth = '800px'; // Adjust this value as needed
+    spreadsheetContainer.style.minWidth = '100%';
 
     const data = aggregatedArray.map(item => [
         item['Style-Size'],
@@ -274,7 +292,8 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
         colHeaders: ['Style-Size', 'Aggregated Quantity', 'Price', 'Goalie'],
         rowHeaders: true,
         height: 'auto',
-        width: '100%', // Set the table width to 100% of its container
+        width: '100%',
+        stretchH: 'all', // Make columns stretch to full width
         licenseKey: 'non-commercial-and-evaluation',
         contextMenu: true,
         manualColumnResize: true,
@@ -282,43 +301,60 @@ function displayAggregatedSpreadsheet(aggregatedArray) {
         filters: true,
         dropdownMenu: true,
         columns: [
-            { data: 0, width: 200 }, // Style-Size column, set a larger width
-            { data: 1, type: 'numeric', width: 150 }, // Aggregated Quantity column
-            { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' }, width: 100 }, // Price column
-            { data: 3, readOnly: true, renderer: goalieRenderer, width: 100 } // Goalie column
+            { data: 0, width: '40%' },
+            { data: 1, type: 'numeric', width: '20%' },
+            { data: 2, type: 'numeric', numericFormat: { pattern: '0.00' }, width: '20%' },
+            { data: 3, readOnly: true, renderer: goalieRenderer, width: '20%' }
         ],
         afterChange: function(changes) {
             if (changes) {
-                changes.forEach(([row, prop, oldValue, newValue]) => {
-                    console.log(`Cell at row ${row}, column ${prop} changed from ${oldValue} to ${newValue}`);
-                });
                 updateTotalQuantity(hot);
             }
-        },
-        afterRender: function() {
-            this.updateSettings({
-                width: '100%',
-                height: this.getSettings().height
-            });
         }
     });
 
-    // Initial update of total quantity
     updateTotalQuantity(hot);
 
-    // Modified "Copy All" functionality
-    document.getElementById('copy-all-btn').addEventListener('click', function() {
+    // Function to handle copying
+    const handleCopy = () => {
         const copyData = hot.getData().map(row => {
-            return row.slice(0, 3).map(cell => cell !== null ? cell : '').join('\t');
+            return [
+                row[0] || '',                              // Style-Size
+                row[1] || '',                              // Quantity
+                (row[2] || 0).toFixed(2)                   // Price always as 0.00
+            ].join('\t');
         }).join('\n');
 
-        const textArea = document.createElement('textarea');
-        textArea.value = copyData;
-        textArea.style.width = '100%';
-        textArea.style.height = '200px';
-        document.body.appendChild(textArea);
-        alert('Please manually copy the data from the text area below.');
-    });
+        navigator.clipboard.writeText(copyData)
+            .then(() => {
+                const statusEl = document.getElementById('copy-status');
+                const bottomStatusEl = document.getElementById('bottom-copy-status');
+                statusEl.textContent = 'Copied to clipboard!';
+                bottomStatusEl.textContent = 'Copied to clipboard!';
+                statusEl.classList.add('success');
+                bottomStatusEl.classList.add('success');
+                setTimeout(() => {
+                    statusEl.textContent = '';
+                    bottomStatusEl.textContent = '';
+                    statusEl.classList.remove('success');
+                    bottomStatusEl.classList.remove('success');
+                }, 2000);
+            })
+            .catch(err => {
+                const statusEl = document.getElementById('copy-status');
+                const bottomStatusEl = document.getElementById('bottom-copy-status');
+                const errorMsg = 'Failed to copy. Please try again.';
+                statusEl.textContent = errorMsg;
+                bottomStatusEl.textContent = errorMsg;
+                statusEl.classList.add('error');
+                bottomStatusEl.classList.add('error');
+                console.error('Copy failed:', err);
+            });
+    };
+
+    // Add click handlers for both buttons
+    document.getElementById('copy-all-btn').addEventListener('click', handleCopy);
+    document.getElementById('bottom-copy-btn').addEventListener('click', handleCopy);
 
     // Force a resize after a short delay to ensure proper rendering
     setTimeout(() => {
@@ -340,89 +376,75 @@ function goalieRenderer(instance, td, row, col, prop, value, cellProperties) {
 
 function displayBasicTable(aggregatedArray) {
     const container = document.querySelector('.container');
-    const controls = document.createElement('div');
-    controls.innerHTML = '<button id="copy-all-btn">Copy All</button>';
-    const table = document.createElement('table');
-    table.className = 'basic-table';
+    container.innerHTML = `
+        <div class="table-controls">
+            <button id="copy-all-btn" class="action-button">Copy to Clipboard</button>
+            <div id="copy-status" class="copy-status"></div>
+        </div>
+        <div class="table-wrapper">
+            <table class="basic-table">
+                <thead>
+                    <tr>
+                        <th>Style-Size</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Goalie</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="total-quantity" class="total-quantity"></div>
+    `;
 
-    // Create table header
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    ['Style-Size', 'Aggregated Quantity', 'Price', 'Goalie'].forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    // Create table body
-    const tbody = document.createElement('tbody');
+    const tbody = container.querySelector('tbody');
     aggregatedArray.forEach(item => {
         const row = document.createElement('tr');
-        
-        const styleSizeCell = document.createElement('td');
-        const styleSizeInput = document.createElement('input');
-        styleSizeInput.type = 'text';
-        styleSizeInput.value = item['Style-Size'];
-        styleSizeCell.appendChild(styleSizeInput);
-        row.appendChild(styleSizeCell);
-
-        const quantityCell = document.createElement('td');
-        const quantityInput = document.createElement('input');
-        quantityInput.type = 'number';
-        quantityInput.value = item['Aggregated Quantity'];
-        quantityCell.appendChild(quantityInput);
-        row.appendChild(quantityCell);
-
-        const priceCell = document.createElement('td');
-        const priceInput = document.createElement('input');
-        priceInput.type = 'number';
-        priceInput.step = '0.01';
-        priceInput.value = '0.00';
-        priceCell.appendChild(priceInput);
-        row.appendChild(priceCell);
-
-        const goalieCell = document.createElement('td');
-        if (item['Goalie?'] === 'Yes') {
-            const goalieBadge = document.createElement('span');
-            goalieBadge.className = 'goalie-badge';
-            goalieBadge.textContent = 'GOALIE';
-            goalieCell.appendChild(goalieBadge);
-        }
-        row.appendChild(goalieCell);
-
+        row.innerHTML = `
+            <td><input type="text" value="${item['Style-Size']}" readonly></td>
+            <td><input type="number" value="${item['Aggregated Quantity']}" min="0"></td>
+            <td><input type="number" value="0.00" step="0.01" min="0"></td>
+            <td>${item['Goalie?'] === 'Yes' ? '<span class="goalie-badge">GOALIE</span>' : ''}</td>
+        `;
         tbody.appendChild(row);
     });
-    table.appendChild(tbody);
 
-    container.innerHTML = '';
-    container.appendChild(controls);
-    container.appendChild(table);
-
-    // Add total quantity display
-    const totalQuantityDiv = document.createElement('div');
-    totalQuantityDiv.id = 'total-quantity';
-    container.appendChild(totalQuantityDiv);
-
-    // Calculate and display total quantity
     updateBasicTableTotalQuantity();
 
-    // Add "Copy All" functionality for basic table
+    // Updated copy functionality for basic table
     document.getElementById('copy-all-btn').addEventListener('click', function() {
-        const rows = table.querySelectorAll('tbody tr');
-        const copyData = Array.from(rows).map(row => 
-            Array.from(row.querySelectorAll('td input')).slice(0, 3).map(input => input.value).join('\t')
-        ).join('\n');
-        navigator.clipboard.writeText(copyData).then(function() {
-            alert('All data copied to clipboard!');
-        }, function(err) {
-            console.error('Could not copy text: ', err);
-        });
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const copyData = rows.map(row => {
+            const inputs = Array.from(row.querySelectorAll('input'));
+            return inputs.slice(0, 3)
+                .map(input => input.value || '')
+                .join('\t'); // Use tab delimiter
+        }).join('\n');
+
+        navigator.clipboard.writeText(copyData)
+            .then(() => {
+                const statusEl = document.getElementById('copy-status');
+                statusEl.textContent = 'Copied to clipboard! Ready to paste into spreadsheet';
+                statusEl.classList.add('success');
+                setTimeout(() => {
+                    statusEl.textContent = '';
+                    statusEl.classList.remove('success');
+                }, 2000);
+            })
+            .catch(err => {
+                const statusEl = document.getElementById('copy-status');
+                statusEl.textContent = 'Failed to copy. Please try again.';
+                statusEl.classList.add('error');
+                setTimeout(() => {
+                    statusEl.textContent = '';
+                    statusEl.classList.remove('error');
+                }, 2000);
+                console.error('Copy failed:', err);
+            });
     });
 
-    // Add event listeners to update total quantity when inputs change
-    table.querySelectorAll('input[type="number"]').forEach(input => {
+    // Add event listeners for quantity updates
+    container.querySelectorAll('input[type="number"]').forEach(input => {
         input.addEventListener('change', updateBasicTableTotalQuantity);
     });
 }

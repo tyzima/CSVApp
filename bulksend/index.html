@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -360,11 +359,14 @@ function handlePaste(e) {
 
         while (row.cells.length < 4) {
             const cell = row.insertCell();
-            if (row.cells.length === 4) {
-                cell.textContent = '0.00';
-                cell.contentEditable = true;
-            }
+            cell.contentEditable = true;
         }
+
+        // Ensure the price cell (last cell) always has "0.00"
+        if (!row.cells[3].textContent.trim()) {
+            row.cells[3].textContent = "0.00";
+        }
+        
         updateProductName({target: row.cells[0]});
     });
 }
